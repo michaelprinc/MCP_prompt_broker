@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-prompt-broker"
+version = "0.1.0"
+description = "MCP server that selects the best instruction for a user prompt."
+authors = [{name = "Prompt Broker"}]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=0.3.1",
+]
+
+[project.scripts]
+mcp-prompt-broker = "mcp_prompt_broker.server:run"
