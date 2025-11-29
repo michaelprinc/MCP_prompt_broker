@@ -1,0 +1,37 @@
+{
+  "name": "mcp_prompt_broker",
+  "version": "1.0.0",
+  "description": "MCP server that uses the best appropriate instruction for the user's prompt with hot-reload capability.",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "mcp-prompt-broker": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch",
+    "lint": "tsc --noEmit",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "copilot",
+    "instruction-profiles"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.10.1",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.5",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.23.0",
+    "chokidar": "^5.0.0"
+  }
+}
