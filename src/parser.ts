@@ -53,7 +53,7 @@ export function parseMarkdownProfile(filePath: string): ProfileMetadata {
  */
 function extractTitle(content: string): string {
   const titleMatch = content.match(/^#\s+(.+)$/m);
-  return titleMatch && titleMatch[1] ? titleMatch[1].trim() : "";
+  return titleMatch?.[1]?.trim() ?? "";
 }
 
 /**
@@ -105,8 +105,8 @@ function extractSections(content: string): ProfileSection[] {
 
       // Start new section
       currentSection = {
-        title: headerMatch[2] ? headerMatch[2].trim() : "",
-        level: headerMatch[1] ? headerMatch[1].length : 1,
+        title: headerMatch[2]?.trim() ?? "",
+        level: headerMatch[1]?.length ?? 1,
         content: "",
       };
       contentLines = [];
@@ -133,10 +133,12 @@ function extractChecklist(content: string): string[] {
 
   let match;
   while ((match = checklistRegex.exec(content)) !== null) {
-    const checkMark = match[1] ?? " ";
-    const text = match[2] ?? "";
-    const isChecked = checkMark.toLowerCase() === "x";
-    checklistItems.push(`[${isChecked ? "x" : " "}] ${text.trim()}`);
+    const checkMark = match[1];
+    const text = match[2];
+    if (checkMark !== undefined && text !== undefined) {
+      const isChecked = checkMark.toLowerCase() === "x";
+      checklistItems.push(`[${isChecked ? "x" : " "}] ${text.trim()}`);
+    }
   }
 
   return checklistItems;
