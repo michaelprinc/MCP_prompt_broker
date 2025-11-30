@@ -14,9 +14,10 @@ def test_privacy_profile_selected_for_sensitive_healthcare():
         context_tags=frozenset({"pii"}),
     )
 
-    profile = router.route(metadata)
+    routing = router.route(metadata)
 
-    assert profile.name == "privacy_sensitive"
+    assert routing.profile.name == "privacy_sensitive"
+    assert routing.consistency == 100.0
 
 
 def test_creative_profile_selected_for_brainstorming():
@@ -29,9 +30,10 @@ def test_creative_profile_selected_for_brainstorming():
         context_tags=frozenset({"storytelling"}),
     )
 
-    profile = router.route(metadata)
+    routing = router.route(metadata)
 
-    assert profile.name == "creative_brainstorm"
+    assert routing.profile.name == "creative_brainstorm"
+    assert routing.consistency >= 99.0
 
 
 def test_technical_support_profile_for_bug_reports():
@@ -43,18 +45,20 @@ def test_technical_support_profile_for_bug_reports():
         context_tags=frozenset({"incident"}),
     )
 
-    profile = router.route(metadata)
+    routing = router.route(metadata)
 
-    assert profile.name == "technical_support"
+    assert routing.profile.name == "technical_support"
+    assert routing.consistency >= 99.0
 
 
 def test_fallback_used_when_no_profiles_match():
     router = ProfileRouter()
     metadata = EnhancedMetadata(prompt="Hello world")
 
-    profile = router.route(metadata)
+    routing = router.route(metadata)
 
-    assert profile.name == "general_default"
+    assert routing.profile.name == "general_default"
+    assert routing.consistency == 100.0
 
 
 def test_privacy_outscores_technical_when_requirements_met():
@@ -67,9 +71,10 @@ def test_privacy_outscores_technical_when_requirements_met():
         context_tags=frozenset({"pii", "incident"}),
     )
 
-    profile = router.route(metadata)
+    routing = router.route(metadata)
 
-    assert profile.name == "privacy_sensitive"
+    assert routing.profile.name == "privacy_sensitive"
+    assert routing.consistency >= 99.0
 
 
 def test_metadata_from_dict_normalizes_tags():
@@ -83,7 +88,8 @@ def test_metadata_from_dict_normalizes_tags():
         }
     )
 
-    profile = router.route(metadata)
+    routing = router.route(metadata)
 
     assert metadata.context_tags == frozenset({"outage"})
-    assert profile.name == "technical_support"
+    assert routing.profile.name == "technical_support"
+    assert routing.score >= routing.profile.default_score

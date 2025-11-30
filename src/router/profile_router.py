@@ -1,6 +1,7 @@
 """Router for mapping enhanced prompt metadata to instruction profiles."""
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
 from typing import Iterable, Mapping, MutableMapping, Sequence
 
@@ -54,18 +55,38 @@ class EnhancedMetadata:
         }
 
 
+@dataclass(frozen=True)
+class RoutingResult:
+    """Result of routing including the matched profile and confidence."""
+
+    profile: InstructionProfile
+    score: int
+    consistency: float
+
+
 class ProfileRouter:
     """Route prompts to instruction profiles using rule-based scoring."""
 
     def __init__(self, profiles: Sequence[InstructionProfile] | None = None):
         self.profiles = list(profiles or get_instruction_profiles())
 
-    def route(self, metadata: EnhancedMetadata) -> InstructionProfile:
+    def _normalize_consistency(self, best_score: int, candidate_scores: Sequence[int]) -> float:
+        """Normalize consistency to a 0-100 scale using a softmax-style weighting."""
+
+        if not candidate_scores:
+            return 100.0
+
+        max_score = max(candidate_scores)
+        exp_scores = [math.exp(score - max_score) for score in candidate_scores]
+        best_weight = math.exp(best_score - max_score)
+        probability = best_weight / sum(exp_scores)
+        return round(probability * 100, 2)
+
+    def route(self, metadata: EnhancedMetadata) -> RoutingResult:
         """Return the best instruction profile for the given metadata."""
 
         metadata_map = metadata.as_mutable()
-        best_profile: InstructionProfile | None = None
-        best_score: int | None = None
+        scored_matches: list[tuple[InstructionProfile, int]] = []
         fallback_profile: InstructionProfile | None = None
 
         for profile in self.profiles:
@@ -75,15 +96,16 @@ class ProfileRouter:
             if not profile.is_match(metadata_map):
                 continue
 
-            score = profile.score(metadata_map)
-            if best_score is None or score > best_score:
-                best_score = score
-                best_profile = profile
+            scored_matches.append((profile, profile.score(metadata_map)))
 
-        if best_profile:
-            return best_profile
+        if scored_matches:
+            best_profile, best_score = max(scored_matches, key=lambda item: item[1])
+            consistency = self._normalize_consistency(
+                best_score, [score for _, score in scored_matches]
+            )
+            return RoutingResult(best_profile, best_score, consistency)
 
         if fallback_profile:
-            return fallback_profile
+            return RoutingResult(fallback_profile, fallback_profile.default_score, 100.0)
 
         raise ValueError("No matching profile and no fallback configured")

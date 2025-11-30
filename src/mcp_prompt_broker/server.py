@@ -11,7 +11,7 @@ from mcp.server import Server
 
 from config.profiles import InstructionProfile, get_instruction_profiles
 from metadata.parser import ParsedMetadata, analyze_prompt
-from router.profile_router import EnhancedMetadata, ProfileRouter
+from router.profile_router import EnhancedMetadata, ProfileRouter, RoutingResult
 
 
 def _profile_to_dict(profile: InstructionProfile) -> Dict[str, object]:
@@ -77,6 +77,7 @@ def _build_server(router: ProfileRouter) -> Server:
                     "properties": {
                         "profile": {"type": "object"},
                         "metadata": {"type": "object"},
+                        "routing": {"type": "object"},
                     },
                 },
             ),
@@ -93,10 +94,14 @@ def _build_server(router: ProfileRouter) -> Server:
                 overrides: Mapping[str, object] | None = arguments.get("metadata")
                 parsed: ParsedMetadata = analyze_prompt(prompt)
                 enhanced: EnhancedMetadata = parsed.to_enhanced_metadata(overrides)
-                profile = router.route(enhanced)
+                routing: RoutingResult = router.route(enhanced)
                 return {
-                    "profile": _profile_to_dict(profile),
+                    "profile": _profile_to_dict(routing.profile),
                     "metadata": parsed.as_dict(),
+                    "routing": {
+                        "score": routing.score,
+                        "consistency": routing.consistency,
+                    },
                 }
             except (ValueError, LookupError) as exc:
                 return types.ErrorData(code=400, message=str(exc))
