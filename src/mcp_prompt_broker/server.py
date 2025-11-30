@@ -4,23 +4,38 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
-from typing import Dict, List
+from typing import Dict, List, Mapping
 
 import mcp.types as types
 from mcp.server import Server
 
-from .instructions import DEFAULT_INSTRUCTIONS, Instruction, InstructionCatalog
+from config.profiles import InstructionProfile, get_instruction_profiles
+from metadata.parser import ParsedMetadata, analyze_prompt
+from router.profile_router import EnhancedMetadata, ProfileRouter
 
 
-def _build_server(catalog: InstructionCatalog) -> Server:
+def _profile_to_dict(profile: InstructionProfile) -> Dict[str, object]:
+    """Serialize an :class:`InstructionProfile` into JSON-safe structure."""
+
+    return {
+        "name": profile.name,
+        "instructions": profile.instructions,
+        "required": {key: sorted(value) for key, value in profile.required.items()},
+        "weights": {key: dict(value) for key, value in profile.weights.items()},
+        "default_score": profile.default_score,
+        "fallback": profile.fallback,
+    }
+
+
+def _build_server(router: ProfileRouter) -> Server:
     server = Server("mcp-prompt-broker")
 
     @server.list_tools()
     async def list_tools() -> List[types.Tool]:
         return [
             types.Tool(
-                name="listInstructions",
-                description="List available instructions and their purpose.",
+                name="list_profile",
+                description="List available instruction profiles and their metadata.",
                 inputSchema={
                     "type": "object",
                     "properties": {},
@@ -31,28 +46,37 @@ def _build_server(catalog: InstructionCatalog) -> Server:
                         "type": "object",
                         "properties": {
                             "name": {"type": "string"},
-                            "description": {"type": "string"},
-                            "guidance": {"type": "string"},
+                            "instructions": {"type": "string"},
+                            "required": {"type": "object"},
+                            "weights": {"type": "object"},
+                            "default_score": {"type": "number"},
+                            "fallback": {"type": "boolean"},
                         },
                     },
                 },
             ),
             types.Tool(
-                name="selectInstruction",
-                description="Select the best instruction for a given user prompt.",
+                name="get_profile",
+                description=(
+                    "Analyze a prompt, enrich it with metadata, and return the best "
+                    "matching instruction profile."
+                ),
                 inputSchema={
                     "type": "object",
                     "properties": {
                         "prompt": {"type": "string"},
+                        "metadata": {
+                            "type": "object",
+                            "description": "Optional metadata overrides to steer routing.",
+                        },
                     },
                     "required": ["prompt"],
                 },
                 outputSchema={
                     "type": "object",
                     "properties": {
-                        "name": {"type": "string"},
-                        "guidance": {"type": "string"},
-                        "description": {"type": "string"},
+                        "profile": {"type": "object"},
+                        "metadata": {"type": "object"},
                     },
                 },
             ),
@@ -60,12 +84,20 @@ def _build_server(catalog: InstructionCatalog) -> Server:
 
     @server.call_tool()
     async def call_tool(name: str, arguments: Dict):
-        if name == "listInstructions":
-            return [instruction.__dict__ for instruction in catalog.list()]
-        if name == "selectInstruction":
+        if name == "list_profile":
+            return [_profile_to_dict(profile) for profile in router.profiles]
+
+        if name == "get_profile":
             try:
-                instruction = catalog.select(arguments.get("prompt", ""))
-                return instruction.__dict__
+                prompt = str(arguments.get("prompt", ""))
+                overrides: Mapping[str, object] | None = arguments.get("metadata")
+                parsed: ParsedMetadata = analyze_prompt(prompt)
+                enhanced: EnhancedMetadata = parsed.to_enhanced_metadata(overrides)
+                profile = router.route(enhanced)
+                return {
+                    "profile": _profile_to_dict(profile),
+                    "metadata": parsed.as_dict(),
+                }
             except (ValueError, LookupError) as exc:
                 return types.ErrorData(code=400, message=str(exc))
 
@@ -83,14 +115,15 @@ def run(argv: List[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    instructions = DEFAULT_INSTRUCTIONS
+    instruction_profiles = list(get_instruction_profiles())
     if args.instructions:
         with open(args.instructions, "r", encoding="utf-8") as fp:
             loaded = json.load(fp)
-            instructions = [Instruction(**item) for item in loaded]
+            # instructions file now expects profile-shaped objects
+            instruction_profiles = [InstructionProfile(**item) for item in loaded]
 
-    catalog = InstructionCatalog(instructions)
-    server = _build_server(catalog)
+    router = ProfileRouter(instruction_profiles)
+    server = _build_server(router)
 
     asyncio.run(server.run_stdio())
     return 0
