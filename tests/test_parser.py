@@ -3,9 +3,6 @@ from typing import List
 
 import pytest
 
-# Ensure the src directory is importable without installing the package.
-sys.path.append("src")
-
 from metadata import PromptMetadata, PromptMetadataParser, analyze_prompt  # noqa: E402
 
 
