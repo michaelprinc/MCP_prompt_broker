@@ -217,12 +217,88 @@ function Update-McpConfig {
     return $true
 }
 
+function Ensure-VscodeDir {
+    param([string]$WorkspacePath)
+    
+    $vscodeDir = Join-Path $WorkspacePath ".vscode"
+    if (-Not (Test-Path $vscodeDir)) {
+        Write-Info "Creating .vscode directory..."
+        New-Item -ItemType Directory -Path $vscodeDir -Force | Out-Null
+    }
+    return $vscodeDir
+}
+
+function Get-WorkspaceMcpServerConfig {
+    # Detect OS for correct Python path in venv
+    $isWindows = $env:OS -eq "Windows_NT"
+    
+    if ($isWindows) {
+        $pythonRelPath = ".venv/Scripts/python.exe"
+    }
+    else {
+        $pythonRelPath = ".venv/bin/python"
+    }
+    
+    return @{
+        type    = "stdio"
+        command = "`${workspaceFolder}/$pythonRelPath"
+        args    = @("-m", "mcp_prompt_broker")
+        env     = @{}
+    }
+}
+
+function Update-WorkspaceMcpConfig {
+    param([string]$VscodeDir)
+    
+    $mcpConfigPath = Join-Path $VscodeDir "mcp.json"
+    
+    Write-Info "Updating workspace MCP configuration..."
+    
+    # Load existing config or create new one
+    $config = @{ servers = @{} }
+    
+    if (Test-Path $mcpConfigPath) {
+        try {
+            $existingContent = Get-Content -Raw -Path $mcpConfigPath -ErrorAction Stop
+            if ($existingContent -and $existingContent.Trim()) {
+                $existingJson = $existingContent | ConvertFrom-Json -ErrorAction Stop
+                if ($existingJson.servers) {
+                    # Convert to hashtable, preserving other servers
+                    $existingJson.servers.PSObject.Properties | ForEach-Object {
+                        $config.servers[$_.Name] = $_.Value
+                    }
+                }
+                # Preserve inputs if exists
+                if ($existingJson.inputs) {
+                    $config.inputs = $existingJson.inputs
+                }
+            }
+        }
+        catch {
+            Write-Warning-Custom "Existing mcp.json is invalid JSON; creating new one."
+        }
+    }
+    
+    # Add/update mcp-prompt-broker server
+    $serverConfig = Get-WorkspaceMcpServerConfig
+    $config.servers["mcp-prompt-broker"] = $serverConfig
+    
+    # Write configuration
+    $jsonContent = $config | ConvertTo-Json -Depth 10
+    Set-Content -Path $mcpConfigPath -Value $jsonContent -Encoding UTF8
+    
+    Write-Success "Workspace MCP configuration updated at $mcpConfigPath"
+    return $true
+}
+
 function Show-Summary {
     param(
         [bool]$InstallSuccess,
         [bool]$TestsSuccess,
         [bool]$ConfigSuccess,
-        [string]$ConfigPath
+        [bool]$WorkspaceConfigSuccess,
+        [string]$ConfigPath,
+        [string]$WorkspaceConfigPath
     )
     
     Write-Host ""
@@ -245,16 +321,24 @@ function Show-Summary {
     }
     
     if ($ConfigSuccess) {
-        Write-Success "MCP Configuration: SUCCESS"
+        Write-Success "Global MCP Configuration: SUCCESS"
         Write-Info "  Config path: $ConfigPath"
     }
     else {
-        Write-Error-Custom "MCP Configuration: FAILED"
+        Write-Error-Custom "Global MCP Configuration: FAILED"
+    }
+    
+    if ($WorkspaceConfigSuccess) {
+        Write-Success "Workspace MCP Configuration: SUCCESS"
+        Write-Info "  Config path: $WorkspaceConfigPath"
+    }
+    else {
+        Write-Error-Custom "Workspace MCP Configuration: FAILED"
     }
     
     Write-Host ("=" * 60) -ForegroundColor Cyan
     
-    if ($InstallSuccess -and $ConfigSuccess) {
+    if ($InstallSuccess -and $ConfigSuccess -and $WorkspaceConfigSuccess) {
         Write-Host ""
         Write-Success "Installation complete!"
         Write-Info "Restart VS Code to activate the MCP server."
@@ -320,18 +404,28 @@ elseif ($SkipTests) {
     $testsSuccess = $true
 }
 
-# Step 6: Update MCP configuration
+# Step 6: Update global MCP configuration
 $configPath = Get-McpConfigPath
 $configSuccess = $false
 if ($installSuccess) {
     $configSuccess = Update-McpConfig -ConfigPath $configPath -VenvPython $venvPython
 }
 
-# Step 7: Show summary
+# Step 7: Update workspace .vscode/mcp.json configuration
+$workspaceConfigPath = Join-Path (Get-Location) ".vscode\mcp.json"
+$workspaceConfigSuccess = $false
+if ($installSuccess) {
+    $vscodeDir = Ensure-VscodeDir -WorkspacePath (Get-Location)
+    $workspaceConfigSuccess = Update-WorkspaceMcpConfig -VscodeDir $vscodeDir
+}
+
+# Step 8: Show summary
 $exitCode = Show-Summary `
     -InstallSuccess $installSuccess `
     -TestsSuccess $testsSuccess `
     -ConfigSuccess $configSuccess `
-    -ConfigPath $configPath
+    -WorkspaceConfigSuccess $workspaceConfigSuccess `
+    -ConfigPath $configPath `
+    -WorkspaceConfigPath $workspaceConfigPath
 
 exit $exitCode

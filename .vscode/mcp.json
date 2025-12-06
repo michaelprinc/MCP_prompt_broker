@@ -1,0 +1,15 @@
+﻿{
+    "servers":  {
+                    "mcp-prompt-broker":  {
+                                              "args":  [
+                                                           "-m",
+                                                           "mcp_prompt_broker"
+                                                       ],
+                                              "env":  {
+
+                                                      },
+                                              "command":  "${workspaceFolder}/.venv/Scripts/python.exe",
+                                              "type":  "stdio"
+                                          }
+                }
+}
