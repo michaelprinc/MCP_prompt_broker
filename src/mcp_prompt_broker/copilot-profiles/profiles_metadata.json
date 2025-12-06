@@ -1,0 +1,431 @@
+{
+  "version": "1.0",
+  "generated_at": "2025-12-06T16:38:54.822869+00:00",
+  "profiles": {
+    "creative_brainstorm": {
+      "name": "creative_brainstorm",
+      "short_description": "Encourage creative exploration and divergent thinking",
+      "source_file": "creative_brainstorm.md",
+      "default_score": 3,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "intent": [
+          "brainstorm",
+          "creative",
+          "ideation"
+        ]
+      },
+      "weights": {
+        "audience": {
+          "marketing": 2,
+          "product": 1,
+          "design": 2
+        },
+        "language": {
+          "en": 1,
+          "fr": 1
+        },
+        "context_tags": {
+          "storytelling": 2,
+          "innovation": 2,
+          "design_thinking": 1
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "cross_domain",
+        "divergent_thinking",
+        "ideation",
+        "quality_assurance"
+      ],
+      "domains": [
+        "creative",
+        "engineering"
+      ],
+      "checklist_count": 8,
+      "instructions_length": 1860,
+      "last_modified": "2025-12-06T15:49:27.982885+00:00"
+    },
+    "creative_brainstorm_complex": {
+      "name": "creative_brainstorm_complex",
+      "short_description": "Advanced creative ideation with meta-cognition, chain-of-thought reasoning, and structured divergent thinking",
+      "source_file": "creative_brainstorm_complex.md",
+      "default_score": 4,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "creative_brainstorm",
+      "required": {
+        "intent": [
+          "brainstorm",
+          "creative",
+          "ideation",
+          "innovation"
+        ]
+      },
+      "weights": {
+        "audience": {
+          "marketing": 3,
+          "product": 2,
+          "design": 3,
+          "executive": 2
+        },
+        "language": {
+          "en": 1,
+          "fr": 1,
+          "de": 1
+        },
+        "context_tags": {
+          "storytelling": 3,
+          "innovation": 3,
+          "design_thinking": 2,
+          "strategy": 2,
+          "vision": 2
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "cross_domain",
+        "divergent_thinking",
+        "ideation",
+        "meta_cognition",
+        "quality_assurance",
+        "systematic_analysis",
+        "verification"
+      ],
+      "domains": [
+        "creative"
+      ],
+      "checklist_count": 12,
+      "instructions_length": 4183,
+      "last_modified": "2025-12-06T16:30:01.614501+00:00"
+    },
+    "general_default": {
+      "name": "general_default",
+      "short_description": "Use balanced, general-purpose instructions",
+      "source_file": "general_default.md",
+      "default_score": 1,
+      "fallback": true,
+      "complexity": "standard",
+      "extends": null,
+      "required": {},
+      "weights": {
+        "priority": {
+          "high": 1,
+          "urgent": 2
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "quality_assurance",
+        "systematic_analysis"
+      ],
+      "domains": [
+        "engineering",
+        "general"
+      ],
+      "checklist_count": 5,
+      "instructions_length": 1013,
+      "last_modified": "2025-12-06T15:49:27.991391+00:00"
+    },
+    "general_default_complex": {
+      "name": "general_default_complex",
+      "short_description": "Advanced adaptive reasoning with multi-step verification, structured thinking, and quality assurance protocols",
+      "source_file": "general_default_complex.md",
+      "default_score": 2,
+      "fallback": true,
+      "complexity": "complex",
+      "extends": "general_default",
+      "required": {},
+      "weights": {
+        "priority": {
+          "high": 2,
+          "urgent": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "high": 2,
+          "complex": 2
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "meta_cognition",
+        "quality_assurance",
+        "systematic_analysis",
+        "verification"
+      ],
+      "domains": [
+        "general"
+      ],
+      "checklist_count": 12,
+      "instructions_length": 4506,
+      "last_modified": "2025-12-06T16:30:03.761108+00:00"
+    },
+    "privacy_sensitive": {
+      "name": "privacy_sensitive",
+      "short_description": "Use privacy-first responses with redaction",
+      "source_file": "privacy_sensitive.md",
+      "default_score": 5,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "sensitivity": [
+          "critical",
+          "high"
+        ]
+      },
+      "weights": {
+        "domain": {
+          "healthcare": 3,
+          "finance": 2,
+          "legal": 2
+        },
+        "language": {
+          "es": 1,
+          "de": 1
+        },
+        "context_tags": {
+          "pii": 2,
+          "compliance": 1,
+          "gdpr": 2,
+          "hipaa": 2
+        }
+      },
+      "capabilities": [
+        "compliance",
+        "privacy_protection",
+        "verification"
+      ],
+      "domains": [
+        "finance",
+        "healthcare",
+        "legal"
+      ],
+      "checklist_count": 8,
+      "instructions_length": 1640,
+      "last_modified": "2025-12-06T15:49:27.982885+00:00"
+    },
+    "privacy_sensitive_complex": {
+      "name": "privacy_sensitive_complex",
+      "short_description": "Zero-trust privacy framework with adversarial awareness, comprehensive compliance matrix, and defense-in-depth data protection",
+      "source_file": "privacy_sensitive_complex.md",
+      "default_score": 6,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "privacy_sensitive",
+      "required": {
+        "sensitivity": [
+          "critical",
+          "extreme",
+          "high"
+        ]
+      },
+      "weights": {
+        "domain": {
+          "healthcare": 4,
+          "finance": 3,
+          "legal": 3,
+          "government": 4,
+          "insurance": 3
+        },
+        "language": {
+          "es": 1,
+          "de": 2,
+          "fr": 1
+        },
+        "context_tags": {
+          "pii": 3,
+          "compliance": 2,
+          "gdpr": 3,
+          "hipaa": 3,
+          "pci": 3,
+          "sox": 2,
+          "ferpa": 2,
+          "ccpa": 2,
+          "classified": 4
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "compliance",
+        "incident_response",
+        "meta_cognition",
+        "privacy_protection",
+        "verification",
+        "zero_trust"
+      ],
+      "domains": [
+        "engineering",
+        "finance",
+        "general",
+        "government",
+        "healthcare",
+        "insurance",
+        "legal",
+        "security"
+      ],
+      "checklist_count": 16,
+      "instructions_length": 5730,
+      "last_modified": "2025-12-06T16:30:05.801198+00:00"
+    },
+    "technical_support": {
+      "name": "technical_support",
+      "short_description": "Provide concise technical troubleshooting steps",
+      "source_file": "technical_support.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "domain": [
+          "devops",
+          "engineering",
+          "it",
+          "software"
+        ]
+      },
+      "weights": {
+        "domain": {
+          "engineering": 3,
+          "it": 2,
+          "devops": 3
+        },
+        "intent": {
+          "bug_report": 3,
+          "diagnosis": 2,
+          "debugging": 3
+        },
+        "context_tags": {
+          "outage": 2,
+          "incident": 1,
+          "error": 1,
+          "crash": 2
+        }
+      },
+      "capabilities": [
+        "incident_response",
+        "quality_assurance",
+        "systematic_analysis",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "devops",
+        "engineering",
+        "it",
+        "software"
+      ],
+      "checklist_count": 8,
+      "instructions_length": 1494,
+      "last_modified": "2025-12-06T15:49:27.991391+00:00"
+    },
+    "technical_support_complex": {
+      "name": "technical_support_complex",
+      "short_description": "Advanced diagnostic framework with root cause analysis, systematic troubleshooting protocols, and expert-level incident management",
+      "source_file": "technical_support_complex.md",
+      "default_score": 3,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "technical_support",
+      "required": {
+        "domain": [
+          "devops",
+          "engineering",
+          "infrastructure",
+          "it",
+          "software",
+          "sre"
+        ]
+      },
+      "weights": {
+        "domain": {
+          "engineering": 4,
+          "it": 3,
+          "devops": 4,
+          "sre": 4,
+          "infrastructure": 3
+        },
+        "intent": {
+          "bug_report": 4,
+          "diagnosis": 3,
+          "debugging": 4,
+          "troubleshooting": 3,
+          "incident": 4
+        },
+        "context_tags": {
+          "outage": 3,
+          "incident": 2,
+          "error": 2,
+          "crash": 3,
+          "performance": 2,
+          "production": 3,
+          "critical": 3
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "incident_response",
+        "meta_cognition",
+        "systematic_analysis",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "devops",
+        "engineering",
+        "general",
+        "infrastructure",
+        "it",
+        "security",
+        "software",
+        "sre"
+      ],
+      "checklist_count": 15,
+      "instructions_length": 6779,
+      "last_modified": "2025-12-06T16:30:07.944324+00:00"
+    }
+  },
+  "statistics": {
+    "total_profiles": 8,
+    "complex_profiles": 4,
+    "standard_profiles": 4,
+    "fallback_profile": "general_default",
+    "capabilities_coverage": {
+      "chain_of_thought": 5,
+      "cross_domain": 2,
+      "divergent_thinking": 2,
+      "ideation": 2,
+      "quality_assurance": 5,
+      "adaptive_communication": 3,
+      "meta_cognition": 4,
+      "systematic_analysis": 5,
+      "verification": 6,
+      "compliance": 2,
+      "privacy_protection": 2,
+      "incident_response": 3,
+      "zero_trust": 1,
+      "troubleshooting": 2
+    },
+    "domains_coverage": {
+      "creative": 2,
+      "engineering": 5,
+      "general": 4,
+      "finance": 2,
+      "healthcare": 2,
+      "legal": 2,
+      "government": 1,
+      "insurance": 1,
+      "security": 2,
+      "devops": 2,
+      "it": 2,
+      "software": 2,
+      "infrastructure": 1,
+      "sre": 1
+    }
+  }
+}

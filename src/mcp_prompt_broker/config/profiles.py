@@ -1,8 +1,14 @@
-"""Configuration for instruction profiles used by the profile router."""
+"""Configuration for instruction profiles used by the profile router.
+
+Supports hot-reload from markdown files in copilot-profiles/ directory.
+"""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, Iterable, Mapping, MutableMapping, Sequence
+from typing import Any, Dict, Iterable, Mapping, MutableMapping, Optional, Sequence, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..profile_parser import ProfileLoader
 
 
 @dataclass(frozen=True)
@@ -64,49 +70,47 @@ class InstructionProfile:
         return score
 
 
-def get_instruction_profiles() -> Sequence[InstructionProfile]:
-    """Return the default instruction profiles used by the router."""
+# Fallback profiles for when markdown loading fails
+_FALLBACK_PROFILES: tuple[InstructionProfile, ...] = (
+    InstructionProfile(
+        name="general_default",
+        instructions="Use balanced, general-purpose instructions",
+        required={},
+        weights={"priority": {"high": 1}},
+        default_score=1,
+        fallback=True,
+    ),
+)
 
-    return (
-        InstructionProfile(
-            name="privacy_sensitive",
-            instructions="Use privacy-first responses with redaction",
-            required={"sensitivity": {"high", "critical"}},
-            weights={
-                "domain": {"healthcare": 3, "finance": 2},
-                "language": {"es": 1},
-                "context_tags": {"pii": 2, "compliance": 1},
-            },
-            default_score=5,
-        ),
-        InstructionProfile(
-            name="creative_brainstorm",
-            instructions="Encourage creative exploration and divergent thinking",
-            required={"intent": {"brainstorm", "ideation"}},
-            weights={
-                "audience": {"marketing": 2, "product": 1},
-                "language": {"en": 1, "fr": 1},
-                "context_tags": {"storytelling": 2},
-            },
-            default_score=3,
-        ),
-        InstructionProfile(
-            name="technical_support",
-            instructions="Provide concise technical troubleshooting steps",
-            required={"domain": {"engineering", "it"}},
-            weights={
-                "domain": {"engineering": 3, "it": 2},
-                "intent": {"bug_report": 3, "diagnosis": 2},
-                "context_tags": {"outage": 2, "incident": 1},
-            },
-            default_score=2,
-        ),
-        InstructionProfile(
-            name="general_default",
-            instructions="Use balanced, general-purpose instructions",
-            required={},
-            weights={"priority": {"high": 1}},
-            default_score=1,
-            fallback=True,
-        ),
-    )
+
+def get_instruction_profiles(use_markdown: bool = True) -> Sequence[InstructionProfile]:
+    """Return instruction profiles, loading from markdown if available.
+    
+    Args:
+        use_markdown: If True, attempt to load from markdown files first.
+                     Falls back to hardcoded defaults on failure.
+    
+    Returns:
+        Sequence of InstructionProfile instances.
+    """
+    if use_markdown:
+        try:
+            from ..profile_parser import get_profile_loader
+            loader = get_profile_loader()
+            profiles = loader.profiles
+            if profiles:
+                return profiles
+        except Exception:
+            pass  # Fall back to defaults
+    
+    return _FALLBACK_PROFILES
+
+
+def reload_instruction_profiles() -> Dict[str, Any]:
+    """Reload instruction profiles from markdown files.
+    
+    Returns:
+        Summary of the reload operation.
+    """
+    from ..profile_parser import reload_profiles
+    return reload_profiles()
