@@ -1,5 +1,8 @@
 README.md
 pyproject.toml
+src/__init__.py
+src/config/__init__.py
+src/config/profiles.py
 src/mcp_prompt_broker/__init__.py
 src/mcp_prompt_broker/__main__.py
 src/mcp_prompt_broker/instructions.py
@@ -10,3 +13,9 @@ src/mcp_prompt_broker.egg-info/dependency_links.txt
 src/mcp_prompt_broker.egg-info/entry_points.txt
 src/mcp_prompt_broker.egg-info/requires.txt
 src/mcp_prompt_broker.egg-info/top_level.txt
+src/metadata/__init__.py
+src/metadata/parser.py
+src/router/__init__.py
+src/router/profile_router.py
+tests/test_metadata_parser.py
+tests/test_profile_router.py
