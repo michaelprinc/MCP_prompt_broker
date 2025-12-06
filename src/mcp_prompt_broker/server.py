@@ -4,14 +4,17 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
-from typing import Dict, List, Mapping
+from typing import Any, Dict, List, Mapping
 
+import mcp.server.stdio
 import mcp.types as types
-from mcp.server import Server
+from mcp.server.lowlevel import NotificationOptions, Server
+from mcp.server.models import InitializationOptions
 
-from config.profiles import InstructionProfile, get_instruction_profiles
-from metadata.parser import ParsedMetadata, analyze_prompt
-from router.profile_router import EnhancedMetadata, ProfileRouter, RoutingResult
+# Relativní importy v rámci balíčku
+from .config.profiles import InstructionProfile, get_instruction_profiles
+from .metadata.parser import ParsedMetadata, analyze_prompt
+from .router.profile_router import EnhancedMetadata, ProfileRouter, RoutingResult
 
 
 def _profile_to_dict(profile: InstructionProfile) -> Dict[str, object]:
@@ -28,6 +31,7 @@ def _profile_to_dict(profile: InstructionProfile) -> Dict[str, object]:
 
 
 def _build_server(router: ProfileRouter) -> Server:
+    """Build and configure the MCP server with tools."""
     server = Server("mcp-prompt-broker")
 
     @server.list_tools()
@@ -39,20 +43,6 @@ def _build_server(router: ProfileRouter) -> Server:
                 inputSchema={
                     "type": "object",
                     "properties": {},
-                },
-                outputSchema={
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {"type": "string"},
-                            "instructions": {"type": "string"},
-                            "required": {"type": "object"},
-                            "weights": {"type": "object"},
-                            "default_score": {"type": "number"},
-                            "fallback": {"type": "boolean"},
-                        },
-                    },
                 },
             ),
             types.Tool(
@@ -72,19 +62,11 @@ def _build_server(router: ProfileRouter) -> Server:
                     },
                     "required": ["prompt"],
                 },
-                outputSchema={
-                    "type": "object",
-                    "properties": {
-                        "profile": {"type": "object"},
-                        "metadata": {"type": "object"},
-                        "routing": {"type": "object"},
-                    },
-                },
             ),
         ]
 
     @server.call_tool()
-    async def call_tool(name: str, arguments: Dict):
+    async def call_tool(name: str, arguments: Dict[str, Any]) -> Any:
         if name == "list_profile":
             return [_profile_to_dict(profile) for profile in router.profiles]
 
@@ -104,14 +86,32 @@ def _build_server(router: ProfileRouter) -> Server:
                     },
                 }
             except (ValueError, LookupError) as exc:
-                return types.ErrorData(code=400, message=str(exc))
+                return types.TextContent(type="text", text=f"Error: {str(exc)}")
 
-        return types.ErrorData(code=404, message=f"Unknown tool: {name}")
+        return types.TextContent(type="text", text=f"Unknown tool: {name}")
 
     return server
 
 
+async def _run_server(server: Server) -> None:
+    """Run the MCP server using stdio transport."""
+    async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
+        await server.run(
+            read_stream,
+            write_stream,
+            InitializationOptions(
+                server_name="mcp-prompt-broker",
+                server_version="0.1.0",
+                capabilities=server.get_capabilities(
+                    notification_options=NotificationOptions(),
+                    experimental_capabilities={},
+                ),
+            ),
+        )
+
+
 def run(argv: List[str] | None = None) -> int:
+    """Parse arguments and run the MCP prompt broker server."""
     parser = argparse.ArgumentParser(description="Run the MCP prompt broker server.")
     parser.add_argument(
         "--instructions",
@@ -124,13 +124,16 @@ def run(argv: List[str] | None = None) -> int:
     if args.instructions:
         with open(args.instructions, "r", encoding="utf-8") as fp:
             loaded = json.load(fp)
-            # instructions file now expects profile-shaped objects
             instruction_profiles = [InstructionProfile(**item) for item in loaded]
 
     router = ProfileRouter(instruction_profiles)
     server = _build_server(router)
 
-    asyncio.run(server.run_stdio())
+    try:
+        asyncio.run(_run_server(server))
+    except KeyboardInterrupt:
+        pass  # Graceful shutdown on Ctrl+C
+
     return 0
 
 

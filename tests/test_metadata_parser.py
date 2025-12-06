@@ -1,6 +1,6 @@
 import pytest
 
-from metadata.parser import analyze_prompt
+from mcp_prompt_broker.metadata.parser import analyze_prompt
 
 
 def test_brainstorm_prompt_classification():

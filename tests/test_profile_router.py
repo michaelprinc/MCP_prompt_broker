@@ -1,7 +1,7 @@
 import pytest
 
-from router.profile_router import EnhancedMetadata, ProfileRouter
-from config.profiles import get_instruction_profiles
+from mcp_prompt_broker.router.profile_router import EnhancedMetadata, ProfileRouter
+from mcp_prompt_broker.config.profiles import get_instruction_profiles
 
 
 def test_privacy_profile_selected_for_sensitive_healthcare():
