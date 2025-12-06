@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2025-12-06T16:38:54.822869+00:00",
+  "generated_at": "2025-12-06T22:04:34.695842+00:00",
   "profiles": {
     "creative_brainstorm": {
       "name": "creative_brainstorm",
@@ -24,8 +24,7 @@
           "design": 2
         },
         "language": {
-          "en": 1,
-          "fr": 1
+          "en": 1
         },
         "context_tags": {
           "storytelling": 2,
@@ -46,7 +45,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 1860,
-      "last_modified": "2025-12-06T15:49:27.982885+00:00"
+      "last_modified": "2025-12-06T16:42:34.179808+00:00"
     },
     "creative_brainstorm_complex": {
       "name": "creative_brainstorm_complex",
@@ -72,9 +71,7 @@
           "executive": 2
         },
         "language": {
-          "en": 1,
-          "fr": 1,
-          "de": 1
+          "en": 1
         },
         "context_tags": {
           "storytelling": 3,
@@ -100,7 +97,7 @@
       ],
       "checklist_count": 12,
       "instructions_length": 4183,
-      "last_modified": "2025-12-06T16:30:01.614501+00:00"
+      "last_modified": "2025-12-06T16:42:34.182843+00:00"
     },
     "general_default": {
       "name": "general_default",
@@ -163,7 +160,7 @@
       ],
       "checklist_count": 12,
       "instructions_length": 4506,
-      "last_modified": "2025-12-06T16:30:03.761108+00:00"
+      "last_modified": "2025-12-06T16:38:55.328262+00:00"
     },
     "privacy_sensitive": {
       "name": "privacy_sensitive",
@@ -186,8 +183,7 @@
           "legal": 2
         },
         "language": {
-          "es": 1,
-          "de": 1
+          "en": 1
         },
         "context_tags": {
           "pii": 2,
@@ -208,7 +204,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 1640,
-      "last_modified": "2025-12-06T15:49:27.982885+00:00"
+      "last_modified": "2025-12-06T16:42:34.178809+00:00"
     },
     "privacy_sensitive_complex": {
       "name": "privacy_sensitive_complex",
@@ -234,9 +230,7 @@
           "insurance": 3
         },
         "language": {
-          "es": 1,
-          "de": 2,
-          "fr": 1
+          "en": 1
         },
         "context_tags": {
           "pii": 3,
@@ -271,7 +265,7 @@
       ],
       "checklist_count": 16,
       "instructions_length": 5730,
-      "last_modified": "2025-12-06T16:30:05.801198+00:00"
+      "last_modified": "2025-12-06T16:42:34.178809+00:00"
     },
     "technical_support": {
       "name": "technical_support",
@@ -387,7 +381,7 @@
       ],
       "checklist_count": 15,
       "instructions_length": 6779,
-      "last_modified": "2025-12-06T16:30:07.944324+00:00"
+      "last_modified": "2025-12-06T16:38:55.328262+00:00"
     }
   },
   "statistics": {

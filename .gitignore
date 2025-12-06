@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 .env
 .venv
+
+# Keep agent files in .github\agents (these should be committed)
+!.github/agents/*.md
+!.github/agents/*.json

@@ -70,6 +70,11 @@ cd MCP_prompt_broker
 ./install.ps1
 ```
 
+This installs:
+- ✅ MCP Prompt Broker server
+- ✅ MCP server configuration (global + workspace)
+- ✅ **Companion custom agent** for GitHub Copilot Chat
+
 **Option 2: Manual Installation**
 
 ```bash
@@ -132,6 +137,40 @@ sequenceDiagram
 | `technical_support` | Troubleshooting and debugging | Standard |
 | `privacy_sensitive` | GDPR/HIPAA compliant operations | Standard |
 | `*_complex` | Enhanced versions with meta-cognition | Complex |
+
+---
+
+## Companion Custom Agent
+
+**Companion** is an intelligent AI assistant that automatically routes your requests to optimal instruction profiles using MCP Prompt Broker.
+
+### Using Companion in GitHub Copilot Chat
+
+After installation, use the Companion agent with the `@companion` mention:
+
+```
+@companion Generate creative names for a fitness tracking app
+@companion Debug this Python KeyError on line 42
+@companion Analyze this medical data with privacy compliance
+```
+
+### How Companion Works
+
+1. **Automatic Profile Selection**: Every request is analyzed via `get_profile` tool
+2. **Context-Aware Instructions**: Applies domain-specific guidance automatically
+3. **Optimal Response Quality**: Leverages specialized profiles (creative, technical, privacy, general)
+4. **Transparent Routing**: Shows which profile was selected and why
+
+### Companion Benefits
+
+| Without Companion | With Companion |
+|-------------------|----------------|
+| Generic AI responses | Domain-optimized responses |
+| Manual instruction writing | Automatic instruction routing |
+| Inconsistent quality | Profile-based consistency |
+| One-size-fits-all | Context-aware adaptation |
+
+See [User Guide](docs/USER_GUIDE.md) for detailed Companion usage instructions.
 
 ---
 
@@ -201,6 +240,11 @@ This documentation was created following these principles:
 
 ```
 MCP_Prompt_Broker/
+├── .github/
+│   └── agents/
+│       ├── companion-instructions.md  # Companion agent instructions
+│       ├── companion-agent.json       # Agent definition (reference)
+│       └── README.md                  # Agent directory documentation
 ├── src/
 │   └── mcp_prompt_broker/
 │       ├── server.py              # MCP server entry point
@@ -209,6 +253,18 @@ MCP_Prompt_Broker/
 │       ├── config/
 │       │   └── profiles.py        # InstructionProfile class
 │       ├── metadata/
+│       │   └── parser.py          # Prompt metadata extraction
+│       ├── router/
+│       │   └── profile_router.py  # Profile routing logic
+│       └── copilot-profiles/      # Markdown profile files
+├── tests/                         # Unit tests
+├── docs/                          # Documentation
+├── reports/                       # Ad-hoc development reports
+├── companion-agent.json           # Source agent definition
+├── companion-instructions.md      # Source agent instructions
+├── pyproject.toml                 # Package configuration
+└── install.ps1                    # Windows installation script
+```
 │       │   └── parser.py          # Prompt metadata extraction
 │       ├── router/
 │       │   └── profile_router.py  # Profile routing logic

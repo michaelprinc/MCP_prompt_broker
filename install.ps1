@@ -291,12 +291,165 @@ function Update-WorkspaceMcpConfig {
     return $true
 }
 
+function Get-VsCodeSettingsPath {
+    $settingsDir = Join-Path $env:APPDATA "Code\User"
+    if (-Not (Test-Path $settingsDir)) {
+        New-Item -ItemType Directory -Path $settingsDir -Force | Out-Null
+    }
+    return Join-Path $settingsDir "settings.json"
+}
+
+function Ensure-GithubAgentsDir {
+    param([string]$WorkspacePath)
+    
+    $agentsDir = Join-Path $WorkspacePath ".github\agents"
+    if (-Not (Test-Path $agentsDir)) {
+        Write-Info "Creating .github\agents directory..."
+        New-Item -ItemType Directory -Path $agentsDir -Force | Out-Null
+    }
+    return $agentsDir
+}
+
+function Copy-CompanionAgentFiles {
+    param([string]$WorkspacePath, [string]$AgentsDir)
+    
+    Write-Info "Copying Companion agent files to .github\agents..."
+    
+    $sourceInstructions = Join-Path $WorkspacePath "companion-instructions.md"
+    $sourceAgent = Join-Path $WorkspacePath "companion-agent.json"
+    
+    # Verify source files exist
+    if (-Not (Test-Path $sourceInstructions)) {
+        Write-Error-Custom "Source file not found: $sourceInstructions"
+        return $false
+    }
+    
+    if (-Not (Test-Path $sourceAgent)) {
+        Write-Warning-Custom "Source file not found: $sourceAgent (optional)"
+    }
+    
+    try {
+        # Copy instructions file
+        $destInstructions = Join-Path $AgentsDir "companion-instructions.md"
+        Copy-Item -Path $sourceInstructions -Destination $destInstructions -Force
+        Write-Success "Copied companion-instructions.md to .github\agents\"
+        
+        # Copy agent definition (optional, for reference)
+        if (Test-Path $sourceAgent) {
+            $destAgent = Join-Path $AgentsDir "companion-agent.json"
+            Copy-Item -Path $sourceAgent -Destination $destAgent -Force
+            Write-Success "Copied companion-agent.json to .github\agents\"
+        }
+        
+        return $true
+    }
+    catch {
+        Write-Error-Custom "Failed to copy agent files: $_"
+        return $false
+    }
+}
+
+function Install-CompanionAgent {
+    param([string]$WorkspacePath)
+    
+    Write-Info "Installing Companion custom agent..."
+    
+    $settingsPath = Get-VsCodeSettingsPath
+    
+    # Create .github\agents directory and copy files
+    $agentsDir = Ensure-GithubAgentsDir -WorkspacePath $WorkspacePath
+    $copySuccess = Copy-CompanionAgentFiles -WorkspacePath $WorkspacePath -AgentsDir $agentsDir
+    
+    if (-not $copySuccess) {
+        Write-Error-Custom "Failed to copy Companion agent files"
+        return $false
+    }
+    
+    # Use path relative to .github\agents for agent registration
+    $instructionsPath = Join-Path $agentsDir "companion-instructions.md"
+    
+    # Verify instructions file exists in target location
+    if (-Not (Test-Path $instructionsPath)) {
+        Write-Error-Custom "Companion instructions file not found after copy: $instructionsPath"
+        return $false
+    }
+    
+    # Load or create settings.json
+    $settings = @{}
+    if (Test-Path $settingsPath) {
+        try {
+            $existingContent = Get-Content -Raw -Path $settingsPath -ErrorAction Stop
+            if ($existingContent -and $existingContent.Trim()) {
+                $settings = $existingContent | ConvertFrom-Json -AsHashtable -ErrorAction Stop
+            }
+        }
+        catch {
+            Write-Warning-Custom "Could not parse existing settings.json; will create new configuration."
+            $settings = @{}
+        }
+    }
+    
+    # Initialize github.copilot.chat.codeGeneration.instructions if not exists
+    if (-not $settings.ContainsKey("github.copilot.chat.codeGeneration.instructions")) {
+        $settings["github.copilot.chat.codeGeneration.instructions"] = @()
+    }
+    
+    # Convert to array if not already
+    $instructions = $settings["github.copilot.chat.codeGeneration.instructions"]
+    if ($instructions -isnot [Array]) {
+        $instructions = @($instructions)
+    }
+    
+    # Normalize path with forward slashes for JSON
+    $normalizedPath = $instructionsPath -replace '\\', '/'
+    
+    # Create Companion agent definition
+    $companionAgent = @{
+        text = "file://$normalizedPath"
+    }
+    
+    # Check if Companion agent already exists
+    $existingIndex = -1
+    for ($i = 0; $i -lt $instructions.Count; $i++) {
+        if ($instructions[$i].text -like "*companion-instructions.md*") {
+            $existingIndex = $i
+            break
+        }
+    }
+    
+    if ($existingIndex -ge 0) {
+        Write-Info "Updating existing Companion agent configuration..."
+        $instructions[$existingIndex] = $companionAgent
+    }
+    else {
+        Write-Info "Adding new Companion agent configuration..."
+        $instructions += $companionAgent
+    }
+    
+    $settings["github.copilot.chat.codeGeneration.instructions"] = $instructions
+    
+    # Write settings.json
+    try {
+        $jsonContent = $settings | ConvertTo-Json -Depth 10
+        Set-Content -Path $settingsPath -Value $jsonContent -Encoding UTF8
+        Write-Success "Companion agent registered in VS Code settings"
+        Write-Info "  Settings path: $settingsPath"
+        Write-Info "  Agent files: .github\agents\"
+        return $true
+    }
+    catch {
+        Write-Error-Custom "Failed to write settings.json: $_"
+        return $false
+    }
+}
+
 function Show-Summary {
     param(
         [bool]$InstallSuccess,
         [bool]$TestsSuccess,
         [bool]$ConfigSuccess,
         [bool]$WorkspaceConfigSuccess,
+        [bool]$CompanionAgentSuccess,
         [string]$ConfigPath,
         [string]$WorkspaceConfigPath
     )
@@ -336,15 +489,27 @@ function Show-Summary {
         Write-Error-Custom "Workspace MCP Configuration: FAILED"
     }
     
+    if ($CompanionAgentSuccess) {
+        Write-Success "Companion Custom Agent: SUCCESS"
+        Write-Info "  Agent: @companion (available in GitHub Copilot Chat)"
+        Write-Info "  Agent files: .github\agents\"
+    }
+    else {
+        Write-Warning-Custom "Companion Custom Agent: SKIPPED or FAILED"
+    }
+    
     Write-Host ("=" * 60) -ForegroundColor Cyan
     
     if ($InstallSuccess -and $ConfigSuccess -and $WorkspaceConfigSuccess) {
         Write-Host ""
         Write-Success "Installation complete!"
-        Write-Info "Restart VS Code to activate the MCP server."
+        Write-Info "Restart VS Code to activate the MCP server and Companion agent."
         Write-Host ""
         Write-Info "To test the server manually:"
         Write-Host "  $VenvPath\Scripts\python.exe -m mcp_prompt_broker" -ForegroundColor White
+        Write-Host ""
+        Write-Info "To use Companion agent in GitHub Copilot Chat:"
+        Write-Host "  Type: @companion <your question>" -ForegroundColor White
         return 0
     }
     else {
@@ -419,12 +584,19 @@ if ($installSuccess) {
     $workspaceConfigSuccess = Update-WorkspaceMcpConfig -VscodeDir $vscodeDir
 }
 
-# Step 8: Show summary
+# Step 8: Install Companion custom agent
+$companionAgentSuccess = $false
+if ($installSuccess) {
+    $companionAgentSuccess = Install-CompanionAgent -WorkspacePath (Get-Location)
+}
+
+# Step 9: Show summary
 $exitCode = Show-Summary `
     -InstallSuccess $installSuccess `
     -TestsSuccess $testsSuccess `
     -ConfigSuccess $configSuccess `
     -WorkspaceConfigSuccess $workspaceConfigSuccess `
+    -CompanionAgentSuccess $companionAgentSuccess `
     -ConfigPath $configPath `
     -WorkspaceConfigPath $workspaceConfigPath
 

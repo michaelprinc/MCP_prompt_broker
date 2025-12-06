@@ -8,12 +8,13 @@
 
 1. [Introduction](#introduction)
 2. [Installation](#installation)
-3. [Configuration](#configuration)
-4. [Using the MCP Tools](#using-the-mcp-tools)
-5. [Understanding Profiles](#understanding-profiles)
-6. [Working with Checklists](#working-with-checklists)
-7. [Troubleshooting](#troubleshooting)
-8. [FAQ](#faq)
+3. [Companion Custom Agent](#companion-custom-agent)
+4. [Configuration](#configuration)
+5. [Using the MCP Tools](#using-the-mcp-tools)
+6. [Understanding Profiles](#understanding-profiles)
+7. [Working with Checklists](#working-with-checklists)
+8. [Troubleshooting](#troubleshooting)
+9. [FAQ](#faq)
 
 ---
 
@@ -79,6 +80,9 @@ The script will:
 1. Create a Python virtual environment
 2. Install the package and dependencies
 3. Register the MCP server with VS Code Copilot Chat
+4. **Install the Companion custom agent** for GitHub Copilot Chat
+
+After installation, restart VS Code to activate both the MCP server and the Companion agent.
 
 ### Method 2: Manual Installation
 
@@ -117,6 +121,229 @@ python -m mcp_prompt_broker
 # You should see:
 # Loaded X profiles: creative_brainstorm, general_default, ...
 ```
+
+---
+
+## Companion Custom Agent
+
+**Companion** is an intelligent AI assistant that seamlessly integrates MCP Prompt Broker with GitHub Copilot Chat. It automatically routes your requests through the optimal instruction profiles.
+
+### What is Companion?
+
+Companion is a custom agent for GitHub Copilot Chat that:
+
+- ✅ **Automatically calls `get_profile`** as the first step for every request
+- ✅ **Applies domain-specific instructions** from the selected profile
+- ✅ **Follows agentic AI best practices** for autonomous planning and tool composition
+- ✅ **Provides transparent routing** showing which profile was selected and why
+- ✅ **Leverages all MCP Prompt Broker tools** intelligently based on context
+
+### Quick Start with Companion
+
+After running `install.ps1`, simply use the `@companion` mention in GitHub Copilot Chat:
+
+```
+@companion Generate 10 creative names for a fitness tracking mobile app
+```
+
+Companion will:
+1. Call `get_profile` with your prompt
+2. Receive "creative_brainstorm" profile with specialized instructions
+3. Apply creative ideation techniques from the profile
+4. Return a high-quality, domain-optimized response
+
+### Example Usage Scenarios
+
+#### Scenario 1: Creative Ideation
+
+```
+User: @companion I need innovative logo concepts for an eco-friendly brand
+
+Companion Workflow:
+1. Calls get_profile(prompt="I need innovative logo concepts...")
+   → Returns: creative_brainstorm profile
+2. Applies creative brainstorming techniques
+3. Generates diverse, innovative logo ideas
+4. Explains the reasoning behind each concept
+```
+
+**Expected Profile**: `creative_brainstorm`
+
+#### Scenario 2: Technical Debugging
+
+```
+User: @companion My Python script throws "KeyError: 'user_id'" on line 42
+
+Companion Workflow:
+1. Calls get_profile(prompt="My Python script throws...")
+   → Returns: technical_support profile
+2. Applies systematic debugging approach
+3. Asks for code context
+4. Identifies root cause
+5. Suggests fix with explanation
+6. Uses get_checklist("technical_support") for quality validation
+```
+
+**Expected Profile**: `technical_support`
+
+#### Scenario 3: Privacy-Sensitive Data
+
+```
+User: @companion Process this CSV file containing patient medical records
+
+Companion Workflow:
+1. Calls get_profile(prompt="Process this CSV file...")
+   → Returns: privacy_sensitive profile
+2. Applies HIPAA/GDPR compliance guidelines
+3. Warns about PII handling requirements
+4. Suggests anonymization techniques
+5. Uses get_checklist("privacy_sensitive") for compliance validation
+```
+
+**Expected Profile**: `privacy_sensitive`
+
+#### Scenario 4: General Information
+
+```
+User: @companion Explain how Docker containers work
+
+Companion Workflow:
+1. Calls get_profile(prompt="Explain how Docker...")
+   → Returns: general_default profile
+2. Applies clear, informational guidance
+3. Provides structured explanation
+4. Includes practical examples
+```
+
+**Expected Profile**: `general_default`
+
+### Companion's Intelligent Tool Usage
+
+Companion knows when to use additional MCP tools based on context:
+
+| Tool | When Companion Uses It |
+|------|------------------------|
+| `get_profile` | **ALWAYS** - First step for every request |
+| `list_profiles` | User asks "What profiles are available?" |
+| `get_checklist` | Multi-step tasks requiring validation |
+| `get_profile_metadata` | User asks about specific profile capabilities |
+| `find_profiles_by_capability` | Discovering profiles for new task types |
+| `find_profiles_by_domain` | Exploring domain-specific profiles |
+| `get_registry_summary` | User wants overview of all profiles |
+| `reload_profiles` | During profile development/testing |
+
+### Advanced Companion Features
+
+#### 1. Low-Confidence Handling
+
+When routing confidence is low (< 0.7), Companion:
+- Acknowledges the ambiguity
+- Asks 1-2 clarifying questions
+- Offers to list relevant profiles
+- Suggests metadata overrides
+
+Example:
+```
+User: @companion Help with the project
+
+Companion: The request is ambiguous (routing confidence: 0.52). 
+Could you clarify:
+1. Is this a creative project (branding, design)?
+2. A technical project (coding, debugging)?
+3. Something else?
+
+Available profiles: creative_brainstorm, technical_support, general_default...
+```
+
+#### 2. Metadata Override
+
+You can force specific profiles:
+
+```json
+@companion [metadata: domain=healthcare, complexity=complex] 
+Analyze patient satisfaction survey results
+```
+
+Companion will route to `privacy_sensitive_complex` profile.
+
+#### 3. Checklist-Driven Execution
+
+For complex tasks, Companion automatically retrieves checklists:
+
+```
+User: @companion Implement a new user authentication system
+
+Companion:
+1. Calls get_profile → technical_support_complex
+2. Calls get_checklist("technical_support_complex")
+3. Follows checklist systematically:
+   - [ ] Define requirements
+   - [ ] Design architecture
+   - [ ] Implement security measures
+   - [ ] Add error handling
+   - [ ] Write tests
+   - [ ] Document API
+```
+
+### Companion Best Practices
+
+✅ **DO:**
+- Let Companion handle profile selection automatically
+- Provide clear, specific requests
+- Trust the routing decisions (high confidence scores)
+- Use Companion for all types of tasks (creative, technical, general)
+
+❌ **DON'T:**
+- Try to manually specify profiles unless necessary
+- Provide ambiguous requests without clarification
+- Skip Companion for complex tasks that benefit from profile routing
+
+### Companion vs. Default Copilot
+
+| Aspect | Default Copilot | With Companion Agent |
+|--------|-----------------|----------------------|
+| **Instructions** | Static, generic | Dynamic, context-aware |
+| **Domain Expertise** | General-purpose | Specialized (creative/technical/privacy) |
+| **Tool Integration** | Manual tool selection | Automatic MCP tool composition |
+| **Quality Assurance** | Ad-hoc | Profile-based checklists |
+| **Adaptability** | Fixed behavior | Hot-reloadable profiles |
+| **Transparency** | Opaque | Shows routing decisions |
+
+### Troubleshooting Companion
+
+**Issue: Companion not available in Copilot Chat**
+
+Solution:
+1. Verify `install.ps1` completed successfully
+2. Check `%APPDATA%\Code\User\settings.json` contains:
+   ```json
+   {
+     "github.copilot.chat.codeGeneration.instructions": [
+       {
+         "text": "file:///C:/path/to/companion-instructions.md"
+       }
+     ]
+   }
+   ```
+3. Restart VS Code
+
+**Issue: Companion not using MCP tools**
+
+Solution:
+1. Verify MCP server is running:
+   ```powershell
+   python -m mcp_prompt_broker
+   ```
+2. Check `.vscode/mcp.json` contains `mcp-prompt-broker` server
+3. Restart VS Code
+
+**Issue: Wrong profile selected**
+
+Solution:
+1. Check the confidence score in Companion's response
+2. If low confidence, provide more context
+3. Use metadata override: `[metadata: domain=X, capability=Y]`
+4. Review `get_profile_metadata` to understand profile criteria
 
 ---
 
