@@ -1,7 +1,7 @@
 ---
 name: general_default
-short_instructions: Use balanced, general-purpose instructions
-default_score: 1
+short_description: Balanced general-purpose assistant for adaptive, helpful responses
+default_score: 4
 fallback: true
 
 required: {}
@@ -10,6 +10,12 @@ weights:
   priority:
     high: 1
     urgent: 2
+  keywords:
+    help: 3
+    question: 3
+    explain: 3
+    what: 2
+    how: 2
 ---
 
 ## Instructions

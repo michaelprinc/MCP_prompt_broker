@@ -1,7 +1,7 @@
 ---
 name: creative_brainstorm
-short_instructions: Encourage creative exploration and divergent thinking
-default_score: 3
+short_description: Encourage creative exploration and divergent thinking for ideation sessions
+default_score: 2
 fallback: false
 
 required:
@@ -21,6 +21,11 @@ weights:
     storytelling: 2
     innovation: 2
     design_thinking: 1
+  keywords:
+    brainstorm: 8
+    creative: 6
+    ideas: 5
+    ideation: 6
 ---
 
 ## Instructions

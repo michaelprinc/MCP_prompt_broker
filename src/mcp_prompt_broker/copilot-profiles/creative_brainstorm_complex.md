@@ -2,7 +2,7 @@
 name: creative_brainstorm_complex
 short_description: Advanced creative ideation with meta-cognition, chain-of-thought reasoning, and structured divergent thinking
 extends: creative_brainstorm
-default_score: 4
+default_score: 3
 fallback: false
 
 required:
@@ -26,6 +26,16 @@ weights:
     design_thinking: 2
     strategy: 2
     vision: 2
+  keywords:
+    brainstorm: 10
+    creative: 8
+    ideas: 8
+    ideation: 10
+    innovation: 8
+    imagine: 6
+    marketing: 4
+    campaign: 4
+    design: 4
 ---
 
 ## Instructions

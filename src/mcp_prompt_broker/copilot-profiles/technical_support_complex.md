@@ -2,7 +2,7 @@
 name: technical_support_complex
 short_description: Advanced diagnostic framework with root cause analysis, systematic troubleshooting protocols, and expert-level incident management
 extends: technical_support
-default_score: 3
+default_score: 1
 fallback: false
 
 required:
@@ -27,6 +27,15 @@ weights:
     debugging: 4
     troubleshooting: 3
     incident: 4
+  keywords:
+    troubleshoot: 10
+    root cause: 12
+    incident: 10
+    outage: 10
+    crash: 8
+    error: 6
+    debug: 8
+    diagnose: 8
   context_tags:
     outage: 3
     incident: 2

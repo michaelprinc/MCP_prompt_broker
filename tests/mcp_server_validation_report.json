@@ -1,0 +1,279 @@
+{
+  "profile_validation": {
+    "total_files": 17,
+    "valid": [
+      "codex_cli.md",
+      "creative_brainstorm.md",
+      "creative_brainstorm_complex.md",
+      "mcp_server_testing_and_validation.md",
+      "podman_container_management.md",
+      "podman_container_management_complex.md",
+      "privacy_sensitive.md",
+      "privacy_sensitive_complex.md",
+      "python_code_generation.md",
+      "python_code_generation_complex.md",
+      "python_code_generation_complex_with_codex.md",
+      "python_testing_revision.md",
+      "python_testing_revision_complex.md",
+      "technical_support.md",
+      "technical_support_complex.md"
+    ],
+    "errors": [],
+    "warnings": [
+      {
+        "file": "general_default.md",
+        "profile_name": "general_default",
+        "issues": [
+          "Empty 'required' field"
+        ]
+      },
+      {
+        "file": "general_default_complex.md",
+        "profile_name": "general_default_complex",
+        "issues": [
+          "Empty 'required' field"
+        ]
+      }
+    ]
+  },
+  "parser_tests": {
+    "total_tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "results": [
+      {
+        "test_name": "Codex CLI prompt (Czech)",
+        "prompt": "Pros\u00edm, pou\u017eij Codex CLI pro vytvo\u0159en\u00ed modelovac\u00ed \u00falohy",
+        "parsed": {
+          "prompt": "Pros\u00edm, pou\u017eij Codex CLI pro vytvo\u0159en\u00ed modelovac\u00ed \u00falohy",
+          "intent": "code_generation",
+          "domain": "data_science",
+          "topics": [
+            "codex_cli"
+          ],
+          "sensitivity": "low",
+          "safety_score": 0,
+          "tone": "neutral",
+          "complexity": "low"
+        },
+        "expected": {
+          "intent": "code_generation",
+          "topics_should_contain": [
+            "codex_cli"
+          ]
+        },
+        "passed": true,
+        "failures": []
+      },
+      {
+        "test_name": "Codex CLI prompt (English)",
+        "prompt": "Use Codex CLI to create a classification model",
+        "parsed": {
+          "prompt": "Use Codex CLI to create a classification model",
+          "intent": "code_generation",
+          "domain": "data_science",
+          "topics": [
+            "codex_cli",
+            "ml_modeling"
+          ],
+          "sensitivity": "low",
+          "safety_score": 0,
+          "tone": "neutral",
+          "complexity": "low"
+        },
+        "expected": {
+          "intent": "code_generation",
+          "topics_should_contain": [
+            "codex_cli"
+          ]
+        },
+        "passed": true,
+        "failures": []
+      },
+      {
+        "test_name": "Debug prompt",
+        "prompt": "Debug the authentication error in the API",
+        "parsed": {
+          "prompt": "Debug the authentication error in the API",
+          "intent": "bug_report",
+          "domain": "engineering",
+          "topics": [],
+          "sensitivity": "low",
+          "safety_score": 0,
+          "tone": "neutral",
+          "complexity": "low"
+        },
+        "expected": {
+          "intent": "bug_report",
+          "domain": "engineering"
+        },
+        "passed": true,
+        "failures": []
+      },
+      {
+        "test_name": "Brainstorm prompt",
+        "prompt": "Brainstorm creative ideas for the campaign",
+        "parsed": {
+          "prompt": "Brainstorm creative ideas for the campaign",
+          "intent": "brainstorm",
+          "domain": "marketing",
+          "topics": [
+            "storytelling"
+          ],
+          "sensitivity": "low",
+          "safety_score": 0,
+          "tone": "neutral",
+          "complexity": "low"
+        },
+        "expected": {
+          "intent": "brainstorm",
+          "topics_should_contain": [
+            "storytelling"
+          ]
+        },
+        "passed": true,
+        "failures": []
+      },
+      {
+        "test_name": "Privacy prompt",
+        "prompt": "Review patient data with SSN for HIPAA compliance",
+        "parsed": {
+          "prompt": "Review patient data with SSN for HIPAA compliance",
+          "intent": "review",
+          "domain": "healthcare",
+          "topics": [
+            "compliance",
+            "pii"
+          ],
+          "sensitivity": "critical",
+          "safety_score": 8,
+          "tone": "neutral",
+          "complexity": "low"
+        },
+        "expected": {
+          "sensitivity": "critical",
+          "topics_should_contain": [
+            "pii",
+            "compliance"
+          ]
+        },
+        "passed": true,
+        "failures": []
+      }
+    ]
+  },
+  "routing_tests": {
+    "total_tests": 5,
+    "passed": 5,
+    "results": [
+      {
+        "description": "Codex CLI ML task",
+        "prompt": "Use Codex CLI to create a classification model",
+        "expected_profile": "python_code_generation_complex_with_codex",
+        "actual_profile": "python_code_generation_complex_with_codex",
+        "score": 51,
+        "consistency": 100.0,
+        "passed": true
+      },
+      {
+        "description": "Creative brainstorming",
+        "prompt": "Brainstorm creative marketing ideas",
+        "expected_profile": "creative_brainstorm_complex",
+        "actual_profile": "creative_brainstorm_complex",
+        "score": 37,
+        "consistency": 100.0,
+        "passed": true
+      },
+      {
+        "description": "Container management",
+        "prompt": "Manage podman containers and images",
+        "expected_profile": "podman_container_management_complex",
+        "actual_profile": "podman_container_management_complex",
+        "score": 49,
+        "consistency": 99.75,
+        "passed": true
+      },
+      {
+        "description": "Privacy-sensitive task",
+        "prompt": "Review sensitive patient medical records",
+        "expected_profile": "privacy_sensitive_complex",
+        "actual_profile": "privacy_sensitive_complex",
+        "score": 35,
+        "consistency": 100.0,
+        "passed": true
+      },
+      {
+        "description": "Generic fallback",
+        "prompt": "Just a general question",
+        "expected_profile": "general_default_complex",
+        "actual_profile": "general_default_complex",
+        "score": 15,
+        "consistency": 100.0,
+        "passed": true
+      }
+    ]
+  },
+  "hot_reload_tests": {
+    "initial_count": 17,
+    "reload_count": 17,
+    "consistent": true,
+    "reload_result": {
+      "success": true,
+      "profiles_loaded": 17,
+      "profile_names": [
+        "codex_cli",
+        "creative_brainstorm",
+        "creative_brainstorm_complex",
+        "general_default",
+        "general_default_complex",
+        "mcp_server_testing_and_validation",
+        "podman_container_management",
+        "podman_container_management_complex",
+        "privacy_sensitive",
+        "privacy_sensitive_complex",
+        "python_code_generation",
+        "python_code_generation_complex",
+        "python_code_generation_complex_with_codex",
+        "python_testing_revision",
+        "python_testing_revision_complex",
+        "technical_support",
+        "technical_support_complex"
+      ],
+      "errors": [],
+      "profiles_dir": "K:\\Data_science_projects\\MCP_Prompt_Broker\\src\\mcp_prompt_broker\\copilot-profiles",
+      "registry": {
+        "success": true,
+        "path": "K:\\Data_science_projects\\MCP_Prompt_Broker\\src\\mcp_prompt_broker\\copilot-profiles\\profiles_metadata.json",
+        "profiles_count": 17,
+        "generated_at": "2025-12-25T19:07:07.607453+00:00"
+      }
+    }
+  },
+  "overall_status": "passed",
+  "profile_loading": {
+    "expected_count": 17,
+    "actual_count": 17,
+    "success_rate": 100.0,
+    "loaded_profiles": [
+      "codex_cli",
+      "creative_brainstorm",
+      "creative_brainstorm_complex",
+      "general_default",
+      "general_default_complex",
+      "mcp_server_testing_and_validation",
+      "podman_container_management",
+      "podman_container_management_complex",
+      "privacy_sensitive",
+      "privacy_sensitive_complex",
+      "python_code_generation",
+      "python_code_generation_complex",
+      "python_code_generation_complex_with_codex",
+      "python_testing_revision",
+      "python_testing_revision_complex",
+      "technical_support",
+      "technical_support_complex"
+    ],
+    "missing_profiles": [],
+    "parse_errors": []
+  }
+}

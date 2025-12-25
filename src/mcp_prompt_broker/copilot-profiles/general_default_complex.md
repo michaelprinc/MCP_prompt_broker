@@ -2,7 +2,7 @@
 name: general_default_complex
 short_description: Advanced adaptive reasoning with multi-step verification, structured thinking, and quality assurance protocols
 extends: general_default
-default_score: 2
+default_score: 5
 fallback: true
 
 required: {}
@@ -15,6 +15,15 @@ weights:
   complexity:
     high: 2
     complex: 2
+  keywords:
+    general: 3
+    question: 4
+    help: 4
+    explain: 4
+    what is: 4
+    how to: 4
+    just: 3
+    simple: 3
 ---
 
 ## Instructions

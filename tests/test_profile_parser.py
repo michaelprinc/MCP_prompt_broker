@@ -191,7 +191,7 @@ Instructions for profile two.
         (tmp_path / "profile_one.md").write_text(profile1, encoding="utf-8")
         (tmp_path / "profile_two.md").write_text(profile2, encoding="utf-8")
 
-        loader = ProfileLoader(tmp_path)
+        loader = ProfileLoader(tmp_path, registry_path=tmp_path / "registry.json")
         result = loader.reload()
 
         assert result["success"] is True
@@ -215,7 +215,7 @@ Valid instructions.
         (tmp_path / "valid.md").write_text(valid, encoding="utf-8")
         (tmp_path / "invalid.md").write_text(invalid, encoding="utf-8")
 
-        loader = ProfileLoader(tmp_path)
+        loader = ProfileLoader(tmp_path, registry_path=tmp_path / "registry.json")
         result = loader.reload()
 
         assert result["profiles_loaded"] == 1
@@ -239,7 +239,7 @@ Test instructions.
 """
         (tmp_path / "checklist_test.md").write_text(profile, encoding="utf-8")
 
-        loader = ProfileLoader(tmp_path)
+        loader = ProfileLoader(tmp_path, registry_path=tmp_path / "registry.json")
         loader.reload()
         
         checklist = loader.get_checklist("checklist_test")
@@ -248,7 +248,7 @@ Test instructions.
         assert len(checklist.items) == 3
 
     def test_get_checklist_returns_none_for_unknown_profile(self, tmp_path: Path) -> None:
-        loader = ProfileLoader(tmp_path)
+        loader = ProfileLoader(tmp_path, registry_path=tmp_path / "registry.json")
         loader.reload()
         
         checklist = loader.get_checklist("nonexistent")
@@ -265,7 +265,7 @@ Original instructions.
 """
         (tmp_path / "original.md").write_text(profile, encoding="utf-8")
 
-        loader = ProfileLoader(tmp_path)
+        loader = ProfileLoader(tmp_path, registry_path=tmp_path / "registry.json")
         loader.reload()
         assert "original" in [p.name for p in loader.profiles]
 
@@ -290,8 +290,12 @@ Replacement instructions.
 class TestActualProfiles:
     """Tests for the actual profile markdown files."""
 
-    def test_actual_profiles_load_successfully(self) -> None:
-        loader = ProfileLoader()
+    def _create_loader(self, tmp_path: Path) -> ProfileLoader:
+        """Create loader using real profiles but isolated registry file."""
+        return ProfileLoader(registry_path=tmp_path / "profiles_metadata.json")
+
+    def test_actual_profiles_load_successfully(self, tmp_path: Path) -> None:
+        loader = self._create_loader(tmp_path)
         result = loader.reload()
         
         assert result["success"] is True
@@ -301,8 +305,8 @@ class TestActualProfiles:
         assert "technical_support" in result["profile_names"]
         assert "general_default" in result["profile_names"]
 
-    def test_all_profiles_have_checklists(self) -> None:
-        loader = ProfileLoader()
+    def test_all_profiles_have_checklists(self, tmp_path: Path) -> None:
+        loader = self._create_loader(tmp_path)
         loader.reload()
         
         for name in loader.parsed_profiles.keys():
@@ -310,8 +314,8 @@ class TestActualProfiles:
             assert checklist is not None, f"Profile {name} should have a checklist"
             assert len(checklist.items) > 0, f"Profile {name} should have checklist items"
 
-    def test_all_profiles_have_instructions(self) -> None:
-        loader = ProfileLoader()
+    def test_all_profiles_have_instructions(self, tmp_path: Path) -> None:
+        loader = self._create_loader(tmp_path)
         loader.reload()
         
         for profile in loader.profiles:

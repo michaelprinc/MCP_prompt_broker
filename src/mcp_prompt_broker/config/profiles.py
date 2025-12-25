@@ -33,10 +33,21 @@ class InstructionProfile:
     fallback: bool = False
 
     def is_match(self, metadata: MutableMapping[str, object]) -> bool:
-        """Return True if the metadata satisfies the profile requirements."""
+        """Return True if the metadata satisfies the profile requirements.
+        
+        Note: Profiles without required fields always match (scored by weights).
+        """
+        if not self.required:
+            # No requirements = always matches (will be scored by weights)
+            return True
 
         for key, allowed_values in self.required.items():
             value = metadata.get(key)
+            
+            # Skip capabilities check - we match on keywords instead
+            if key == "capabilities":
+                continue
+            
             if value is None:
                 return False
 
@@ -53,18 +64,33 @@ class InstructionProfile:
         return True
 
     def score(self, metadata: MutableMapping[str, object]) -> int:
-        """Calculate a score for the profile based on metadata weights."""
+        """Calculate a score for the profile based on metadata weights and prompt keywords."""
 
         score = self.default_score
+        prompt = str(metadata.get("prompt", "")).lower()
 
         for key, value_weights in self.weights.items():
+            # Special handling for keywords - match against prompt text
+            if key == "keywords":
+                if isinstance(value_weights, dict):
+                    # Dict format: {"keyword": weight, ...}
+                    for keyword, weight in value_weights.items():
+                        if keyword.lower() in prompt:
+                            score += weight
+                elif isinstance(value_weights, (list, tuple)):
+                    # List format: ["keyword1", "keyword2", ...] - each match = 1 point
+                    for keyword in value_weights:
+                        if str(keyword).lower() in prompt:
+                            score += 1
+                continue
+            
             value = metadata.get(key)
             if value is None:
                 continue
 
             if key == "context_tags" and isinstance(value, Iterable):
                 score += sum(value_weights.get(tag, 0) for tag in set(value))
-            else:
+            elif isinstance(value_weights, dict):
                 score += value_weights.get(value, 0)
 
         return score

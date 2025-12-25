@@ -1,10 +1,10 @@
 ---
 name: podman_container_management
-short_instructions: Create, manage, and troubleshoot Podman containers and images
-default_score: 5
+short_description: Create, manage, and troubleshoot Podman containers and images
+default_score: 1
 
 required:
-  capabilities: ["container_management", "devops", "podman"]
+  context_tags: ["container_management", "devops", "podman"]
 
 weights:
   priority:
@@ -15,13 +15,13 @@ weights:
     devops: 4
     infrastructure: 3
   keywords:
-    - podman
-    - container
-    - containerfile
-    - dockerfile
-    - pod
-    - image
-    - podman compose
+    podman: 12
+    container: 10
+    containerfile: 8
+    dockerfile: 8
+    pod: 6
+    image: 5
+    podman compose: 10
 ---
 
 ## Instructions

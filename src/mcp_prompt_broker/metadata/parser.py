@@ -12,6 +12,21 @@ INTENT_KEYWORDS: Mapping[str, tuple[str, ...]] = {
     "diagnosis": ("investigate", "diagnose", "root cause", "analysis"),
     "review": ("review", "feedback", "critique", "audit"),
     "question": ("how", "what", "why", "can you"),
+    # Code generation intents
+    "code_generation": (
+        "create", "generate", "implement", "build", "develop", "write code",
+        "codex cli", "codex", "použij codex", "vytvoř", "generuj", "implementuj",
+        "make a script", "make a function", "make a class",
+    ),
+    # Testing and validation intents
+    "testing": (
+        "test", "testing", "validate", "validation", "verify", "verification",
+        "check", "kontrola", "ověř", "zkontroluj", "funkčnost",
+    ),
+    # Debugging intents
+    "debugging": (
+        "debug", "troubleshoot", "fix", "resolve", "oprav", "problém",
+    ),
 }
 
 DOMAIN_KEYWORDS: Mapping[str, tuple[str, ...]] = {
@@ -21,6 +36,26 @@ DOMAIN_KEYWORDS: Mapping[str, tuple[str, ...]] = {
     "security": ("exploit", "payload", "vulnerability", "attack", "breach"),
     "legal": ("contract", "law", "regulation", "compliance"),
     "marketing": ("campaign", "launch", "ad copy", "audience"),
+    # Data science and ML domains
+    "data_science": (
+        "model", "dataset", "classification", "regression", "clustering",
+        "machine learning", "ml", "sklearn", "sci-kit learn", "scikit",
+        "pandas", "numpy", "tensorflow", "pytorch", "keras",
+        "klasifikac", "modelovací", "trénování", "predikce",
+    ),
+    # Python development domain
+    "python": (
+        "python", ".py", "pip", "venv", "pytest", "django", "flask", "fastapi",
+    ),
+    # Container and DevOps domain
+    "containers": (
+        "docker", "podman", "container", "kubernetes", "k8s", "helm",
+    ),
+    # Testing and QA domain
+    "testing": (
+        "mcp server", "prompt broker", "profile", "routing", "hot reload",
+        "qa", "quality assurance", "unit test", "integration test",
+    ),
 }
 
 TOPIC_KEYWORDS: Mapping[str, tuple[str, ...]] = {
@@ -29,6 +64,26 @@ TOPIC_KEYWORDS: Mapping[str, tuple[str, ...]] = {
     "storytelling": ("story", "narrative", "creative", "brainstorm"),
     "incident": ("outage", "downtime", "breach", "incident", "crash", "failure"),
     "security": ("exploit", "payload", "attack", "ransomware"),
+    # Codex CLI and tool orchestration topics
+    "codex_cli": (
+        "codex cli", "codex", "použij codex", "tool orchestration",
+        "cli tool", "external tool",
+    ),
+    # Machine learning topics
+    "ml_modeling": (
+        "modelovací úloha", "klasifikační", "classification", "regression",
+        "dataset", "training", "prediction", "sklearn", "sci-kit learn",
+        "iris", "mnist", "titanic", "feature engineering",
+    ),
+    # MCP server testing topics
+    "mcp_testing": (
+        "mcp server", "prompt broker", "hot reload", "metadata parser",
+        "profile routing", "profile loading",
+    ),
+    # Container management topics
+    "container_management": (
+        "podman", "docker", "container", "image", "volume", "network",
+    ),
 }
 
 SENSITIVE_PHRASES: Mapping[str, int] = {

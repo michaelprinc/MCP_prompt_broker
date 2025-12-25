@@ -2,10 +2,10 @@
 name: python_testing_revision_complex
 short_description: Advanced code review with mutation testing, property-based testing, performance profiling, and architectural analysis
 extends: python_testing_revision
-default_score: 8
+default_score: 0
 
 required:
-  capabilities: ["code_review", "testing", "python", "debugging", "architecture"]
+  context_tags: ["testing", "python", "code_review"]
 
 weights:
   priority:
@@ -20,13 +20,17 @@ weights:
     quality_assurance: 4
     performance: 3
   keywords:
-    - advanced testing
-    - mutation testing
-    - property testing
-    - performance profiling
-    - integration testing
-    - tdd
-    - bdd
+    advanced testing: 12
+    mutation testing: 12
+    property testing: 10
+    performance profiling: 10
+    integration testing: 10
+    tdd: 10
+    bdd: 8
+    pytest: 10
+    unittest: 8
+    test python: 10
+    review code: 8
 ---
 
 ## Instructions

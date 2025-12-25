@@ -22,11 +22,7 @@ from .profile_parser import (
     ProfileLoader,
     ParsedProfile,
 )
-from .metadata_registry import (
-    get_registry_manager,
-    get_registry_summary,
-    MetadataRegistryManager,
-)
+from .metadata_registry import get_registry_summary
 
 
 def _profile_to_dict(profile: InstructionProfile) -> Dict[str, object]:
@@ -236,7 +232,7 @@ def _build_server(loader: ProfileLoader) -> Server:
 
         if name == "get_registry_summary":
             try:
-                summary = get_registry_summary()
+                summary = get_registry_summary(loader.registry_manager)
                 return [types.TextContent(
                     type="text",
                     text=json.dumps(summary, indent=2)
@@ -250,7 +246,7 @@ def _build_server(loader: ProfileLoader) -> Server:
                 if not profile_name:
                     return [types.TextContent(type="text", text="Error: profile_name is required")]
                 
-                registry_manager = get_registry_manager()
+                registry_manager = loader.registry_manager
                 profile_metadata = registry_manager.registry.get_profile(profile_name)
                 
                 if profile_metadata is None:
@@ -273,7 +269,7 @@ def _build_server(loader: ProfileLoader) -> Server:
                 if not capability:
                     return [types.TextContent(type="text", text="Error: capability is required")]
                 
-                registry_manager = get_registry_manager()
+                registry_manager = loader.registry_manager
                 matching = registry_manager.registry.get_profiles_by_capability(capability)
                 
                 result = {
@@ -303,7 +299,7 @@ def _build_server(loader: ProfileLoader) -> Server:
                 if not domain:
                     return [types.TextContent(type="text", text="Error: domain is required")]
                 
-                registry_manager = get_registry_manager()
+                registry_manager = loader.registry_manager
                 matching = registry_manager.registry.get_profiles_by_domain(domain)
                 
                 result = {

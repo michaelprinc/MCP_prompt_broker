@@ -2,10 +2,10 @@
 name: python_code_generation_complex
 short_description: Advanced Python code generation with architecture patterns, performance optimization, and enterprise-grade practices
 extends: python_code_generation
-default_score: 8
+default_score: 1
 
 required:
-  capabilities: ["code_generation", "programming", "python", "architecture"]
+  context_tags: ["python", "code_generation"]
 
 weights:
   priority:
@@ -20,11 +20,15 @@ weights:
     architecture: 4
     performance: 3
   keywords:
-    - advanced python
-    - python architecture
-    - optimize python
-    - scalable python
-    - enterprise python
+    python: 10
+    advanced python: 12
+    python architecture: 12
+    optimize python: 10
+    scalable python: 10
+    enterprise python: 10
+    def: 5
+    class: 5
+    import: 3
 ---
 
 ## Instructions

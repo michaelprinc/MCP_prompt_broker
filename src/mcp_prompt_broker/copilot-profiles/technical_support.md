@@ -1,6 +1,6 @@
 ---
 name: technical_support
-short_instructions: Provide concise technical troubleshooting steps
+short_description: Concise technical troubleshooting steps for software and infrastructure issues
 default_score: 2
 fallback: false
 
@@ -25,6 +25,14 @@ weights:
     incident: 1
     error: 1
     crash: 2
+  keywords:
+    troubleshoot: 8
+    fix: 6
+    error: 6
+    crash: 8
+    issue: 5
+    problem: 5
+    debug: 6
 ---
 
 ## Instructions

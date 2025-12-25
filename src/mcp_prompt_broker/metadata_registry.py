@@ -13,6 +13,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Set
 
+DEFAULT_PROFILES_DIR = Path(__file__).parent / "copilot-profiles"
+DEFAULT_REGISTRY_FILENAME = "profiles_metadata.json"
+REGISTRY_ENV_VAR = "MCP_PROMPT_BROKER_REGISTRY_PATH"
+
 # Keywords for automatic capability inference
 CAPABILITY_KEYWORDS: Mapping[str, tuple[str, ...]] = {
     "ideation": ("brainstorm", "ideation", "creative", "ideas", "divergent"),
@@ -291,22 +295,57 @@ def get_file_modified_time(file_path: Path) -> str:
         return datetime.now(timezone.utc).isoformat()
 
 
+def _resolve_registry_path(
+    registry_path: Path | str | None,
+    profiles_dir: Path | str | None,
+) -> Path:
+    """Resolve registry destination honoring overrides and defaults.
+    
+    Resolution order (highest priority first):
+    1. Explicit registry_path parameter
+    2. MCP_PROMPT_BROKER_REGISTRY_PATH environment variable
+    3. profiles_dir / profiles_metadata.json
+    4. Package default path
+    
+    Raises:
+        ValueError: If resolved path is empty or invalid.
+    """
+    resolved: Path | None = None
+    
+    if registry_path:
+        resolved = Path(registry_path)
+    elif env_override := os.environ.get(REGISTRY_ENV_VAR):
+        resolved = Path(env_override)
+    elif profiles_dir:
+        resolved = Path(profiles_dir) / DEFAULT_REGISTRY_FILENAME
+    else:
+        resolved = DEFAULT_PROFILES_DIR / DEFAULT_REGISTRY_FILENAME
+    
+    # Validate the resolved path
+    if not resolved or str(resolved).strip() == "":
+        raise ValueError("Registry path cannot be empty")
+    
+    return resolved
+
+
 class MetadataRegistryManager:
     """Manages the central metadata registry file."""
     
-    DEFAULT_FILENAME = "profiles_metadata.json"
+    DEFAULT_FILENAME = DEFAULT_REGISTRY_FILENAME
     
-    def __init__(self, registry_path: Optional[Path] = None):
+    def __init__(
+        self,
+        registry_path: Path | str | None = None,
+        *,
+        profiles_dir: Path | str | None = None,
+    ):
         """Initialize the registry manager.
         
         Args:
-            registry_path: Path to the registry JSON file.
-                          Defaults to copilot-profiles/profiles_metadata.json.
+            registry_path: Path to the registry JSON file. Overrides all other sources.
+            profiles_dir: Profiles directory used to derive default registry path.
         """
-        if registry_path is None:
-            registry_path = Path(__file__).parent / "copilot-profiles" / self.DEFAULT_FILENAME
-        
-        self._registry_path = registry_path
+        self._registry_path = _resolve_registry_path(registry_path, profiles_dir)
         self._registry: Optional[MetadataRegistry] = None
     
     @property
@@ -342,6 +381,10 @@ class MetadataRegistryManager:
         
         Returns:
             Summary of the save operation.
+            
+        Raises:
+            PermissionError: If the registry path is not writable.
+            OSError: If directory creation or file writing fails.
         """
         if self._registry is None:
             self._registry = MetadataRegistry()
@@ -352,12 +395,26 @@ class MetadataRegistryManager:
         # Compute statistics before saving
         self._registry.compute_statistics()
         
-        # Ensure directory exists
-        self._registry_path.parent.mkdir(parents=True, exist_ok=True)
+        # Ensure directory exists with clear error handling
+        try:
+            self._registry_path.parent.mkdir(parents=True, exist_ok=True)
+        except PermissionError as e:
+            raise PermissionError(
+                f"Cannot create registry directory '{self._registry_path.parent}': {e}"
+            ) from e
+        except OSError as e:
+            raise OSError(
+                f"Failed to create registry directory '{self._registry_path.parent}': {e}"
+            ) from e
         
         # Write JSON file with pretty formatting
-        with open(self._registry_path, "w", encoding="utf-8") as f:
-            json.dump(self._registry.as_dict(), f, indent=2, ensure_ascii=False)
+        try:
+            with open(self._registry_path, "w", encoding="utf-8") as f:
+                json.dump(self._registry.as_dict(), f, indent=2, ensure_ascii=False)
+        except PermissionError as e:
+            raise PermissionError(
+                f"Cannot write to registry file '{self._registry_path}': {e}"
+            ) from e
         
         return {
             "success": True,
@@ -471,6 +528,15 @@ class MetadataRegistryManager:
 _global_registry_manager: Optional[MetadataRegistryManager] = None
 
 
+def create_registry_manager(
+    *,
+    registry_path: Path | str | None = None,
+    profiles_dir: Path | str | None = None,
+) -> MetadataRegistryManager:
+    """Create a registry manager honoring overrides."""
+    return MetadataRegistryManager(registry_path, profiles_dir=profiles_dir)
+
+
 def get_registry_manager() -> MetadataRegistryManager:
     """Get or create the global registry manager."""
     global _global_registry_manager
@@ -479,16 +545,25 @@ def get_registry_manager() -> MetadataRegistryManager:
     return _global_registry_manager
 
 
-def get_metadata_registry() -> MetadataRegistry:
+def get_metadata_registry(
+    manager: MetadataRegistryManager | None = None,
+) -> MetadataRegistry:
     """Get the current metadata registry."""
-    return get_registry_manager().registry
+    target = manager or get_registry_manager()
+    return target.registry
 
 
-def save_metadata_registry() -> Dict[str, Any]:
+def save_metadata_registry(
+    manager: MetadataRegistryManager | None = None,
+) -> Dict[str, Any]:
     """Save the current registry to disk."""
-    return get_registry_manager().save()
+    target = manager or get_registry_manager()
+    return target.save()
 
 
-def get_registry_summary() -> Dict[str, Any]:
+def get_registry_summary(
+    manager: MetadataRegistryManager | None = None,
+) -> Dict[str, Any]:
     """Get a summary of the registry for MCP tools."""
-    return get_registry_manager().get_summary()
+    target = manager or get_registry_manager()
+    return target.get_summary()

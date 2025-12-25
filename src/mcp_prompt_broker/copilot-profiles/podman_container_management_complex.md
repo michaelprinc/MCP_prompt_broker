@@ -2,10 +2,11 @@
 name: podman_container_management_complex
 short_description: Advanced Podman architecture with Quadlet, systemd integration, security hardening, orchestration, and CI/CD pipelines
 extends: podman_container_management
-default_score: 8
+default_score: 0
 
 required:
-  capabilities: ["container_management", "devops", "podman", "architecture", "security"]
+  context_tags:
+    - container_management
 
 weights:
   priority:
@@ -21,12 +22,17 @@ weights:
     security: 4
     ci_cd: 3
   keywords:
-    - quadlet
-    - podman systemd
-    - container security
-    - podman orchestration
-    - advanced podman
-    - container architecture
+    podman: 15
+    docker: 10
+    container: 12
+    containers: 12
+    kubernetes: 8
+    k8s: 8
+    quadlet: 15
+    systemd: 6
+    image: 5
+    volume: 5
+    network: 5
 ---
 
 ## Instructions

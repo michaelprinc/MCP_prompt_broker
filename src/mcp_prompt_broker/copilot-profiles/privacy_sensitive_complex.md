@@ -2,14 +2,13 @@
 name: privacy_sensitive_complex
 short_description: Zero-trust privacy framework with adversarial awareness, comprehensive compliance matrix, and defense-in-depth data protection
 extends: privacy_sensitive
-default_score: 6
+default_score: 1
 fallback: false
 
 required:
-  sensitivity:
-    - high
-    - critical
-    - extreme
+  context_tags:
+    - pii
+    - compliance
 
 weights:
   domain:
@@ -21,15 +20,27 @@ weights:
   language:
     en: 1
   context_tags:
-    pii: 3
-    compliance: 2
-    gdpr: 3
-    hipaa: 3
-    pci: 3
-    sox: 2
-    ferpa: 2
-    ccpa: 2
-    classified: 4
+    pii: 5
+    compliance: 4
+    gdpr: 5
+    hipaa: 5
+    pci: 5
+    sox: 4
+    ferpa: 4
+    ccpa: 4
+    classified: 6
+  keywords:
+    patient: 8
+    medical: 6
+    sensitive: 6
+    private: 6
+    confidential: 8
+    hipaa: 10
+    gdpr: 10
+    pii: 10
+    ssn: 10
+    credit card: 8
+    personal data: 8
 ---
 
 ## Instructions

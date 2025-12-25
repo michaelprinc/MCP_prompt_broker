@@ -11,8 +11,7 @@ import yaml
 from .config.profiles import InstructionProfile
 from .metadata_registry import (
     MetadataRegistryManager,
-    get_registry_manager,
-    save_metadata_registry,
+    create_registry_manager,
 )
 
 
@@ -105,13 +104,13 @@ def _extract_checklist_items(content: str) -> List[str]:
     items: List[str] = []
     
     # Match checkbox items: - [ ] or - [x]
-    checkbox_pattern = r"^-\s*\[[ xX]\]\s*(.+)$"
+    checkbox_pattern = r"^\s*-\s*\[[ xX]\]\s*(.+)$"
     for match in re.finditer(checkbox_pattern, content, re.MULTILINE):
         items.append(match.group(1).strip())
     
     # If no checkbox items, try regular list items
     if not items:
-        list_pattern = r"^-\s+(.+)$"
+        list_pattern = r"^\s*-\s+(.+)$"
         for match in re.finditer(list_pattern, content, re.MULTILINE):
             item = match.group(1).strip()
             # Skip items that look like metadata
@@ -186,7 +185,13 @@ def parse_profile_markdown(file_path: Path) -> ParsedProfile:
     
     # Extract checklist section
     checklist_content = _extract_section(markdown, "Checklist")
-    checklist_items = _extract_checklist_items(checklist_content) if checklist_content else []
+    checklist_items: List[str] = []
+    if checklist_content:
+        checklist_items = _extract_checklist_items(checklist_content)
+    if not checklist_items:
+        # Fallback: scan the entire markdown for checkbox items when a dedicated
+        # Checklist section is missing.
+        checklist_items = _extract_checklist_items(markdown)
     
     # Build profile
     profile = InstructionProfile(
@@ -215,7 +220,13 @@ def parse_profile_markdown(file_path: Path) -> ParsedProfile:
 class ProfileLoader:
     """Manages loading and hot-reloading of profiles from markdown files."""
     
-    def __init__(self, profiles_dir: Optional[Path] = None):
+    def __init__(
+        self,
+        profiles_dir: Optional[Path] = None,
+        *,
+        registry_path: Optional[Path] = None,
+        registry_manager: Optional[MetadataRegistryManager] = None,
+    ):
         """Initialize the loader.
         
         Args:
@@ -225,10 +236,13 @@ class ProfileLoader:
         if profiles_dir is None:
             profiles_dir = Path(__file__).parent / "copilot-profiles"
         
-        self._profiles_dir = profiles_dir
+        self._profiles_dir = Path(profiles_dir)
         self._parsed_profiles: Dict[str, ParsedProfile] = {}
         self._load_errors: List[str] = []
-        self._registry_manager = get_registry_manager()
+        self._registry_manager = registry_manager or create_registry_manager(
+            registry_path=registry_path,
+            profiles_dir=self._profiles_dir,
+        )
     
     @property
     def profiles_dir(self) -> Path:
@@ -250,6 +264,11 @@ class ProfileLoader:
         """Return any errors from the last load operation."""
         return list(self._load_errors)
     
+    @property
+    def registry_manager(self) -> MetadataRegistryManager:
+        """Return the metadata registry manager backing this loader."""
+        return self._registry_manager
+    
     def reload(self) -> Dict[str, Any]:
         """Reload all profiles from markdown files.
         
@@ -266,7 +285,8 @@ class ProfileLoader:
             self._load_errors.append(f"Profiles directory not found: {self._profiles_dir}")
             return self._get_reload_summary()
         
-        md_files = list(self._profiles_dir.glob("*.md"))
+        # Sort files for deterministic load order across filesystems
+        md_files = sorted(self._profiles_dir.glob("*.md"))
         
         for md_file in md_files:
             try:

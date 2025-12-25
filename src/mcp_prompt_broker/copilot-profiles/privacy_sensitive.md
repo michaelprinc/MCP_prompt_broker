@@ -1,7 +1,7 @@
 ---
 name: privacy_sensitive
-short_instructions: Use privacy-first responses with redaction
-default_score: 5
+short_description: Privacy-first responses with data protection, redaction, and regulatory compliance
+default_score: 0
 fallback: false
 
 required:
@@ -21,6 +21,14 @@ weights:
     compliance: 1
     gdpr: 2
     hipaa: 2
+  keywords:
+    privacy: 10
+    sensitive: 8
+    pii: 10
+    gdpr: 8
+    hipaa: 8
+    compliance: 6
+    redact: 8
 ---
 
 ## Instructions

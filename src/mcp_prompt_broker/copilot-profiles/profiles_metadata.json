@@ -1,10 +1,63 @@
 {
   "version": "1.0",
-  "generated_at": "2025-12-06T22:04:34.695842+00:00",
+  "generated_at": "2025-12-25T19:07:07.607453+00:00",
   "profiles": {
+    "codex_cli": {
+      "name": "codex_cli",
+      "short_description": "Integration profile for safe Codex CLI invocation, input/output sanitization, and fallback behavior",
+      "source_file": "codex_cli.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "cli_integration",
+          "codex_cli"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 2,
+          "critical": 3
+        },
+        "complexity": {
+          "medium": 2,
+          "high": 3
+        },
+        "domain": {
+          "engineering": 3,
+          "python": 3,
+          "code_generation": 4
+        },
+        "keywords": {
+          "codex cli": 12,
+          "codex": 10,
+          "cli integration": 6,
+          "subprocess": 4,
+          "external tool": 4,
+          "timeout": 2,
+          "sandbox": 4
+        }
+      },
+      "capabilities": [
+        "privacy_protection",
+        "verification"
+      ],
+      "domains": [
+        "code_generation",
+        "engineering",
+        "general",
+        "python",
+        "security"
+      ],
+      "checklist_count": 7,
+      "instructions_length": 1630,
+      "last_modified": "2025-12-25T19:06:47.472382+00:00"
+    },
     "creative_brainstorm": {
       "name": "creative_brainstorm",
-      "short_description": "Encourage creative exploration and divergent thinking",
+      "short_description": "Encourage creative exploration and divergent thinking for ideation sessions",
       "source_file": "creative_brainstorm.md",
       "default_score": 3,
       "fallback": false,
@@ -30,6 +83,12 @@
           "storytelling": 2,
           "innovation": 2,
           "design_thinking": 1
+        },
+        "keywords": {
+          "brainstorm": 8,
+          "creative": 6,
+          "ideas": 5,
+          "ideation": 6
         }
       },
       "capabilities": [
@@ -45,7 +104,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 1860,
-      "last_modified": "2025-12-06T16:42:34.179808+00:00"
+      "last_modified": "2025-12-25T19:05:51.459736+00:00"
     },
     "creative_brainstorm_complex": {
       "name": "creative_brainstorm_complex",
@@ -79,6 +138,17 @@
           "design_thinking": 2,
           "strategy": 2,
           "vision": 2
+        },
+        "keywords": {
+          "brainstorm": 10,
+          "creative": 8,
+          "ideas": 8,
+          "ideation": 10,
+          "innovation": 8,
+          "imagine": 6,
+          "marketing": 4,
+          "campaign": 4,
+          "design": 4
         }
       },
       "capabilities": [
@@ -97,11 +167,11 @@
       ],
       "checklist_count": 12,
       "instructions_length": 4183,
-      "last_modified": "2025-12-06T16:42:34.182843+00:00"
+      "last_modified": "2025-12-25T19:02:02.891978+00:00"
     },
     "general_default": {
       "name": "general_default",
-      "short_description": "Use balanced, general-purpose instructions",
+      "short_description": "Balanced general-purpose assistant for adaptive, helpful responses",
       "source_file": "general_default.md",
       "default_score": 1,
       "fallback": true,
@@ -112,6 +182,13 @@
         "priority": {
           "high": 1,
           "urgent": 2
+        },
+        "keywords": {
+          "help": 3,
+          "question": 3,
+          "explain": 3,
+          "what": 2,
+          "how": 2
         }
       },
       "capabilities": [
@@ -125,13 +202,13 @@
       ],
       "checklist_count": 5,
       "instructions_length": 1013,
-      "last_modified": "2025-12-06T15:49:27.991391+00:00"
+      "last_modified": "2025-12-25T19:05:51.486835+00:00"
     },
     "general_default_complex": {
       "name": "general_default_complex",
       "short_description": "Advanced adaptive reasoning with multi-step verification, structured thinking, and quality assurance protocols",
       "source_file": "general_default_complex.md",
-      "default_score": 2,
+      "default_score": 5,
       "fallback": true,
       "complexity": "complex",
       "extends": "general_default",
@@ -145,6 +222,16 @@
         "complexity": {
           "high": 2,
           "complex": 2
+        },
+        "keywords": {
+          "general": 3,
+          "question": 4,
+          "help": 4,
+          "explain": 4,
+          "what is": 4,
+          "how to": 4,
+          "just": 3,
+          "simple": 3
         }
       },
       "capabilities": [
@@ -160,11 +247,204 @@
       ],
       "checklist_count": 12,
       "instructions_length": 4506,
-      "last_modified": "2025-12-06T16:38:55.328262+00:00"
+      "last_modified": "2025-12-25T19:02:02.893485+00:00"
+    },
+    "mcp_server_testing_and_validation": {
+      "name": "mcp_server_testing_and_validation",
+      "short_description": "Systematic testing and validation of MCP Prompt Broker server functionality, profile configuration, and routing logic",
+      "source_file": "mcp_server_testing_and_validation.md",
+      "default_score": 7,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "mcp_server",
+          "testing",
+          "validation"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "medium": 2,
+          "high": 3
+        },
+        "domain": {
+          "testing": 5,
+          "quality_assurance": 4,
+          "debugging": 4
+        },
+        "keywords": {
+          "mcp server": 12,
+          "prompt broker": 12,
+          "mcp": 10,
+          "test": 8,
+          "testing": 8,
+          "validation": 8,
+          "validate": 8,
+          "verify": 6,
+          "check": 5,
+          "debug": 6,
+          "diagnose": 6,
+          "profile": 5,
+          "routing": 6,
+          "hot reload": 8,
+          "metadata": 5,
+          "parser": 6,
+          "funkčnost": 5,
+          "kontrola": 5
+        }
+      },
+      "capabilities": [
+        "compliance",
+        "ideation",
+        "privacy_protection",
+        "systematic_analysis",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "creative",
+        "debugging",
+        "engineering",
+        "general",
+        "healthcare",
+        "legal",
+        "quality_assurance",
+        "testing"
+      ],
+      "checklist_count": 36,
+      "instructions_length": 4867,
+      "last_modified": "2025-12-25T19:04:38.886469+00:00"
+    },
+    "podman_container_management": {
+      "name": "podman_container_management",
+      "short_description": "Create, manage, and troubleshoot Podman containers and images",
+      "source_file": "podman_container_management.md",
+      "default_score": 5,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "container_management",
+          "devops",
+          "podman"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 2,
+          "urgent": 1
+        },
+        "domain": {
+          "containers": 5,
+          "devops": 4,
+          "infrastructure": 3
+        },
+        "keywords": {
+          "podman": 12,
+          "container": 10,
+          "containerfile": 8,
+          "dockerfile": 8,
+          "pod": 6,
+          "image": 5,
+          "podman compose": 10
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "privacy_protection",
+        "systematic_analysis",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "containers",
+        "devops",
+        "engineering",
+        "general",
+        "infrastructure",
+        "security"
+      ],
+      "checklist_count": 10,
+      "instructions_length": 8060,
+      "last_modified": "2025-12-25T19:05:51.487834+00:00"
+    },
+    "podman_container_management_complex": {
+      "name": "podman_container_management_complex",
+      "short_description": "Advanced Podman architecture with Quadlet, systemd integration, security hardening, orchestration, and CI/CD pipelines",
+      "source_file": "podman_container_management_complex.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "podman_container_management",
+      "required": {
+        "context_tags": [
+          "container_management"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "high": 3,
+          "complex": 4
+        },
+        "domain": {
+          "containers": 5,
+          "devops": 5,
+          "infrastructure": 4,
+          "security": 4,
+          "ci_cd": 3
+        },
+        "keywords": {
+          "podman": 15,
+          "docker": 10,
+          "container": 12,
+          "containers": 12,
+          "kubernetes": 8,
+          "k8s": 8,
+          "quadlet": 15,
+          "systemd": 6,
+          "image": 5,
+          "volume": 5,
+          "network": 5
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "compliance",
+        "incident_response",
+        "systematic_analysis",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "ci_cd",
+        "containers",
+        "creative",
+        "devops",
+        "engineering",
+        "general",
+        "infrastructure",
+        "legal",
+        "security"
+      ],
+      "checklist_count": 14,
+      "instructions_length": 14378,
+      "last_modified": "2025-12-25T19:02:02.893485+00:00"
     },
     "privacy_sensitive": {
       "name": "privacy_sensitive",
-      "short_description": "Use privacy-first responses with redaction",
+      "short_description": "Privacy-first responses with data protection, redaction, and regulatory compliance",
       "source_file": "privacy_sensitive.md",
       "default_score": 5,
       "fallback": false,
@@ -190,6 +470,15 @@
           "compliance": 1,
           "gdpr": 2,
           "hipaa": 2
+        },
+        "keywords": {
+          "privacy": 10,
+          "sensitive": 8,
+          "pii": 10,
+          "gdpr": 8,
+          "hipaa": 8,
+          "compliance": 6,
+          "redact": 8
         }
       },
       "capabilities": [
@@ -204,7 +493,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 1640,
-      "last_modified": "2025-12-06T16:42:34.178809+00:00"
+      "last_modified": "2025-12-25T19:05:51.487834+00:00"
     },
     "privacy_sensitive_complex": {
       "name": "privacy_sensitive_complex",
@@ -215,10 +504,9 @@
       "complexity": "complex",
       "extends": "privacy_sensitive",
       "required": {
-        "sensitivity": [
-          "critical",
-          "extreme",
-          "high"
+        "context_tags": [
+          "compliance",
+          "pii"
         ]
       },
       "weights": {
@@ -233,15 +521,28 @@
           "en": 1
         },
         "context_tags": {
-          "pii": 3,
-          "compliance": 2,
-          "gdpr": 3,
-          "hipaa": 3,
-          "pci": 3,
-          "sox": 2,
-          "ferpa": 2,
-          "ccpa": 2,
-          "classified": 4
+          "pii": 5,
+          "compliance": 4,
+          "gdpr": 5,
+          "hipaa": 5,
+          "pci": 5,
+          "sox": 4,
+          "ferpa": 4,
+          "ccpa": 4,
+          "classified": 6
+        },
+        "keywords": {
+          "patient": 8,
+          "medical": 6,
+          "sensitive": 6,
+          "private": 6,
+          "confidential": 8,
+          "hipaa": 10,
+          "gdpr": 10,
+          "pii": 10,
+          "ssn": 10,
+          "credit card": 8,
+          "personal data": 8
         }
       },
       "capabilities": [
@@ -265,11 +566,309 @@
       ],
       "checklist_count": 16,
       "instructions_length": 5730,
-      "last_modified": "2025-12-06T16:42:34.178809+00:00"
+      "last_modified": "2025-12-25T19:02:02.891978+00:00"
+    },
+    "python_code_generation": {
+      "name": "python_code_generation",
+      "short_description": "Generate clean, idiomatic Python code with best practices and type hints",
+      "source_file": "python_code_generation.md",
+      "default_score": 5,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "code_generation",
+          "python"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 2,
+          "urgent": 1
+        },
+        "domain": {
+          "python": 5,
+          "backend": 2,
+          "scripting": 3
+        },
+        "keywords": {
+          "write python": 10,
+          "generate python": 10,
+          "create python": 8,
+          "python script": 8,
+          "implement python": 8,
+          "python function": 8,
+          "python class": 8
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "quality_assurance",
+        "verification"
+      ],
+      "domains": [
+        "backend",
+        "creative",
+        "engineering",
+        "python",
+        "scripting"
+      ],
+      "checklist_count": 7,
+      "instructions_length": 3033,
+      "last_modified": "2025-12-25T19:05:51.487834+00:00"
+    },
+    "python_code_generation_complex": {
+      "name": "python_code_generation_complex",
+      "short_description": "Advanced Python code generation with architecture patterns, performance optimization, and enterprise-grade practices",
+      "source_file": "python_code_generation_complex.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "python_code_generation",
+      "required": {
+        "context_tags": [
+          "code_generation",
+          "python"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "high": 3,
+          "complex": 4
+        },
+        "domain": {
+          "python": 5,
+          "backend": 3,
+          "architecture": 4,
+          "performance": 3
+        },
+        "keywords": {
+          "python": 10,
+          "advanced python": 12,
+          "python architecture": 12,
+          "optimize python": 10,
+          "scalable python": 10,
+          "enterprise python": 10,
+          "def": 5,
+          "class": 5,
+          "import": 3
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "quality_assurance",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "architecture",
+        "backend",
+        "creative",
+        "engineering",
+        "general",
+        "healthcare",
+        "performance",
+        "python",
+        "security"
+      ],
+      "checklist_count": 12,
+      "instructions_length": 12140,
+      "last_modified": "2025-12-25T19:02:02.893485+00:00"
+    },
+    "python_code_generation_complex_with_codex": {
+      "name": "python_code_generation_complex_with_codex",
+      "short_description": "Advanced Python code generation with architecture patterns, performance optimization, and enterprise-grade practices use Codex CLI",
+      "source_file": "python_code_generation_complex_with_codex.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "python_code_generation_complex",
+      "required": {
+        "context_tags": [
+          "codex_cli",
+          "ml_modeling"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "high": 3,
+          "complex": 4
+        },
+        "domain": {
+          "python": 5,
+          "backend": 3,
+          "architecture": 4,
+          "performance": 3,
+          "data_science": 4,
+          "machine_learning": 4
+        },
+        "keywords": {
+          "advanced python": 3,
+          "python architecture": 3,
+          "optimize python": 2,
+          "scalable python": 2,
+          "enterprise python": 2,
+          "Codex CLI": 15,
+          "Codex": 12,
+          "použij Codex": 15,
+          "codex cli": 15,
+          "complex code": 2,
+          "modelovací úloha": 8,
+          "klasifikační": 6,
+          "machine learning": 6,
+          "sklearn": 6,
+          "sci-kit learn": 6,
+          "classification": 5,
+          "regression": 5
+        }
+      },
+      "capabilities": [
+        "quality_assurance",
+        "verification"
+      ],
+      "domains": [
+        "architecture",
+        "backend",
+        "creative",
+        "data_science",
+        "engineering",
+        "machine_learning",
+        "performance",
+        "python"
+      ],
+      "checklist_count": 60,
+      "instructions_length": 1160,
+      "last_modified": "2025-12-25T19:02:02.884977+00:00"
+    },
+    "python_testing_revision": {
+      "name": "python_testing_revision",
+      "short_description": "Review, test, and improve existing Python code with focus on quality",
+      "source_file": "python_testing_revision.md",
+      "default_score": 5,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "code_review",
+          "python",
+          "testing"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 2,
+          "urgent": 1
+        },
+        "domain": {
+          "python": 5,
+          "testing": 4,
+          "quality_assurance": 3
+        },
+        "keywords": {
+          "test python": 10,
+          "review python": 10,
+          "fix python": 8,
+          "unittest": 8,
+          "pytest": 10,
+          "debug python": 8,
+          "refactor python": 8
+        }
+      },
+      "capabilities": [
+        "compliance",
+        "quality_assurance",
+        "verification"
+      ],
+      "domains": [
+        "engineering",
+        "legal",
+        "python",
+        "quality_assurance",
+        "testing"
+      ],
+      "checklist_count": 20,
+      "instructions_length": 6977,
+      "last_modified": "2025-12-25T19:05:51.487834+00:00"
+    },
+    "python_testing_revision_complex": {
+      "name": "python_testing_revision_complex",
+      "short_description": "Advanced code review with mutation testing, property-based testing, performance profiling, and architectural analysis",
+      "source_file": "python_testing_revision_complex.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "python_testing_revision",
+      "required": {
+        "context_tags": [
+          "code_review",
+          "python",
+          "testing"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "high": 3,
+          "complex": 4
+        },
+        "domain": {
+          "python": 5,
+          "testing": 5,
+          "quality_assurance": 4,
+          "performance": 3
+        },
+        "keywords": {
+          "advanced testing": 12,
+          "mutation testing": 12,
+          "property testing": 10,
+          "performance profiling": 10,
+          "integration testing": 10,
+          "tdd": 10,
+          "bdd": 8,
+          "pytest": 10,
+          "unittest": 8,
+          "test python": 10,
+          "review code": 8
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "incident_response",
+        "quality_assurance",
+        "verification"
+      ],
+      "domains": [
+        "creative",
+        "engineering",
+        "healthcare",
+        "legal",
+        "performance",
+        "python",
+        "quality_assurance",
+        "security",
+        "testing"
+      ],
+      "checklist_count": 22,
+      "instructions_length": 14241,
+      "last_modified": "2025-12-25T19:06:24.198877+00:00"
     },
     "technical_support": {
       "name": "technical_support",
-      "short_description": "Provide concise technical troubleshooting steps",
+      "short_description": "Concise technical troubleshooting steps for software and infrastructure issues",
       "source_file": "technical_support.md",
       "default_score": 2,
       "fallback": false,
@@ -299,6 +898,15 @@
           "incident": 1,
           "error": 1,
           "crash": 2
+        },
+        "keywords": {
+          "troubleshoot": 8,
+          "fix": 6,
+          "error": 6,
+          "crash": 8,
+          "issue": 5,
+          "problem": 5,
+          "debug": 6
         }
       },
       "capabilities": [
@@ -316,7 +924,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 1494,
-      "last_modified": "2025-12-06T15:49:27.991391+00:00"
+      "last_modified": "2025-12-25T19:05:51.487834+00:00"
     },
     "technical_support_complex": {
       "name": "technical_support_complex",
@@ -351,6 +959,16 @@
           "troubleshooting": 3,
           "incident": 4
         },
+        "keywords": {
+          "troubleshoot": 10,
+          "root cause": 12,
+          "incident": 10,
+          "outage": 10,
+          "crash": 8,
+          "error": 6,
+          "debug": 8,
+          "diagnose": 8
+        },
         "context_tags": {
           "outage": 3,
           "incident": 2,
@@ -381,44 +999,57 @@
       ],
       "checklist_count": 15,
       "instructions_length": 6779,
-      "last_modified": "2025-12-06T16:38:55.328262+00:00"
+      "last_modified": "2025-12-25T19:05:51.487834+00:00"
     }
   },
   "statistics": {
-    "total_profiles": 8,
-    "complex_profiles": 4,
-    "standard_profiles": 4,
+    "total_profiles": 17,
+    "complex_profiles": 8,
+    "standard_profiles": 9,
     "fallback_profile": "general_default",
     "capabilities_coverage": {
-      "chain_of_thought": 5,
+      "privacy_protection": 5,
+      "verification": 15,
+      "chain_of_thought": 8,
       "cross_domain": 2,
       "divergent_thinking": 2,
-      "ideation": 2,
-      "quality_assurance": 5,
-      "adaptive_communication": 3,
+      "ideation": 3,
+      "quality_assurance": 10,
+      "adaptive_communication": 7,
       "meta_cognition": 4,
-      "systematic_analysis": 5,
-      "verification": 6,
-      "compliance": 2,
-      "privacy_protection": 2,
-      "incident_response": 3,
-      "zero_trust": 1,
-      "troubleshooting": 2
+      "systematic_analysis": 8,
+      "compliance": 5,
+      "troubleshooting": 6,
+      "incident_response": 5,
+      "zero_trust": 1
     },
     "domains_coverage": {
-      "creative": 2,
-      "engineering": 5,
-      "general": 4,
+      "code_generation": 1,
+      "engineering": 14,
+      "general": 9,
+      "python": 6,
+      "security": 7,
+      "creative": 8,
+      "debugging": 1,
+      "healthcare": 5,
+      "legal": 6,
+      "quality_assurance": 3,
+      "testing": 3,
+      "containers": 2,
+      "devops": 4,
+      "infrastructure": 3,
+      "ci_cd": 1,
       "finance": 2,
-      "healthcare": 2,
-      "legal": 2,
       "government": 1,
       "insurance": 1,
-      "security": 2,
-      "devops": 2,
+      "backend": 3,
+      "scripting": 1,
+      "architecture": 2,
+      "performance": 3,
+      "data_science": 1,
+      "machine_learning": 1,
       "it": 2,
       "software": 2,
-      "infrastructure": 1,
       "sre": 1
     }
   }

@@ -28,6 +28,10 @@ timeline
     section Phase 3: New Features
         Dec 6, 2025 : Hot Reload (07)
                     : Complex Profiles (08)
+    section Phase 4: Testing & Validation
+        Dec 25, 2025 : Companion Agent (09)
+                     : Registry Refactoring (10)
+                     : Codex CLI Analysis (11)
 ```
 
 ---
@@ -56,6 +60,9 @@ timeline
 |---|--------|-------------|----------|--------|
 | 07 | [Hot Reload Implementation](../reports/07_hot_reload_profiles.md) | Markdown profile parser and hot reload functionality | High | ✅ Implemented |
 | 08 | [Complex Profiles & Registry](../reports/08_complex_profiles_centralni_metadata.md) | Advanced profiles with meta-cognition and central metadata | High | ✅ Implemented |
+| 09 | [Companion Agent Implementation](../reports/09_companion_agent_implementation.md) | Companion agent integration and configuration | Medium | ✅ Implemented |
+| 10 | [Registry Refactoring Evaluation](../reports/10_registry_refactoring_evaluation.md) | Evaluation of metadata registry refactoring | Medium | ✅ Completed |
+| 11 | [Codex CLI Routing Analysis](../reports/11_codex_cli_profile_routing_analysis.md) | Deep analysis of Codex CLI profile routing failure | Critical | ✅ Analyzed |
 
 ---
 
@@ -209,6 +216,70 @@ flowchart TD
 - Automatic capability inference
 - Automatic domain detection
 - `profiles_metadata.json` - Central registry file
+
+---
+
+### Report 09: Companion Agent Implementation
+
+**Purpose**: Integrate companion agent for enhanced user interaction.
+
+**Key Features**:
+- Companion agent configuration in `companion-agent.json`
+- Custom instructions for MCP Prompt Broker context
+- Integration with existing profiles
+
+**Impact**: Enhanced user experience with specialized agent support.
+
+---
+
+### Report 10: Registry Refactoring Evaluation
+
+**Purpose**: Evaluate metadata registry architecture and identify improvements.
+
+**Key Findings**:
+- Central registry provides good abstraction
+- Automatic inference working well
+- Some profiles missing metadata
+- Hot reload consistency validated
+
+**Recommendations**: Continue with current architecture, add validation.
+
+---
+
+### Report 11: Codex CLI Routing Analysis ⭐ NEW
+
+**Purpose**: Deep analysis of why Codex CLI profile wasn't recognized.
+
+**Root Causes Identified**:
+1. ❌ **Missing `## Instructions` section** - Profile not loaded at all
+2. ❌ **Keywords not in metadata parser** - "Codex CLI" not recognized
+3. ❌ **Silent hot reload failure** - No warning to user
+4. ❌ **Capabilities matching failed** - Even if loaded, wouldn't match
+
+**Key Findings**:
+
+```python
+# Parser didn't know about Codex CLI
+INTENT_KEYWORDS = {
+    # "code_generation": ("codex", "codex cli") ❌ MISSING
+}
+
+# Profile had wrong structure
+## Primary Role  ❌ Should be ## Instructions
+```
+
+**Solutions Implemented**:
+- ✅ Created comprehensive testing profile
+- ✅ Built automated validation suite
+- ✅ Documented all issues with implementation plan
+
+**New Artifacts**:11 |
+| Bug Fix Reports | 5 |
+| Feature Reports | 3 |
+| Analysis Reports | 2 |
+| Planning Reports | 1 |
+| Total Lines (est.) | ~4,000 |
+| Language | Czech + Englismatic approach to preventing similar issues in future.
 
 ---
 

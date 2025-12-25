@@ -1,10 +1,10 @@
 ---
 name: python_code_generation
-short_instructions: Generate clean, idiomatic Python code with best practices
-default_score: 5
+short_description: Generate clean, idiomatic Python code with best practices and type hints
+default_score: 1
 
 required:
-  capabilities: ["code_generation", "programming", "python"]
+  context_tags: ["code_generation", "python"]
 
 weights:
   priority:
@@ -15,11 +15,13 @@ weights:
     backend: 2
     scripting: 3
   keywords:
-    - write python
-    - generate python
-    - create python function
-    - python script
-    - implement python
+    write python: 10
+    generate python: 10
+    create python: 8
+    python script: 8
+    implement python: 8
+    python function: 8
+    python class: 8
 ---
 
 ## Instructions

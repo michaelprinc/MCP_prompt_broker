@@ -1,10 +1,10 @@
 ---
 name: python_testing_revision
-short_instructions: Review, test, and improve existing Python code
-default_score: 5
+short_description: Review, test, and improve existing Python code with focus on quality
+default_score: 1
 
 required:
-  capabilities: ["code_review", "testing", "python", "debugging"]
+  context_tags: ["code_review", "testing", "python"]
 
 weights:
   priority:
@@ -15,13 +15,13 @@ weights:
     testing: 4
     quality_assurance: 3
   keywords:
-    - test python
-    - review python
-    - fix python
-    - python unittest
-    - pytest
-    - debug python
-    - refactor python
+    test python: 10
+    review python: 10
+    fix python: 8
+    unittest: 8
+    pytest: 10
+    debug python: 8
+    refactor python: 8
 ---
 
 ## Instructions
