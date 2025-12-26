@@ -95,6 +95,77 @@ for prompt in test_prompts:
     print(f"Intent: {parsed.intent}, Domain: {parsed.domain}, Topics: {parsed.topics}")
 ```
 
+#### 2a. Dynamic Parser Update (Hot Reload)
+
+The metadata parser now supports **dynamic keyword updates** from profiles during hot reload.
+
+**How it works:**
+1. When `reload_profiles()` is called, the system:
+   - Clears all dynamic keywords from the parser
+   - Loads all profiles from markdown files
+   - Extracts keywords from `weights.keywords`, `required.context_tags`, `weights.domain`, etc.
+   - Merges extracted keywords with base parser keywords
+
+**Parser update check:**
+```python
+from mcp_prompt_broker.metadata.parser import get_parser_stats, get_domain_keywords
+from mcp_prompt_broker.profile_parser import ProfileLoader
+
+loader = ProfileLoader()
+result = loader.reload()
+
+# Check parser update result
+print(f"Parser update success: {result['parser_update']['success']}")
+print(f"Keywords added: {result['parser_update']['keywords_added']}")
+print(f"Parser stats: {result['parser_update']['parser_stats']}")
+
+# Verify domain keywords now include profile-specific terms
+domain_keywords = get_domain_keywords()
+print(f"Total domains: {len(domain_keywords)}")
+```
+
+**Adding new keywords to parser via profiles:**
+
+To add new keywords for intent/domain/topic detection, add them to a profile's YAML frontmatter:
+
+```yaml
+weights:
+  keywords:
+    new_keyword: 10
+    another_term: 8
+  domain:
+    my_domain: 5
+  intent:
+    my_intent: 4
+```
+
+After adding and running `reload_profiles()`:
+- Keywords from `weights.keywords` are added to topics under the profile name
+- Keywords from `weights.domain` are added to domain detection
+- Keywords from `weights.intent` are added to intent classification
+
+**Verify parser update:**
+```python
+from mcp_prompt_broker.metadata.parser import (
+    get_intent_keywords, 
+    get_domain_keywords, 
+    get_topic_keywords,
+    get_parser_stats
+)
+
+# Before reload
+stats_before = get_parser_stats()
+print(f"Before: {stats_before['total_domain_count']} domains")
+
+# After adding a new profile with new keywords
+loader.reload()
+
+# After reload
+stats_after = get_parser_stats()
+print(f"After: {stats_after['total_domain_count']} domains")
+print(f"New dynamic domains: {stats_after['dynamic_domain_count']}")
+```
+
 #### 3. Profile Loading and Hot Reload
 
 Verify hot reload functionality:
@@ -338,7 +409,39 @@ Based on recent analysis, watch for:
 
 **Symptom:** Prompts not routed to correct profile despite clear intent
 **Detection:** Check metadata parser output for empty topics/domain
-**Solution:** Add keywords to `metadata/parser.py` dictionaries
+**Solution:** 
+- **Option A (Recommended):** Add keywords to profile's `weights.keywords` section and run `reload_profiles()` - parser updates automatically
+- **Option B (Base parser):** Add keywords to `_BASE_*_KEYWORDS` dictionaries in `metadata/parser.py`
+
+**Example - Adding keywords via profile (Option A):**
+```yaml
+# In your profile's YAML frontmatter
+weights:
+  keywords:
+    my_new_keyword: 10
+    another_term: 8
+```
+
+**Example - Adding to base parser (Option B):**
+Edit `src/mcp_prompt_broker/metadata/parser.py`:
+```python
+_BASE_DOMAIN_KEYWORDS: Mapping[str, tuple[str, ...]] = {
+    # ... existing domains ...
+    "my_new_domain": ("keyword1", "keyword2", "keyword3"),
+}
+
+_BASE_INTENT_KEYWORDS: Mapping[str, tuple[str, ...]] = {
+    # ... existing intents ...
+    "my_new_intent": ("trigger_word1", "trigger_word2"),
+}
+
+_BASE_TOPIC_KEYWORDS: Mapping[str, tuple[str, ...]] = {
+    # ... existing topics ...
+    "my_new_topic": ("topic_term1", "topic_term2"),
+}
+```
+
+After editing base parser, restart the MCP server or call `reload_profiles()`.
 
 #### Issue 3: Silent Hot Reload Failures
 
@@ -386,12 +489,16 @@ Before deploying changes:
 - [ ] Test sensitivity scoring
 - [ ] Test Czech language support
 - [ ] Verify keyword coverage
+- [ ] **Check dynamic keyword update after reload**
+- [ ] **Verify parser_stats shows correct counts**
+- [ ] **Test new keywords added via profile weights**
 
 ### Loader Testing
 - [ ] Count expected vs. loaded profiles
 - [ ] Review parse errors
 - [ ] Test hot reload functionality
 - [ ] Verify metadata registry update
+- [ ] **Verify parser_update in reload result**
 - [ ] Check for silent failures
 
 ### Routing Testing

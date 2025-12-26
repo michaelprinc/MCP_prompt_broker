@@ -1,4 +1,4 @@
-﻿{
+{
     "servers":  {
                     "mcp-prompt-broker":  {
                                               "args":  [
@@ -7,6 +7,19 @@
                                                        ],
                                               "env":  {
 
+                                                      },
+                                              "command":  "${workspaceFolder}/.venv/Scripts/python.exe",
+                                              "type":  "stdio"
+                                          },
+                    "codex-orchestrator":  {
+                                              "args":  [
+                                                           "-m",
+                                                           "mcp_codex_orchestrator"
+                                                       ],
+                                              "env":  {
+                                                          "DOCKER_COMPOSE_PATH": "${workspaceFolder}/mcp-codex-orchestrator/docker",
+                                                          "WORKSPACE_PATH": "${workspaceFolder}/mcp-codex-orchestrator/workspace",
+                                                          "RUNS_PATH": "${workspaceFolder}/mcp-codex-orchestrator/runs"
                                                       },
                                               "command":  "${workspaceFolder}/.venv/Scripts/python.exe",
                                               "type":  "stdio"

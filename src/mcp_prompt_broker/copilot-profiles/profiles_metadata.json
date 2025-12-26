@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2025-12-25T19:07:07.607453+00:00",
+  "generated_at": "2025-12-25T21:34:17.828461+00:00",
   "profiles": {
     "codex_cli": {
       "name": "codex_cli",
@@ -53,13 +53,13 @@
       ],
       "checklist_count": 7,
       "instructions_length": 1630,
-      "last_modified": "2025-12-25T19:06:47.472382+00:00"
+      "last_modified": "2025-12-25T19:07:16.130318+00:00"
     },
     "creative_brainstorm": {
       "name": "creative_brainstorm",
       "short_description": "Encourage creative exploration and divergent thinking for ideation sessions",
       "source_file": "creative_brainstorm.md",
-      "default_score": 3,
+      "default_score": 2,
       "fallback": false,
       "complexity": "standard",
       "extends": null,
@@ -104,13 +104,13 @@
       ],
       "checklist_count": 8,
       "instructions_length": 1860,
-      "last_modified": "2025-12-25T19:05:51.459736+00:00"
+      "last_modified": "2025-12-25T19:09:37.148460+00:00"
     },
     "creative_brainstorm_complex": {
       "name": "creative_brainstorm_complex",
       "short_description": "Advanced creative ideation with meta-cognition, chain-of-thought reasoning, and structured divergent thinking",
       "source_file": "creative_brainstorm_complex.md",
-      "default_score": 4,
+      "default_score": 3,
       "fallback": false,
       "complexity": "complex",
       "extends": "creative_brainstorm",
@@ -167,13 +167,13 @@
       ],
       "checklist_count": 12,
       "instructions_length": 4183,
-      "last_modified": "2025-12-25T19:02:02.891978+00:00"
+      "last_modified": "2025-12-25T19:09:37.148460+00:00"
     },
     "general_default": {
       "name": "general_default",
       "short_description": "Balanced general-purpose assistant for adaptive, helpful responses",
       "source_file": "general_default.md",
-      "default_score": 1,
+      "default_score": 4,
       "fallback": true,
       "complexity": "standard",
       "extends": null,
@@ -202,7 +202,7 @@
       ],
       "checklist_count": 5,
       "instructions_length": 1013,
-      "last_modified": "2025-12-25T19:05:51.486835+00:00"
+      "last_modified": "2025-12-25T19:07:16.130318+00:00"
     },
     "general_default_complex": {
       "name": "general_default_complex",
@@ -253,7 +253,7 @@
       "name": "mcp_server_testing_and_validation",
       "short_description": "Systematic testing and validation of MCP Prompt Broker server functionality, profile configuration, and routing logic",
       "source_file": "mcp_server_testing_and_validation.md",
-      "default_score": 7,
+      "default_score": 1,
       "fallback": false,
       "complexity": "standard",
       "extends": null,
@@ -300,6 +300,7 @@
         }
       },
       "capabilities": [
+        "adaptive_communication",
         "compliance",
         "ideation",
         "privacy_protection",
@@ -317,15 +318,15 @@
         "quality_assurance",
         "testing"
       ],
-      "checklist_count": 36,
-      "instructions_length": 4867,
-      "last_modified": "2025-12-25T19:04:38.886469+00:00"
+      "checklist_count": 40,
+      "instructions_length": 7018,
+      "last_modified": "2025-12-25T20:06:56.158304+00:00"
     },
     "podman_container_management": {
       "name": "podman_container_management",
       "short_description": "Create, manage, and troubleshoot Podman containers and images",
       "source_file": "podman_container_management.md",
-      "default_score": 5,
+      "default_score": 1,
       "fallback": false,
       "complexity": "standard",
       "extends": null,
@@ -373,7 +374,7 @@
       ],
       "checklist_count": 10,
       "instructions_length": 8060,
-      "last_modified": "2025-12-25T19:05:51.487834+00:00"
+      "last_modified": "2025-12-25T19:08:32.364850+00:00"
     },
     "podman_container_management_complex": {
       "name": "podman_container_management_complex",
@@ -446,7 +447,7 @@
       "name": "privacy_sensitive",
       "short_description": "Privacy-first responses with data protection, redaction, and regulatory compliance",
       "source_file": "privacy_sensitive.md",
-      "default_score": 5,
+      "default_score": 0,
       "fallback": false,
       "complexity": "standard",
       "extends": null,
@@ -493,13 +494,13 @@
       ],
       "checklist_count": 8,
       "instructions_length": 1640,
-      "last_modified": "2025-12-25T19:05:51.487834+00:00"
+      "last_modified": "2025-12-25T19:08:32.364850+00:00"
     },
     "privacy_sensitive_complex": {
       "name": "privacy_sensitive_complex",
       "short_description": "Zero-trust privacy framework with adversarial awareness, comprehensive compliance matrix, and defense-in-depth data protection",
       "source_file": "privacy_sensitive_complex.md",
-      "default_score": 6,
+      "default_score": 1,
       "fallback": false,
       "complexity": "complex",
       "extends": "privacy_sensitive",
@@ -566,13 +567,13 @@
       ],
       "checklist_count": 16,
       "instructions_length": 5730,
-      "last_modified": "2025-12-25T19:02:02.891978+00:00"
+      "last_modified": "2025-12-25T19:08:32.364850+00:00"
     },
     "python_code_generation": {
       "name": "python_code_generation",
       "short_description": "Generate clean, idiomatic Python code with best practices and type hints",
       "source_file": "python_code_generation.md",
-      "default_score": 5,
+      "default_score": 1,
       "fallback": false,
       "complexity": "standard",
       "extends": null,
@@ -616,13 +617,13 @@
       ],
       "checklist_count": 7,
       "instructions_length": 3033,
-      "last_modified": "2025-12-25T19:05:51.487834+00:00"
+      "last_modified": "2025-12-25T19:08:32.364850+00:00"
     },
     "python_code_generation_complex": {
       "name": "python_code_generation_complex",
       "short_description": "Advanced Python code generation with architecture patterns, performance optimization, and enterprise-grade practices",
       "source_file": "python_code_generation_complex.md",
-      "default_score": 0,
+      "default_score": 1,
       "fallback": false,
       "complexity": "complex",
       "extends": "python_code_generation",
@@ -679,13 +680,13 @@
       ],
       "checklist_count": 12,
       "instructions_length": 12140,
-      "last_modified": "2025-12-25T19:02:02.893485+00:00"
+      "last_modified": "2025-12-25T19:08:32.364850+00:00"
     },
     "python_code_generation_complex_with_codex": {
       "name": "python_code_generation_complex_with_codex",
       "short_description": "Advanced Python code generation with architecture patterns, performance optimization, and enterprise-grade practices use Codex CLI",
       "source_file": "python_code_generation_complex_with_codex.md",
-      "default_score": 0,
+      "default_score": 2,
       "fallback": false,
       "complexity": "complex",
       "extends": "python_code_generation_complex",
@@ -748,13 +749,13 @@
       ],
       "checklist_count": 60,
       "instructions_length": 1160,
-      "last_modified": "2025-12-25T19:02:02.884977+00:00"
+      "last_modified": "2025-12-25T19:09:37.147460+00:00"
     },
     "python_testing_revision": {
       "name": "python_testing_revision",
       "short_description": "Review, test, and improve existing Python code with focus on quality",
       "source_file": "python_testing_revision.md",
-      "default_score": 5,
+      "default_score": 1,
       "fallback": false,
       "complexity": "standard",
       "extends": null,
@@ -799,7 +800,7 @@
       ],
       "checklist_count": 20,
       "instructions_length": 6977,
-      "last_modified": "2025-12-25T19:05:51.487834+00:00"
+      "last_modified": "2025-12-25T19:08:56.339326+00:00"
     },
     "python_testing_revision_complex": {
       "name": "python_testing_revision_complex",
@@ -864,7 +865,7 @@
       ],
       "checklist_count": 22,
       "instructions_length": 14241,
-      "last_modified": "2025-12-25T19:06:24.198877+00:00"
+      "last_modified": "2025-12-25T19:07:16.134184+00:00"
     },
     "technical_support": {
       "name": "technical_support",
@@ -924,13 +925,13 @@
       ],
       "checklist_count": 8,
       "instructions_length": 1494,
-      "last_modified": "2025-12-25T19:05:51.487834+00:00"
+      "last_modified": "2025-12-25T19:07:16.134184+00:00"
     },
     "technical_support_complex": {
       "name": "technical_support_complex",
       "short_description": "Advanced diagnostic framework with root cause analysis, systematic troubleshooting protocols, and expert-level incident management",
       "source_file": "technical_support_complex.md",
-      "default_score": 3,
+      "default_score": 1,
       "fallback": false,
       "complexity": "complex",
       "extends": "technical_support",
@@ -999,7 +1000,7 @@
       ],
       "checklist_count": 15,
       "instructions_length": 6779,
-      "last_modified": "2025-12-25T19:05:51.487834+00:00"
+      "last_modified": "2025-12-25T19:08:56.339326+00:00"
     }
   },
   "statistics": {
@@ -1015,7 +1016,7 @@
       "divergent_thinking": 2,
       "ideation": 3,
       "quality_assurance": 10,
-      "adaptive_communication": 7,
+      "adaptive_communication": 8,
       "meta_cognition": 4,
       "systematic_analysis": 8,
       "compliance": 5,

@@ -9,6 +9,21 @@ poml<spec agent="github-copilot" version="1.0">
   </gather>
 </pre_flight>
 
+<mcp_preferences>
+  <preferred_order>
+    <server>local (use for iterative development; set MCP_SERVER=local)</server>
+    <server>docker-dev (docker-compose based local dev; set MCP_SERVER=dev)</server>
+    <server>staging (integration tests & non-destructive verification; set MCP_SERVER=staging)</server>
+    <server>production (only with explicit CONFIRM and approvals; set MCP_SERVER=prod)</server>
+  </preferred_order>
+  <guidance>
+    <item>Check target server availability before running long or destructive tasks.</item>
+    <item>Prefer `local` for quick iterations and `staging` for integration checks.</item>
+    <item>Set the `MCP_SERVER` environment variable to override the default selection.</item>
+    <item>Do not run destructive operations on `production` without explicit CONFIRM in the terminal protocol.</item>
+  </guidance>
+</mcp_preferences>
+
 <task>
   <phase name="plan">
     <step>Produce a 3–5 step checklist WITH acceptance criteria.</step>

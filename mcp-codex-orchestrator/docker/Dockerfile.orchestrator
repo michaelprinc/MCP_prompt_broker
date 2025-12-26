@@ -1,0 +1,56 @@
+# MCP Orchestrator Server Container
+# For running the orchestrator as a containerized service
+
+FROM python:3.11-slim
+
+# Set labels
+LABEL maintainer="MCP Prompt Broker Team"
+LABEL description="MCP Codex Orchestrator Server"
+LABEL version="1.0"
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Docker CLI (for container management)
+RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
+    sh get-docker.sh && \
+    rm get-docker.sh
+
+# Create non-root user
+RUN useradd -m -s /bin/bash -u 1000 orchestrator && \
+    usermod -aG docker orchestrator
+
+# Set working directory
+WORKDIR /app
+
+# Copy project files
+COPY pyproject.toml README.md ./
+COPY src/ ./src/
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -e .
+
+# Create directories
+RUN mkdir -p /workspace /runs && \
+    chown -R orchestrator:orchestrator /app /workspace /runs
+
+# Switch to non-root user
+USER orchestrator
+
+# Environment
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Expose MCP server port
+EXPOSE 3000
+
+# Health check endpoint
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:3000/health')" || exit 1
+
+# Run the MCP server
+ENTRYPOINT ["python", "-m", "mcp_codex_orchestrator"]
+CMD ["--host", "0.0.0.0", "--port", "3000"]

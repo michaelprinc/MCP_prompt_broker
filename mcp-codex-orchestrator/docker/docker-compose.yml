@@ -1,0 +1,109 @@
+# MCP Codex Orchestrator - Docker Compose Configuration
+# 
+# Usage:
+#   Build image:     docker-compose build codex-runner
+#   Run manually:    docker-compose run --rm codex-runner "<prompt>"
+#   With orchestrator: docker-compose --profile with-orchestrator up
+
+services:
+  # Codex CLI Runner - ephemeral per-run container
+  codex-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: codex-runner:latest
+    container_name: codex-run-${RUN_ID:-manual}
+    
+    volumes:
+      # Workspace - repository to work on
+      - ${WORKSPACE_PATH:-../workspace}:/workspace:rw
+      # Runs - logs and results storage
+      - ${RUNS_PATH:-../runs}:/runs:rw
+      # Codex authentication - mount only auth.json as read-only
+      # Session data will be stored in container's .codex directory
+      - ${CODEX_AUTH_PATH:-~/.codex}/auth.json:/home/node/.codex/auth.json:ro
+    
+    environment:
+      # OPENAI_API_KEY is optional if using ChatGPT Plus authentication via auth.json
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - CODEX_QUIET_MODE=${CODEX_QUIET_MODE:-1}
+      - CODEX_FULL_AUTO=${CODEX_FULL_AUTO:-false}
+      - CODEX_HOME=/home/node/.codex
+    
+    working_dir: /workspace
+    
+    # Resource limits for safety
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    
+    # Network settings
+    networks:
+      - codex-net
+    
+    # Container is meant to be run per-task, not as persistent service
+    # Use 'docker-compose run --rm codex-runner "<prompt>"'
+    profiles:
+      - manual
+
+  # MCP Orchestrator Server (optional - can run as Python process instead)
+  mcp-orchestrator:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.orchestrator
+      args:
+        - PYTHON_VERSION=3.11
+    image: mcp-codex-orchestrator:latest
+    container_name: mcp-codex-orchestrator
+    
+    volumes:
+      # Workspace access
+      - ${WORKSPACE_PATH:-../workspace}:/workspace:rw
+      # Runs storage
+      - ${RUNS_PATH:-../runs}:/runs:rw
+      # Docker socket for container management
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:?OPENAI_API_KEY is required}
+      - WORKSPACE_PATH=/workspace
+      - RUNS_PATH=/runs
+      - CODEX_IMAGE=codex-runner:latest
+      - DEFAULT_TIMEOUT=${DEFAULT_TIMEOUT:-300}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    
+    ports:
+      - "${MCP_PORT:-3000}:3000"
+    
+    networks:
+      - codex-net
+    
+    depends_on:
+      - codex-runner
+    
+    # Only start when explicitly requested
+    profiles:
+      - with-orchestrator
+    
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:3000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  codex-net:
+    driver: bridge
+    name: codex-orchestrator-network
+
+volumes:
+  workspace-data:
+    name: codex-workspace
+  runs-data:
+    name: codex-runs

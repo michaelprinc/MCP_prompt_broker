@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple
 
 import yaml
 
@@ -12,6 +12,11 @@ from .config.profiles import InstructionProfile
 from .metadata_registry import (
     MetadataRegistryManager,
     create_registry_manager,
+)
+from .metadata.parser import (
+    update_parser_keywords,
+    clear_dynamic_keywords,
+    get_parser_stats,
 )
 
 
@@ -150,6 +155,81 @@ def _parse_weights(data: Any) -> Mapping[str, Mapping[str, int]]:
     return result
 
 
+def extract_keywords_from_profiles(
+    profiles: Mapping[str, "ParsedProfile"]
+) -> Dict[str, Dict[str, Tuple[str, ...]]]:
+    """Extract keywords from all profiles for parser update.
+    
+    This function scans profile metadata (weights.keywords, required.context_tags,
+    required.domain, weights.domain, weights.intent) and extracts them for use
+    in the metadata parser.
+    
+    Args:
+        profiles: Dictionary of parsed profiles.
+        
+    Returns:
+        Dictionary with keys 'intent', 'domain', 'topic' containing extracted keywords.
+    """
+    intent_keywords: Dict[str, Set[str]] = {}
+    domain_keywords: Dict[str, Set[str]] = {}
+    topic_keywords: Dict[str, Set[str]] = {}
+    
+    for profile_name, parsed in profiles.items():
+        profile = parsed.profile
+        yaml_meta = parsed.yaml_metadata
+        
+        # Extract keywords from weights.keywords section
+        weights_keywords = profile.weights.get("keywords", {})
+        if weights_keywords:
+            # These are topic/routing keywords - add to topics
+            topic_keywords.setdefault(profile_name, set()).update(
+                k.lower() for k in weights_keywords.keys()
+            )
+        
+        # Extract from weights.intent section
+        weights_intent = profile.weights.get("intent", {})
+        if weights_intent:
+            for intent_name in weights_intent.keys():
+                # Add profile keywords as triggers for this intent
+                if weights_keywords:
+                    intent_keywords.setdefault(intent_name, set()).update(
+                        k.lower() for k in weights_keywords.keys()
+                    )
+        
+        # Extract from weights.domain section
+        weights_domain = profile.weights.get("domain", {})
+        if weights_domain:
+            for domain_name in weights_domain.keys():
+                # Add profile keywords as triggers for this domain
+                if weights_keywords:
+                    domain_keywords.setdefault(domain_name, set()).update(
+                        k.lower() for k in weights_keywords.keys()
+                    )
+        
+        # Extract from required.context_tags
+        req_context_tags = profile.required.get("context_tags", set())
+        if req_context_tags:
+            topic_keywords.setdefault(profile_name, set()).update(
+                t.lower() for t in req_context_tags
+            )
+        
+        # Extract from required.domain
+        req_domains = profile.required.get("domain", set())
+        if req_domains:
+            for domain in req_domains:
+                # Add the profile name keywords to the domain
+                if weights_keywords:
+                    domain_keywords.setdefault(domain.lower(), set()).update(
+                        k.lower() for k in weights_keywords.keys()
+                    )
+    
+    return {
+        "intent": {k: tuple(sorted(v)) for k, v in intent_keywords.items()},
+        "domain": {k: tuple(sorted(v)) for k, v in domain_keywords.items()},
+        "topic": {k: tuple(sorted(v)) for k, v in topic_keywords.items()},
+    }
+
+
 def parse_profile_markdown(file_path: Path) -> ParsedProfile:
     """Parse a single profile markdown file.
     
@@ -273,6 +353,7 @@ class ProfileLoader:
         """Reload all profiles from markdown files.
         
         Also updates the central metadata registry and saves it to JSON.
+        Additionally, updates the metadata parser with keywords extracted from profiles.
         
         Returns:
             Summary of the reload operation.
@@ -280,6 +361,9 @@ class ProfileLoader:
         self._parsed_profiles.clear()
         self._load_errors.clear()
         self._registry_manager.clear()
+        
+        # Clear dynamic parser keywords before reload
+        clear_dynamic_keywords()
         
         if not self._profiles_dir.exists():
             self._load_errors.append(f"Profiles directory not found: {self._profiles_dir}")
@@ -301,6 +385,9 @@ class ProfileLoader:
             except Exception as e:
                 self._load_errors.append(f"Unexpected error parsing {md_file}: {e}")
         
+        # Update metadata parser with keywords from profiles
+        parser_update_result = self._update_parser_from_profiles()
+        
         # Save the registry to JSON file
         registry_result = {}
         try:
@@ -308,7 +395,36 @@ class ProfileLoader:
         except Exception as e:
             self._load_errors.append(f"Error saving metadata registry: {e}")
         
-        return self._get_reload_summary(registry_result)
+        return self._get_reload_summary(registry_result, parser_update_result)
+    
+    def _update_parser_from_profiles(self) -> Dict[str, Any]:
+        """Extract keywords from profiles and update the metadata parser.
+        
+        Returns:
+            Summary of parser updates.
+        """
+        try:
+            extracted = extract_keywords_from_profiles(self._parsed_profiles)
+            
+            update_counts = update_parser_keywords(
+                intent_keywords=extracted.get("intent", {}),
+                domain_keywords=extracted.get("domain", {}),
+                topic_keywords=extracted.get("topic", {}),
+            )
+            
+            parser_stats = get_parser_stats()
+            
+            return {
+                "success": True,
+                "keywords_added": update_counts,
+                "parser_stats": parser_stats,
+            }
+        except Exception as e:
+            self._load_errors.append(f"Error updating parser keywords: {e}")
+            return {
+                "success": False,
+                "error": str(e),
+            }
     
     def _update_registry_from_profile(self, parsed: ParsedProfile) -> None:
         """Update the metadata registry with data from a parsed profile."""
@@ -336,7 +452,11 @@ class ProfileLoader:
             yaml_metadata=yaml_meta,
         )
     
-    def _get_reload_summary(self, registry_result: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def _get_reload_summary(
+        self, 
+        registry_result: Optional[Dict[str, Any]] = None,
+        parser_result: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
         """Generate a summary of the last reload operation."""
         summary = {
             "success": len(self._load_errors) == 0,
@@ -348,6 +468,9 @@ class ProfileLoader:
         
         if registry_result:
             summary["registry"] = registry_result
+        
+        if parser_result:
+            summary["parser_update"] = parser_result
         
         return summary
     
