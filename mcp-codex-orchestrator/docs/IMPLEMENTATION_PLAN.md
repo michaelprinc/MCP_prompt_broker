@@ -10,7 +10,7 @@
 ## 1. Přehled projektu
 
 ### 1.1 Cíl
-Vytvořit **MCP server (Prompt Broker rozšíření)**, který orchestruje běhy OpenAI Codex CLI v izolovaných Docker kontejnerech. Server vystavuje MCP tool `codex.run()` a zajišťuje plánování, logování, error handling a komunikaci výsledků.
+Vytvořit **MCP server (Prompt Broker rozšíření)**, který orchestruje běhy OpenAI Codex CLI v izolovaných Docker kontejnerech. Server vystavuje MCP tool `codex_run` a zajišťuje plánování, logování, error handling a komunikaci výsledků.
 
 ### 1.2 Klíčové vlastnosti
 - **Per-run container** architektura (čistý start pro každý běh)
@@ -37,7 +37,7 @@ Vytvořit **MCP server (Prompt Broker rozšíření)**, který orchestruje běhy
 │  │              MCP Codex Orchestrator Server                  ││
 │  │  ┌─────────────┐  ┌──────────────┐  ┌──────────────────┐   ││
 │  │  │ Tool:       │  │ Run Manager  │  │ Result Collector │   ││
-│  │  │ codex.run() │  │              │  │                  │   ││
+│  │  │ codex_run() │  │              │  │                  │   ││
 │  │  └─────────────┘  └──────────────┘  └──────────────────┘   ││
 │  └─────────────────────────────────────────────────────────────┘│
 │                              │                                   │
@@ -75,7 +75,7 @@ mcp-codex-orchestrator/
 │       ├── server.py               # MCP server implementace
 │       ├── tools/
 │       │   ├── __init__.py
-│       │   └── codex_run.py        # codex.run() tool
+│       │   └── codex_run.py        # codex_run() tool
 │       ├── orchestrator/
 │       │   ├── __init__.py
 │       │   ├── run_manager.py      # Správa běhů
@@ -121,7 +121,7 @@ mcp-codex-orchestrator/
 **MCP Tool definice:**
 
 ```python
-@mcp_tool(name="codex.run")
+@mcp_tool(name="codex_run")
 async def codex_run(
     prompt: str,
     mode: str = "full-auto",           # full-auto | suggest | ask

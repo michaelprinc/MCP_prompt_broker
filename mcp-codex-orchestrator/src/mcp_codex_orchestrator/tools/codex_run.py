@@ -1,7 +1,7 @@
 """
 MCP Codex Orchestrator - Codex Run Tool
 
-Implementace MCP tool codex.run().
+Implementace MCP tool codex_run().
 """
 
 import structlog
@@ -18,7 +18,7 @@ async def handle_codex_run(
     run_manager: RunManager,
 ) -> CodexRunResult:
     """
-    Handle codex.run() tool invocation.
+    Handle codex_run tool invocation.
     
     Args:
         request: The run request with prompt and parameters
@@ -28,7 +28,7 @@ async def handle_codex_run(
         CodexRunResult with the outcome of the run
     """
     logger.info(
-        "Handling codex.run request",
+        "Handling codex_run request",
         prompt_length=len(request.prompt),
         mode=request.mode,
         timeout=request.timeout,
@@ -51,7 +51,7 @@ async def handle_codex_run(
         return result
         
     except Exception as e:
-        logger.exception("Error executing codex.run", error=str(e))
+        logger.exception("Error executing codex_run", error=str(e))
         
         # Return error result
         return CodexRunResult(

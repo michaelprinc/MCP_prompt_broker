@@ -9,7 +9,7 @@ MCP Codex Orchestrator je rozšíření [MCP Prompt Broker](../README.md), kter�
 ### Klíčové vlastnosti
 
 - 🐳 **Per-run container** – každý běh v čistém izolovaném prostředí
-- 🔧 **MCP tool `codex.run()`** – standardní MCP interface
+- 🔧 **MCP tool `codex_run`** – standardní MCP interface
 - 📝 **Strukturované logování** – všechny běhy jsou logovány
 - ⏱️ **Timeout management** – automatické ukončení při překročení limitu
 - 🔄 **Marker-based protokol** – spolehlivá detekce dokončení úlohy
@@ -125,11 +125,11 @@ Přidejte do `.vscode/mcp.json`:
 
 ## 📖 Použití
 
-### MCP Tool: `codex.run()`
+### MCP Tool: `codex_run`
 
 ```python
 # Příklad volání přes MCP
-result = await mcp_client.call_tool("codex.run", {
+result = await mcp_client.call_tool("codex_run", {
     "prompt": "Implementuj funkci pro validaci emailu",
     "mode": "full-auto",
     "timeout": 300

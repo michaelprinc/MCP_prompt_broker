@@ -93,7 +93,7 @@
   - Argument parsing (--host, --port, --transport, --log-level)
 - [x] Vytvořit `src/mcp_codex_orchestrator/server.py`:
   - MCP server instance
-  - Tool registrace (`codex.run`)
+  - Tool registrace (`codex_run`)
   - Lifecycle management (startup, shutdown)
 
 ### 2.2 Data modely

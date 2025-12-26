@@ -41,7 +41,7 @@ def create_server() -> Server:
         """List available MCP tools."""
         return [
             Tool(
-                name="codex.run",
+                name="codex_run",
                 description=(
                     "Spustí OpenAI Codex CLI v izolovaném Docker kontejneru. "
                     "Codex provede zadanou úlohu nad workspace a vrátí výsledek."
@@ -88,7 +88,7 @@ def create_server() -> Server:
         """Handle tool calls."""
         logger.info("Tool called", tool=name, arguments=arguments)
         
-        if name == "codex.run":
+        if name == "codex_run":
             # Validate and create request
             request = CodexRunRequest(
                 prompt=arguments["prompt"],
