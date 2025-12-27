@@ -217,7 +217,7 @@ Technical specifications:
 Generate ONLY code according to these specifications.
   ",
   "mode": "full-auto",
-  "timeout": 300,
+  "timeout": 600,
   "working_dir": "src"
 }
 ```
@@ -230,7 +230,7 @@ Generate ONLY code according to these specifications.
 {
   "prompt": "Create file: src/models.py\n\nImplement data models for the task management system:\n\n1. TaskStatus enum (PENDING, IN_PROGRESS, COMPLETED, FAILED)\n2. Priority enum (LOW, MEDIUM, HIGH, CRITICAL)\n3. Task dataclass with __slots__:\n   - id: str\n   - title: str\n   - description: str | None\n   - status: TaskStatus\n   - priority: Priority\n   - created_at: datetime\n   - updated_at: datetime\n   - metadata: dict[str, Any]\n\nRequirements:\n- Use @dataclass(frozen=False, slots=True)\n- Implement __post_init__ for validation\n- Add methods: to_dict(), from_dict()\n- Custom __repr__ for readable output\n- Type hints for all attributes\n- Docstrings with usage examples",
   "mode": "full-auto",
-  "timeout": 180
+  "timeout": 600
 }
 ```
 
@@ -240,7 +240,7 @@ Generate ONLY code according to these specifications.
 {
   "prompt": "Create file: src/repository.py\n\nImplement the Generic Repository pattern for the Task entity:\n\n1. TaskRepository(Generic[T]) class\n2. Methods:\n   - add(task: Task) -> None\n   - get(task_id: str) -> Task | None\n   - find(predicate: Callable[[Task], bool]) -> list[Task]\n   - update(task_id: str, **updates) -> Task\n   - delete(task_id: str) -> bool\n   - list_all() -> list[Task]\n\nRequirements:\n- Thread-safe implementation (use threading.Lock)\n- In-memory storage with dict[str, Task]\n- Custom exceptions: TaskNotFoundError, DuplicateTaskError\n- Logging of all operations\n- Type hints with Protocol for storage backend\n- Docstrings with complexity analysis\n\nArchitecture:\n- Use Protocol for StorageBackend abstraction\n- Implement InMemoryStorage as default\n- Dependency injection for storage",
   "mode": "full-auto",
-  "timeout": 240,
+  "timeout": 600,
   "working_dir": "src"
 }
 ```
@@ -252,7 +252,7 @@ Generate ONLY code according to these specifications.
 {
   "prompt": "Create file: tests/test_repository.py\n\nImplement comprehensive unit tests for TaskRepository:\n\nTest cases:\n1. test_add_task_success\n2. test_add_duplicate_task_raises_error\n3. test_get_existing_task\n4. test_get_nonexistent_task_returns_none\n5. test_find_with_predicate\n6. test_update_task_success\n7. test_delete_task_success\n8. test_thread_safety (concurrent operations)\n\nFramework: pytest\nFixtures:\n- sample_task: Task instance\n- repository: Fresh TaskRepository\n\nUse:\n- pytest.fixture for setup\n- pytest.raises for exception testing\n- pytest.mark.parametrize for multiple scenarios\n- Mock objects where appropriate",
   "mode": "full-auto",
-  "timeout": 300,
+  "timeout": 600,
   "working_dir": "tests"
 }
 ```
@@ -307,7 +307,7 @@ After each completed task in Codex CLI, perform:
 {
   "prompt": "REFACTORING task_XXX\n\nProblems found during the audit:\n1. [Specific problem 1]\n2. [Specific problem 2]\n\nFix the following in the file [path]:\n- [Specific fix 1]\n- [Specific fix 2]\n\nPreserve:\n- Existing functionality\n- Public method signatures\n- Test compatibility",
   "mode": "full-auto",
-  "timeout": 180
+  "timeout": 600
 }
 ```
 
@@ -320,7 +320,7 @@ After completing all tasks:
 {
   "prompt": "FINAL INTEGRATION\n\nTasks:\n1. Create __init__.py with public API exports\n2. Verify all imports work\n3. Run all tests: pytest tests/ -v\n4. Create usage example in examples/demo.py\n5. Update README.md with:\n   - Installation instructions\n   - Quick start guide\n   - API documentation\n   - Examples",
   "mode": "full-auto",
-  "timeout": 300
+  "timeout": 600
 }
 ```
 "
@@ -409,7 +409,7 @@ Continue with implementation? [Y/n]
 {
   "prompt": "PERFORMANCE OPTIMIZATION\n\nProfile and optimize [module/function]:\n\n1. Use cProfile or line_profiler\n2. Identify bottlenecks\n3. Implement optimizations:\n   - functools.lru_cache for memoization\n   - __slots__ for memory\n   - Generator expressions instead of lists\n   - Async/await for I/O operations\n\n4. Benchmark before and after:\n   - timeit measurement\n   - memory_profiler\n   \n5. Document improvements in docstring\n\nTarget: [specific metrics, e.g., <100ms response time]",
   "mode": "full-auto",
-  "timeout": 300
+  "timeout": 600
 }
 ```
 
@@ -420,7 +420,7 @@ Continue with implementation? [Y/n]
 {
   "prompt": "SECURITY HARDENING\n\nPerform security review for [module]:\n\nChecklist:\n- Input validation (whitelist approach)\n- SQL injection prevention (parametrized queries)\n- XSS prevention (output escaping)\n- Path traversal protection\n- Secrets management (environment variables)\n- Rate limiting where relevant\n- Logging without sensitive data\n- Exception messages without internal details\n\nImplement security measures according to OWASP guidelines.",
   "mode": "suggest",
-  "timeout": 300
+  "timeout": 600
 }
 ```
 

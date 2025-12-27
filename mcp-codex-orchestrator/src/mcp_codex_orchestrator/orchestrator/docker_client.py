@@ -10,6 +10,11 @@ from pathlib import Path
 from typing import AsyncGenerator
 
 import docker
+
+# Default path for Codex authentication file
+DEFAULT_CODEX_AUTH_PATH = Path(
+    os.getenv("CODEX_AUTH_PATH", os.path.expanduser("~/.codex"))
+)
 from docker.errors import DockerException, ImageNotFound, NotFound
 from docker.models.containers import Container
 import structlog
@@ -341,8 +346,12 @@ class DockerCodexClient:
             )
     
     def _build_command(self, prompt: str, mode: str) -> list[str]:
-        """Build Docker command for Codex CLI."""
-        cmd = []
+        """Build Docker command for Codex CLI.
+        
+        Uses 'exec' subcommand for non-interactive execution.
+        """
+        # Use 'exec' subcommand for non-interactive mode
+        cmd = ["exec"]
         
         # Add mode flag
         if mode == "full-auto":
@@ -351,7 +360,7 @@ class DockerCodexClient:
             cmd.append("--suggest")
         # "ask" is the default, no flag needed
         
-        # Add prompt
+        # Add prompt as the task
         cmd.append(prompt)
         
         return cmd
@@ -377,12 +386,18 @@ class DockerCodexClient:
         runs_path: Path,
         run_id: str,
     ) -> dict[str, dict[str, str]]:
-        """Build volume mounts for container."""
+        """Build volume mounts for container.
+        
+        Includes:
+        - Workspace directory (read-write)
+        - Run-specific logs directory (read-write)
+        - Codex auth.json for OAuth/ChatGPT Plus authentication (read-only)
+        """
         # Create run-specific directory
         run_dir = runs_path / run_id
         run_dir.mkdir(parents=True, exist_ok=True)
         
-        return {
+        volumes = {
             str(workspace_path.resolve()): {
                 "bind": "/workspace",
                 "mode": "rw",
@@ -392,6 +407,24 @@ class DockerCodexClient:
                 "mode": "rw",
             },
         }
+        
+        # Mount auth.json for OAuth/ChatGPT Plus authentication
+        # This is required for Codex CLI to authenticate with ChatGPT Plus subscription
+        auth_file = DEFAULT_CODEX_AUTH_PATH / "auth.json"
+        if auth_file.exists():
+            volumes[str(auth_file.resolve())] = {
+                "bind": "/home/node/.codex/auth.json",
+                "mode": "ro",  # Read-only for security
+            }
+            logger.debug("Mounting auth.json for OAuth authentication", auth_file=str(auth_file))
+        else:
+            logger.warning(
+                "auth.json not found - OAuth authentication may fail",
+                expected_path=str(auth_file),
+                hint="Run 'codex login' to authenticate with ChatGPT Plus"
+            )
+        
+        return volumes
     
     def close(self) -> None:
         """Close Docker client connection."""

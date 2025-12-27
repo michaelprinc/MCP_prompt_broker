@@ -1,0 +1,53 @@
+{
+    "$schema": "llama-server-config-schema.json",
+    "_comment": "Konfigurace llama.cpp serveru - snadno modifikovatelná šablona",
+    
+    "server": {
+        "host": "127.0.0.1",
+        "port": 8001,
+        "timeout": 600
+    },
+    
+    "model": {
+        "path": "../models/gpt-oss-20b-Q4_K_S.gguf",
+        "name": "GPT-OSS-20B",
+        "context_size": 4096,
+        "batch_size": 512,
+        "threads": 16,
+        "gpu_layers": 30,
+        "_comment_gpu_layers": "30 = GPU layers, offload pro GPT-OSS-20B na AMD RX 6800"
+    },
+    
+    "gpu": {
+        "backend": "vulkan",
+        "_comment_backend": "Vulkan backend je nainstalován, ale GPT-OSS model aktuálně běží na CPU kvůli nekompatibilitě mxfp4 tensorů.",
+        "device_id": 1,
+        "_comment_device": "0 = integrovaná AMD Radeon, 1 = diskrétní AMD Radeon RX 6800",
+        "main_gpu": 1,
+        "fit_memory": false,
+        "_comment_fit": "Vypnuto - automatický fit způsobuje pád při GPU offloadingu GPT-OSS modelu"
+    },
+    
+    "generation": {
+        "temperature": 0.7,
+        "top_p": 0.95,
+        "top_k": 40,
+        "repeat_penalty": 1.1,
+        "max_tokens": 2048
+    },
+    
+    "api": {
+        "api_key": "",
+        "_comment_api_key": "Prázdné = bez autentizace. Pro produkci nastavte bezpečný klíč.",
+        "cors_allow_origin": "*",
+        "embedding": false,
+        "parallel": 4,
+        "_comment_parallel": "4 paralelní sloty pro souběžné požadavky"
+    },
+    
+    "performance": {
+        "_comment": "Naměřená výkonnost na CPU (AMD Ryzen):",
+        "prompt_tokens_per_sec": 16.6,
+        "predicted_tokens_per_sec": 12.0
+    }
+}

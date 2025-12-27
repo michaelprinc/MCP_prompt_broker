@@ -88,7 +88,10 @@ def create_server() -> Server:
         """Handle tool calls."""
         logger.info("Tool called", tool=name, arguments=arguments)
         
-        if name == "codex_run":
+        # Normalize tool name - VS Code may transform underscores to dots
+        normalized_name = name.replace(".", "_")
+        
+        if normalized_name == "codex_run":
             # Validate and create request
             request = CodexRunRequest(
                 prompt=arguments["prompt"],
@@ -110,7 +113,7 @@ def create_server() -> Server:
                 )
             ]
         
-        raise ValueError(f"Unknown tool: {name}")
+        raise ValueError(f"Unknown tool: {name} (normalized: {normalized_name})")
     
     return server
 

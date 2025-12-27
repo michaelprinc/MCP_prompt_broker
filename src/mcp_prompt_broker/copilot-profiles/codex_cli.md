@@ -46,7 +46,7 @@ Use this profile when:
 
 1. **Docker Isolation**: All Codex runs execute in isolated Docker containers
 2. **MCP Protocol**: Use the `codex_run` tool via MCP for structured communication
-3. **Timeout Management**: Configure appropriate timeouts (default: 300s)
+3. **Timeout Management**: Configure appropriate timeouts (default: 600s)
 4. **Structured Responses**: Receive `CodexRunResult` with status, outputs, and metrics
 5. **Audit Trail**: All runs are logged with unique `run_id` for traceability
 
@@ -81,7 +81,7 @@ The `codex-orchestrator` MCP server exposes the `codex_run` tool with the follow
       },
       "timeout": {
         "type": "integer",
-        "default": 300,
+        "default": 600,
         "description": "Timeout v sekundách"
       },
       "env_vars": {
@@ -116,7 +116,7 @@ Instead of calling Codex CLI directly via subprocess, use the MCP tool:
 {
     "prompt": "Create a Python function that calculates fibonacci numbers with memoization",
     "mode": "full-auto",
-    "timeout": 120,
+    "timeout": 600,
     "env_vars": {
         "PYTHON_VERSION": "3.11"
     }

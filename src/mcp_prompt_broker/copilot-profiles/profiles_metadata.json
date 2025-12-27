@@ -1,10 +1,10 @@
 {
   "version": "1.0",
-  "generated_at": "2025-12-25T21:34:17.828461+00:00",
+  "generated_at": "2025-12-27T13:48:30.147636+00:00",
   "profiles": {
     "codex_cli": {
       "name": "codex_cli",
-      "short_description": "Integration profile for safe Codex CLI invocation, input/output sanitization, and fallback behavior",
+      "short_description": "Integration profile for Codex via MCP codex-orchestrator server with Docker isolation, timeout management, and structured responses",
       "source_file": "codex_cli.md",
       "default_score": 0,
       "fallback": false,
@@ -12,8 +12,9 @@
       "extends": null,
       "required": {
         "context_tags": [
-          "cli_integration",
-          "codex_cli"
+          "codex_cli",
+          "codex_orchestrator",
+          "mcp_integration"
         ]
       },
       "weights": {
@@ -33,27 +34,28 @@
         "keywords": {
           "codex cli": 12,
           "codex": 10,
-          "cli integration": 6,
-          "subprocess": 4,
-          "external tool": 4,
+          "codex orchestrator": 15,
+          "mcp server": 8,
+          "docker isolation": 6,
           "timeout": 2,
           "sandbox": 4
         }
       },
       "capabilities": [
-        "privacy_protection",
+        "adaptive_communication",
+        "quality_assurance",
+        "systematic_analysis",
         "verification"
       ],
       "domains": [
         "code_generation",
         "engineering",
         "general",
-        "python",
-        "security"
+        "python"
       ],
       "checklist_count": 7,
-      "instructions_length": 1630,
-      "last_modified": "2025-12-25T19:07:16.130318+00:00"
+      "instructions_length": 3264,
+      "last_modified": "2025-12-26T11:12:19.929687+00:00"
     },
     "creative_brainstorm": {
       "name": "creative_brainstorm",
@@ -248,6 +250,169 @@
       "checklist_count": 12,
       "instructions_length": 4506,
       "last_modified": "2025-12-25T19:02:02.893485+00:00"
+    },
+    "implementation_planner": {
+      "name": "implementation_planner",
+      "short_description": "Systematic planning profile that generates detailed checklists and implementation plans in separate markdown files with recommended implementation prompts",
+      "source_file": "implementation_planner.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "implementation_planner"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "medium": 2,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "engineering": 4,
+          "architecture": 5,
+          "project_management": 5,
+          "planning": 6
+        },
+        "keywords": {
+          "implementační plán": 18,
+          "implementacni plan": 18,
+          "implementace": 12,
+          "plán": 10,
+          "plan": 10,
+          "checklist": 15,
+          "kontrolní seznam": 15,
+          "kontrolni seznam": 15,
+          "naplánuj": 12,
+          "naplanuj": 12,
+          "rozplánuj": 12,
+          "rozplanuj": 12,
+          "vytvoř plán": 15,
+          "vytvor plan": 15,
+          "projekt": 6,
+          "postup": 8,
+          "kroky": 6,
+          "úkoly": 6,
+          "ukoly": 6,
+          "milníky": 8,
+          "milniky": 8,
+          "implementation plan": 18,
+          "implementation": 12,
+          "planning": 12,
+          "roadmap": 12,
+          "task list": 12,
+          "breakdown": 10,
+          "steps": 6,
+          "tasks": 6,
+          "milestones": 8,
+          "project plan": 15,
+          "action items": 12,
+          "deliverables": 10,
+          "acceptance criteria": 12,
+          "spec": 8,
+          "specification": 10
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "privacy_protection",
+        "verification"
+      ],
+      "domains": [
+        "architecture",
+        "engineering",
+        "planning",
+        "project_management",
+        "security"
+      ],
+      "checklist_count": 22,
+      "instructions_length": 2247,
+      "last_modified": "2025-12-27T13:46:22.716563+00:00"
+    },
+    "implementation_planner_complex": {
+      "name": "implementation_planner_complex",
+      "short_description": "Enterprise-grade planning profile for complex multi-module projects with detailed risk analysis, dependency mapping, and phased rollout strategies",
+      "source_file": "implementation_planner_complex.md",
+      "default_score": 1,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "implementation_planner",
+      "required": {
+        "context_tags": [
+          "implementation_planner_complex"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 4,
+          "critical": 5
+        },
+        "complexity": {
+          "high": 5,
+          "complex": 7,
+          "critical": 8
+        },
+        "domain": {
+          "engineering": 5,
+          "architecture": 7,
+          "project_management": 7,
+          "planning": 7,
+          "enterprise": 6
+        },
+        "keywords": {
+          "komplexní plán": 18,
+          "komplexni plan": 18,
+          "architektura": 14,
+          "migrace": 12,
+          "refaktoring": 12,
+          "refactoring": 12,
+          "systémový design": 15,
+          "systemovy design": 15,
+          "enterprise": 12,
+          "velký projekt": 15,
+          "velky projekt": 15,
+          "více modulů": 12,
+          "vice modulu": 12,
+          "complex implementation": 18,
+          "architecture design": 16,
+          "system design": 16,
+          "migration": 14,
+          "large project": 15,
+          "multi-module": 14,
+          "cross-team": 12,
+          "microservices": 12,
+          "distributed": 12,
+          "scalable": 10,
+          "infrastructure": 12,
+          "deployment": 10,
+          "ci/cd": 10,
+          "devops": 10
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "compliance",
+        "verification"
+      ],
+      "domains": [
+        "architecture",
+        "engineering",
+        "enterprise",
+        "finance",
+        "legal",
+        "planning",
+        "project_management",
+        "security"
+      ],
+      "checklist_count": 19,
+      "instructions_length": 2042,
+      "last_modified": "2025-12-27T13:46:22.716563+00:00"
     },
     "mcp_server_testing_and_validation": {
       "name": "mcp_server_testing_and_validation",
@@ -684,7 +849,7 @@
     },
     "python_code_generation_complex_with_codex": {
       "name": "python_code_generation_complex_with_codex",
-      "short_description": "Advanced Python code generation with architecture patterns, performance optimization, and enterprise-grade practices use Codex CLI",
+      "short_description": "Advanced Python code generation with architecture patterns, performance optimization, and enterprise-grade practices using MCP codex-orchestrator",
       "source_file": "python_code_generation_complex_with_codex.md",
       "default_score": 2,
       "fallback": false,
@@ -693,6 +858,7 @@
       "required": {
         "context_tags": [
           "codex_cli",
+          "codex_orchestrator",
           "ml_modeling"
         ]
       },
@@ -719,6 +885,8 @@
           "optimize python": 2,
           "scalable python": 2,
           "enterprise python": 2,
+          "codex orchestrator": 18,
+          "mcp codex": 15,
           "Codex CLI": 15,
           "Codex": 12,
           "použij Codex": 15,
@@ -747,9 +915,9 @@
         "performance",
         "python"
       ],
-      "checklist_count": 60,
-      "instructions_length": 1160,
-      "last_modified": "2025-12-25T19:09:37.147460+00:00"
+      "checklist_count": 45,
+      "instructions_length": 1288,
+      "last_modified": "2025-12-26T11:13:04.757982+00:00"
     },
     "python_testing_revision": {
       "name": "python_testing_revision",
@@ -1004,48 +1172,51 @@
     }
   },
   "statistics": {
-    "total_profiles": 17,
-    "complex_profiles": 8,
-    "standard_profiles": 9,
+    "total_profiles": 19,
+    "complex_profiles": 9,
+    "standard_profiles": 10,
     "fallback_profile": "general_default",
     "capabilities_coverage": {
-      "privacy_protection": 5,
-      "verification": 15,
-      "chain_of_thought": 8,
+      "adaptive_communication": 9,
+      "quality_assurance": 11,
+      "systematic_analysis": 9,
+      "verification": 17,
+      "chain_of_thought": 10,
       "cross_domain": 2,
       "divergent_thinking": 2,
       "ideation": 3,
-      "quality_assurance": 10,
-      "adaptive_communication": 8,
       "meta_cognition": 4,
-      "systematic_analysis": 8,
-      "compliance": 5,
+      "privacy_protection": 5,
+      "compliance": 6,
       "troubleshooting": 6,
       "incident_response": 5,
       "zero_trust": 1
     },
     "domains_coverage": {
       "code_generation": 1,
-      "engineering": 14,
+      "engineering": 16,
       "general": 9,
       "python": 6,
-      "security": 7,
       "creative": 8,
+      "architecture": 4,
+      "planning": 2,
+      "project_management": 2,
+      "security": 8,
+      "enterprise": 1,
+      "finance": 3,
+      "legal": 7,
       "debugging": 1,
       "healthcare": 5,
-      "legal": 6,
       "quality_assurance": 3,
       "testing": 3,
       "containers": 2,
       "devops": 4,
       "infrastructure": 3,
       "ci_cd": 1,
-      "finance": 2,
       "government": 1,
       "insurance": 1,
       "backend": 3,
       "scripting": 1,
-      "architecture": 2,
       "performance": 3,
       "data_science": 1,
       "machine_learning": 1,

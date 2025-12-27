@@ -15,15 +15,17 @@
   },
   "workflow": {
     "required_first_step": {
-      "tool": "get_profile",
-      "description": "ALWAYS call get_profile from mcp-prompt-broker as the FIRST step when receiving a user request. This analyzes the prompt and returns the optimal instruction profile with domain-specific guidance.",
+      "tool": "resolve_prompt",
+      "aliases": ["get_profile"],
+      "description": "CRITICAL: ALWAYS call resolve_prompt (or get_profile) as the VERY FIRST step for ANY user request. This is MANDATORY - do NOT skip this step. The tool analyzes the prompt and returns domain-specific instructions that MUST be followed.",
+      "priority": "highest",
       "input": {
-        "prompt": "User's complete request text",
+        "prompt": "User's complete request text - pass the ENTIRE user message",
         "metadata": "Optional: override specific metadata fields (domain, capability, complexity)"
       },
       "output": {
         "profile_name": "Selected instruction profile identifier",
-        "instructions": "Detailed instructions to follow for this specific task",
+        "instructions": "Detailed instructions to follow for this specific task - MUST BE APPLIED",
         "metadata": "Enriched metadata including domain, capabilities, complexity, confidence score"
       }
     },
@@ -63,10 +65,11 @@
     ]
   },
   "best_practices": [
-    "Always start by calling get_profile to obtain context-appropriate instructions",
+    "ALWAYS start by calling resolve_prompt (or get_profile) - this is MANDATORY for every request",
+    "Never skip the initial prompt routing step - it provides critical context-specific instructions",
     "Follow the instructions from the selected profile precisely",
     "Use profile metadata (complexity, confidence) to adjust response detail level",
-    "For low-confidence routing, consider asking user for clarification",
+    "For low-confidence routing (< 0.7), consider asking user for clarification",
     "Leverage checklists from profiles for multi-step tasks",
     "Hot-reload profiles during development without restarting VS Code",
     "Use find_profiles_by_* tools to discover relevant profiles for new domains",
@@ -74,10 +77,12 @@
   ],
   "metadata": {
     "author": "MCP Prompt Broker Project",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "created": "2025-12-06",
+    "updated": "2025-12-26",
     "mcp_server_version": "0.1.0",
     "required_mcp_tools": [
+      "resolve_prompt",
       "get_profile",
       "list_profiles",
       "get_checklist",
@@ -86,6 +91,10 @@
       "find_profiles_by_domain",
       "get_registry_summary",
       "reload_profiles"
-    ]
+    ],
+    "primary_tool": "resolve_prompt",
+    "tool_aliases": {
+      "resolve_prompt": ["get_profile"]
+    }
   }
 }

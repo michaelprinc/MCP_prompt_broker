@@ -1,32 +1,41 @@
-"""Train a RandomForestClassifier on the iris dataset and report accuracy metrics."""
-from sklearn.datasets import load_iris
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, classification_report
+"""Train a LinearRegression model on a toy regression dataset and save it."""
+from pathlib import Path
+
+import joblib
+from sklearn.datasets import make_regression
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
 
 def main() -> None:
-    iris = load_iris()
-    features, labels = iris.data, iris.target
-
-    train_features, test_features, train_labels, test_labels = train_test_split(
-        features,
-        labels,
-        test_size=0.2,
-        stratify=labels,
+    features, targets = make_regression(
+        n_samples=300,
+        n_features=4,
+        noise=12.0,
         random_state=42,
     )
 
-    model = RandomForestClassifier(random_state=42)
+    train_features, test_features, train_labels, test_labels = train_test_split(
+        features,
+        targets,
+        test_size=0.2,
+        random_state=42,
+    )
+
+    model = LinearRegression()
     model.fit(train_features, train_labels)
 
     predictions = model.predict(test_features)
-    accuracy = accuracy_score(test_labels, predictions)
-    report = classification_report(test_labels, predictions, target_names=iris.target_names)
+    mse = mean_squared_error(test_labels, predictions)
+    r2 = r2_score(test_labels, predictions)
 
-    print(f"Accuracy: {accuracy:.4f}")
-    print("Classification report:\n")
-    print(report)
+    print(f"Mean squared error: {mse:.2f}")
+    print(f"R2 score: {r2:.3f}")
+
+    model_path = Path("linear_regression_model.joblib")
+    joblib.dump(model, model_path)
+    print(f"Model saved to {model_path.resolve()}")
 
 
 if __name__ == "__main__":

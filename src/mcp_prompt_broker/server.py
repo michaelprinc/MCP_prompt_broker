@@ -76,6 +76,30 @@ def _build_server(loader: ProfileLoader) -> Server:
                     "required": ["prompt"],
                 },
             ),
+            # Alias for get_profile - improves discoverability for LLM tool selection
+            types.Tool(
+                name="resolve_prompt",
+                description=(
+                    "PRIMARY TOOL: Always call this FIRST before processing any user request. "
+                    "Analyzes the user's prompt, detects domain/capability/complexity, "
+                    "and returns optimal instructions for handling the request. "
+                    "This is the main entry point for intelligent prompt routing."
+                ),
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "prompt": {
+                            "type": "string",
+                            "description": "The user's complete request text to analyze and route.",
+                        },
+                        "metadata": {
+                            "type": "object",
+                            "description": "Optional metadata overrides (domain, capability, complexity).",
+                        },
+                    },
+                    "required": ["prompt"],
+                },
+            ),
             types.Tool(
                 name="reload_profiles",
                 description=(
@@ -177,7 +201,8 @@ def _build_server(loader: ProfileLoader) -> Server:
                 text=json.dumps([_profile_to_dict(profile) for profile in loader.profiles], indent=2)
             )]
 
-        if name == "get_profile":
+        # Handle both get_profile and its alias resolve_prompt
+        if name in ("get_profile", "resolve_prompt"):
             try:
                 prompt = str(arguments.get("prompt", ""))
                 overrides: Mapping[str, object] | None = arguments.get("metadata")

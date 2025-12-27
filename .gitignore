@@ -6,3 +6,5 @@ __pycache__/
 # Keep agent files in .github\agents (these should be committed)
 !.github/agents/*.md
 !.github/agents/*.json
+models/
+llama-cpp-server/bin
