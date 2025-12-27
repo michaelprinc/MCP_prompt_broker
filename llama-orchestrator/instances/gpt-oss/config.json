@@ -2,7 +2,7 @@
     "$schema": "../llama-instance-schema.json",
     "name": "gpt-oss",
     "model": {
-        "path": "../../models/gpt-oss-20b-Q4_K_S.gguf",
+        "path": "models/gpt-oss-20b-Q4_K_S.gguf",
         "context_size": 4096,
         "batch_size": 512,
         "threads": 16

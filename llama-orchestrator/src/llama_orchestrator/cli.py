@@ -271,17 +271,67 @@ def ps(
 
 @app.command()
 def health(
-    name: Annotated[str, typer.Argument(help="Instance name to check")],
+    name: Annotated[str | None, typer.Argument(help="Instance name to check")] = None,
+    all_instances: Annotated[
+        bool, typer.Option("--all", "-a", help="Check all instances")
+    ] = False,
+    watch: Annotated[
+        bool, typer.Option("--watch", "-w", help="Continuously monitor health")
+    ] = False,
 ) -> None:
     """
     Check health status of an instance.
     
     Example:
         llama-orch health gpt-oss
+        llama-orch health --all
     """
-    console.print(f"[blue]Checking health:[/blue] {name}")
-    # TODO: Implement in Phase 3
-    console.print("[yellow]⚠ Not implemented yet (Phase 3)[/yellow]")
+    from llama_orchestrator.config import discover_instances, get_instance_config
+    from llama_orchestrator.health import check_instance_health
+    from rich.panel import Panel
+    
+    if name is None and not all_instances:
+        console.print("[yellow]Specify an instance name or use --all[/yellow]")
+        raise typer.Exit(1)
+    
+    instances_to_check = [name] if name else [n for n, _ in discover_instances()]
+    
+    if not instances_to_check:
+        console.print("[dim]No instances found.[/dim]")
+        return
+    
+    table = Table(title="Health Status")
+    table.add_column("Instance", style="cyan")
+    table.add_column("Status", style="bold")
+    table.add_column("Response Time", style="dim")
+    table.add_column("Details", style="dim")
+    
+    for inst_name in instances_to_check:
+        try:
+            result = check_instance_health(inst_name)
+            
+            # Status styling
+            if result.is_healthy:
+                status_text = "[green]● HEALTHY[/green]"
+            elif result.is_loading:
+                status_text = "[yellow]◐ LOADING[/yellow]"
+            else:
+                status_text = f"[red]✗ {result.status.value.upper()}[/red]"
+            
+            response_time = f"{result.response_time_ms:.1f}ms" if result.response_time_ms else "-"
+            details = result.error_message or ""
+            
+            if result.slots_idle is not None:
+                details = f"Slots: {result.slots_idle} idle, {result.slots_processing} busy"
+            
+            table.add_row(inst_name, status_text, response_time, details)
+            
+        except FileNotFoundError:
+            table.add_row(inst_name, "[dim]NOT FOUND[/dim]", "-", "Config missing")
+        except Exception as e:
+            table.add_row(inst_name, "[red]ERROR[/red]", "-", str(e))
+    
+    console.print(table)
 
 
 @app.command()
@@ -298,10 +348,89 @@ def logs(
         llama-orch logs gpt-oss --tail 50
         llama-orch logs gpt-oss --follow
     """
+    import time
+    from llama_orchestrator.config import get_instance_config, get_logs_dir
+    
+    try:
+        config = get_instance_config(name)
+    except FileNotFoundError:
+        console.print(f"[red]Instance '{name}' not found.[/red]")
+        raise typer.Exit(1)
+    
+    # Determine log file path
+    logs_dir = get_logs_dir() / name
+    log_file = logs_dir / ("stderr.log" if stderr else "stdout.log")
+    
+    if not log_file.exists():
+        console.print(f"[yellow]No log file found at {log_file}[/yellow]")
+        console.print("[dim]Instance may not have been started yet.[/dim]")
+        raise typer.Exit(1)
+    
     log_type = "stderr" if stderr else "stdout"
-    console.print(f"[blue]Showing {log_type} logs for:[/blue] {name}")
-    # TODO: Implement in Phase 4
-    console.print("[yellow]⚠ Not implemented yet (Phase 4)[/yellow]")
+    console.print(f"[dim]Showing {log_type} logs for instance '{name}'[/dim]")
+    console.print(f"[dim]Log file: {log_file}[/dim]\n")
+    
+    def read_last_n_lines(file_path, n):
+        """Read last n lines from a file efficiently."""
+        with open(file_path, 'rb') as f:
+            # Seek to end
+            f.seek(0, 2)
+            file_size = f.tell()
+            
+            if file_size == 0:
+                return []
+            
+            # Read backwards in chunks to find enough lines
+            lines = []
+            chunk_size = 8192
+            position = file_size
+            
+            while position > 0 and len(lines) <= n:
+                chunk_start = max(0, position - chunk_size)
+                f.seek(chunk_start)
+                chunk = f.read(position - chunk_start)
+                
+                # Split into lines and prepend
+                chunk_lines = chunk.decode('utf-8', errors='replace').splitlines(keepends=True)
+                lines = chunk_lines + lines
+                position = chunk_start
+            
+            return lines[-n:] if len(lines) > n else lines
+    
+    if follow:
+        # Follow mode - stream new lines
+        console.print("[dim]Following log output (Ctrl+C to stop)...[/dim]\n")
+        
+        try:
+            with open(log_file, 'r', encoding='utf-8', errors='replace') as f:
+                # First show tail
+                f.seek(0, 2)  # End of file
+                file_size = f.tell()
+                
+                # Show last N lines first
+                lines = read_last_n_lines(log_file, tail)
+                for line in lines:
+                    console.print(line.rstrip())
+                
+                # Then follow
+                f.seek(0, 2)  # Back to end
+                while True:
+                    line = f.readline()
+                    if line:
+                        console.print(line.rstrip())
+                    else:
+                        time.sleep(0.1)
+        except KeyboardInterrupt:
+            console.print("\n[dim]Stopped following logs.[/dim]")
+    else:
+        # Show last N lines
+        lines = read_last_n_lines(log_file, tail)
+        
+        if not lines:
+            console.print("[dim]Log file is empty.[/dim]")
+        else:
+            for line in lines:
+                console.print(line.rstrip())
 
 
 @app.command()
@@ -384,12 +513,109 @@ def dashboard() -> None:
     """
     Launch live TUI dashboard.
     
+    Shows all instances with live status updates.
+    Press 'q' to quit, 'r' to refresh, 'h' for help.
+    
     Example:
         llama-orch dashboard
     """
-    console.print("[blue]Launching dashboard...[/blue]")
-    # TODO: Implement in Phase 4
-    console.print("[yellow]⚠ Not implemented yet (Phase 4)[/yellow]")
+    import time
+    from rich.live import Live
+    from rich.layout import Layout
+    from rich.panel import Panel
+    
+    from llama_orchestrator.config import discover_instances, get_instance_config
+    from llama_orchestrator.engine import list_instances
+    from llama_orchestrator.engine.state import InstanceStatus
+    from llama_orchestrator.health import check_instance_health
+    
+    def build_table() -> Table:
+        """Build the instances table."""
+        table = Table(
+            title="llama-orchestrator Dashboard",
+            caption="Press Ctrl+C to exit",
+            expand=True,
+        )
+        
+        table.add_column("Instance", style="cyan", no_wrap=True)
+        table.add_column("PID", style="magenta", justify="right")
+        table.add_column("Port", style="green", justify="right")
+        table.add_column("Backend", style="yellow")
+        table.add_column("Model", style="dim", max_width=30)
+        table.add_column("Status", style="bold", justify="center")
+        table.add_column("Health", style="bold", justify="center")
+        table.add_column("Uptime", style="dim", justify="right")
+        
+        instances = list_instances()
+        instance_configs = {name for name, _ in discover_instances()}
+        
+        # Merge config info with state info
+        all_names = set(instances.keys()) | instance_configs
+        
+        for name in sorted(all_names):
+            state = instances.get(name)
+            
+            # Get config info
+            try:
+                config = get_instance_config(name)
+                port = str(config.server.port)
+                backend = config.gpu.backend
+                model = config.model.path.name[:30]
+            except Exception:
+                port = "-"
+                backend = "-"
+                model = "-"
+            
+            # State info
+            if state:
+                pid = str(state.pid) if state.pid else "-"
+                
+                status_style = {
+                    InstanceStatus.RUNNING: "green",
+                    InstanceStatus.STARTING: "yellow",
+                    InstanceStatus.STOPPING: "yellow",
+                    InstanceStatus.STOPPED: "dim",
+                    InstanceStatus.ERROR: "red",
+                }.get(state.status, "white")
+                
+                status_text = f"[{status_style}]{state.status_symbol} {state.status.value}[/{status_style}]"
+                health_text = f"{state.health_symbol} {state.health.value}"
+                uptime = state.uptime_str
+            else:
+                pid = "-"
+                status_text = "[dim]○ stopped[/dim]"
+                health_text = "? unknown"
+                uptime = "-"
+            
+            table.add_row(
+                name,
+                pid,
+                port,
+                backend,
+                model,
+                status_text,
+                health_text,
+                uptime,
+            )
+        
+        if not all_names:
+            table.add_row(
+                "[dim]No instances configured[/dim]",
+                "", "", "", "", "", "", ""
+            )
+        
+        return table
+    
+    console.print("[bold]Starting dashboard...[/bold]")
+    console.print("[dim]Press Ctrl+C to exit[/dim]\n")
+    
+    try:
+        with Live(build_table(), console=console, refresh_per_second=1) as live:
+            while True:
+                time.sleep(1)
+                live.update(build_table())
+    except KeyboardInterrupt:
+        console.print("\n[dim]Dashboard closed.[/dim]")
 
 
 @app.command()
@@ -650,14 +876,40 @@ def daemon_start(
     """
     Start the orchestrator daemon.
     
+    The daemon monitors all instances and triggers auto-restarts
+    based on health check policies.
+    
     Example:
         llama-orch daemon start
         llama-orch daemon start --foreground
     """
+    from llama_orchestrator.daemon import is_daemon_running, start_daemon
+    from rich.panel import Panel
+    
+    if is_daemon_running():
+        console.print("[yellow]Daemon is already running.[/yellow]")
+        console.print("Use 'llama-orch daemon status' to check status.")
+        raise typer.Exit(1)
+    
     mode = "foreground" if foreground else "background"
     console.print(f"[green]Starting daemon ({mode})...[/green]")
-    # TODO: Implement in Phase 5
-    console.print("[yellow]⚠ Not implemented yet (Phase 5)[/yellow]")
+    
+    if foreground:
+        console.print("[dim]Press Ctrl+C to stop[/dim]\n")
+        try:
+            start_daemon(foreground=True)
+        except KeyboardInterrupt:
+            console.print("\n[dim]Daemon stopped.[/dim]")
+    else:
+        start_daemon(foreground=False)
+        console.print(Panel(
+            "[green]Daemon started successfully![/green]\n\n"
+            "The daemon will monitor all instances and trigger auto-restarts.\n"
+            "Use 'llama-orch daemon status' to check status.\n"
+            "Use 'llama-orch daemon stop' to stop.",
+            title="✅ Daemon Started",
+            border_style="green"
+        ))
 
 
 @daemon_app.command("stop")
@@ -668,9 +920,24 @@ def daemon_stop() -> None:
     Example:
         llama-orch daemon stop
     """
+    from llama_orchestrator.daemon import is_daemon_running, stop_daemon
+    from rich.panel import Panel
+    
+    if not is_daemon_running():
+        console.print("[yellow]Daemon is not running.[/yellow]")
+        raise typer.Exit(1)
+    
     console.print("[red]Stopping daemon...[/red]")
-    # TODO: Implement in Phase 5
-    console.print("[yellow]⚠ Not implemented yet (Phase 5)[/yellow]")
+    
+    if stop_daemon():
+        console.print(Panel(
+            "[green]Daemon stopped successfully![/green]",
+            title="✅ Daemon Stopped",
+            border_style="green"
+        ))
+    else:
+        console.print("[red]Failed to stop daemon.[/red]")
+        raise typer.Exit(1)
 
 
 @daemon_app.command("status")
@@ -681,9 +948,26 @@ def daemon_status() -> None:
     Example:
         llama-orch daemon status
     """
-    console.print("[blue]Daemon status:[/blue]")
-    # TODO: Implement in Phase 5
-    console.print("[yellow]⚠ Not implemented yet (Phase 5)[/yellow]")
+    from llama_orchestrator.daemon import get_daemon_status
+    from rich.panel import Panel
+    
+    status = get_daemon_status()
+    
+    if status.running:
+        info = f"""
+[green]● Daemon is running[/green]
+
+  PID:                 {status.pid}
+  Instances monitored: {status.instances_monitored}
+"""
+        console.print(Panel(info.strip(), title="Daemon Status", border_style="green"))
+    else:
+        console.print(Panel(
+            "[dim]○ Daemon is not running[/dim]\n\n"
+            "Use 'llama-orch daemon start' to start.",
+            title="Daemon Status",
+            border_style="dim"
+        ))
 
 
 if __name__ == "__main__":
