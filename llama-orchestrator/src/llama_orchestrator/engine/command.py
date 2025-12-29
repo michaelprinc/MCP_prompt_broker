@@ -2,6 +2,7 @@
 Command builder for llama.cpp server.
 
 Builds the command line arguments for llama-server based on instance configuration.
+Supports UUID-based binary resolution from bins/registry.json.
 """
 
 from __future__ import annotations
@@ -27,13 +28,17 @@ def build_command(config: InstanceConfig) -> list[str]:
     """
     Build the llama-server command line from configuration.
     
+    Uses UUID-based binary resolution if config has binary section.
+    Falls back to legacy bin/ if not.
+    
     Args:
         config: Instance configuration
         
     Returns:
         List of command arguments (first element is the executable)
     """
-    server_exe = get_llama_server_path()
+    # Resolve binary path using config (UUID-aware)
+    server_exe = get_llama_server_path(config)
     model_path = resolve_model_path(config)
     
     args = [
@@ -99,14 +104,20 @@ def format_command(args: list[str]) -> str:
     return " ".join(shlex.quote(arg) for arg in args)
 
 
-def validate_executable() -> tuple[bool, str]:
+def validate_executable(config: "InstanceConfig | None" = None) -> tuple[bool, str]:
     """
     Check if llama-server executable exists and is runnable.
+    
+    Args:
+        config: Optional instance config for binary resolution
     
     Returns:
         Tuple of (is_valid, message)
     """
-    server_exe = get_llama_server_path()
+    try:
+        server_exe = get_llama_server_path(config)
+    except FileNotFoundError as e:
+        return False, str(e)
     
     if not server_exe.exists():
         return False, f"llama-server.exe not found at {server_exe}"

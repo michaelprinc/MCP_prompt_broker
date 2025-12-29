@@ -31,5 +31,10 @@ build/
 bin/*.exe
 bin/*.dll
 
+# Binary installations (UUID-based directories with llama.cpp binaries)
+# Keep only registry.json in version control
+bins/*/
+!bins/registry.json
+
 # Model files (too large for git)
 models/*.gguf

@@ -8,9 +8,64 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Literal
+from typing import Literal, Optional
+from uuid import UUID
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, HttpUrl, field_validator, model_validator
+
+
+class BinaryConfig(BaseModel):
+    """
+    Binary configuration for llama.cpp server executable.
+    
+    The binary_id (UUID) is the PRIMARY identifier that joins to
+    bins/registry.json. Version and variant are optional hints
+    for resolution when binary_id is not set.
+    
+    This enables:
+    - Unambiguous binary identification via UUID
+    - Database-like joins between config.json and registry.json
+    - Multiple installations of the same version+variant
+    """
+    
+    binary_id: Optional[UUID] = Field(
+        default=None,
+        description="Primary identifier - UUID of installed binary. Joins to registry.json"
+    )
+    version: Optional[str] = Field(
+        default=None,
+        description="llama.cpp version tag (e.g., 'b7572', 'latest'). Used when binary_id is None"
+    )
+    variant: Literal[
+        "win-cpu-x64",
+        "win-cpu-arm64",
+        "win-vulkan-x64",
+        "win-cuda-12.4-x64",
+        "win-cuda-13.1-x64",
+        "win-hip-radeon-x64",
+        "win-sycl-x64",
+    ] = Field(
+        default="win-vulkan-x64",
+        description="Platform/GPU variant. Used when binary_id is None"
+    )
+    source_url: Optional[HttpUrl] = Field(
+        default=None,
+        description="Custom download URL (overrides auto-generated URL)"
+    )
+    sha256: Optional[str] = Field(
+        default=None,
+        description="Expected SHA256 checksum for verification"
+    )
+    
+    @field_validator("sha256")
+    @classmethod
+    def validate_sha256(cls, v: Optional[str]) -> Optional[str]:
+        """Validate SHA256 format if provided."""
+        if v is not None:
+            v = v.lower().strip()
+            if len(v) != 64 or not all(c in "0123456789abcdef" for c in v):
+                raise ValueError("SHA256 must be 64 hex characters")
+        return v
 
 
 class ModelConfig(BaseModel):
@@ -109,9 +164,16 @@ class InstanceConfig(BaseModel):
     Complete configuration for a llama.cpp server instance.
     
     This is the root schema that combines all sub-configurations.
+    
+    The `binary` field is optional for backward compatibility.
+    If not set, the system falls back to the legacy bin/ directory.
     """
     
     name: str = Field(..., min_length=1, max_length=64, description="Unique instance name")
+    binary: Optional[BinaryConfig] = Field(
+        default=None,
+        description="Binary version configuration. UUID joins to bins/registry.json"
+    )
     model: ModelConfig
     server: ServerConfig = Field(default_factory=ServerConfig)
     gpu: GpuConfig = Field(default_factory=GpuConfig)

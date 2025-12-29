@@ -2,11 +2,14 @@
     "$schema": "../llama-instance-schema.json",
     "name": "gpt-oss",
     
+    // Binary configuration - UUID is the primary identifier
+    // Run 'llama-orch binary install' to get a binary_id
+    // If binary_id is null, version+variant are used as fallback hints
     "binary": {
+        "binary_id": "a9576b8e-4d9a-4f76-a392-8748632b35ed",
         "version": "b7572",
         "variant": "win-vulkan-x64",
-        "source_url": "https://github.com/ggml-org/llama.cpp/releases/download/b7572/llama-b7572-bin-win-vulkan-x64.zip",
-        "sha256": null
+        "source_url": "https://github.com/ggml-org/llama.cpp/releases/download/b7572/llama-b7572-bin-win-vulkan-x64.zip"
     },
     
     "model": {

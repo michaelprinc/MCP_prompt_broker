@@ -5,6 +5,8 @@ Configuration module for llama-orchestrator.
 from llama_orchestrator.config.loader import (
     ConfigLoadError,
     discover_instances,
+    get_bin_dir,
+    get_bins_dir,
     get_instance_config,
     get_instances_dir,
     get_llama_server_path,
@@ -17,6 +19,7 @@ from llama_orchestrator.config.loader import (
 )
 from llama_orchestrator.config.schema import (
     EXAMPLE_CONFIG,
+    BinaryConfig,
     GpuConfig,
     HealthcheckConfig,
     InstanceConfig,
@@ -36,6 +39,7 @@ from llama_orchestrator.config.validator import (
 __all__ = [
     # Schema
     "InstanceConfig",
+    "BinaryConfig",
     "ModelConfig",
     "ServerConfig",
     "GpuConfig",
@@ -52,6 +56,8 @@ __all__ = [
     "discover_instances",
     "get_project_root",
     "get_instances_dir",
+    "get_bin_dir",
+    "get_bins_dir",
     "get_llama_server_path",
     "get_state_dir",
     "get_logs_dir",

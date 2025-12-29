@@ -46,13 +46,64 @@ def get_instances_dir() -> Path:
 
 
 def get_bin_dir() -> Path:
-    """Get the bin directory path (contains llama-server.exe)."""
+    """Get the legacy bin directory path (deprecated, use bins/)."""
     return get_project_root() / "bin"
 
 
-def get_llama_server_path() -> Path:
-    """Get the path to llama-server executable."""
-    return get_bin_dir() / "llama-server.exe"
+def get_bins_dir() -> Path:
+    """Get the bins directory path (contains versioned binaries)."""
+    bins_dir = get_project_root() / "bins"
+    bins_dir.mkdir(exist_ok=True)
+    return bins_dir
+
+
+def get_llama_server_path(config: "InstanceConfig | None" = None) -> Path:
+    """
+    Get the path to llama-server executable.
+    
+    Resolution order:
+    1. If config has binary.binary_id, lookup by UUID in registry
+    2. If config has binary.version+variant, lookup by those
+    3. Use default binary from registry
+    4. Fall back to legacy bin/llama-server.exe
+    
+    Args:
+        config: Optional InstanceConfig for binary resolution
+        
+    Returns:
+        Path to llama-server.exe
+        
+    Raises:
+        FileNotFoundError: If no valid binary found
+    """
+    from llama_orchestrator.binaries import get_binary_manager
+    
+    project_root = get_project_root()
+    
+    # Try new bins/ structure
+    if config is not None and config.binary is not None:
+        manager = get_binary_manager(project_root)
+        server_path = manager.resolve_server_path(config.binary)
+        if server_path is not None and server_path.exists():
+            return server_path
+    
+    # Try default binary
+    try:
+        manager = get_binary_manager(project_root)
+        default = manager.get_default()
+        if default is not None:
+            server_path = manager.registry.get_server_path(default.id)
+            if server_path is not None and server_path.exists():
+                return server_path
+    except Exception:
+        pass  # Fall through to legacy
+    
+    # Fall back to legacy bin/
+    legacy_path = get_bin_dir() / "llama-server.exe"
+    if legacy_path.exists():
+        return legacy_path
+    
+    raise FileNotFoundError("No llama-server.exe found in bins/ or legacy bin/")
 
 
 def get_state_dir() -> Path:

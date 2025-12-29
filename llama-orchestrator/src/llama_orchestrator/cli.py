@@ -12,6 +12,11 @@ Commands:
     dashboard           Live TUI dashboard
     config validate     Validate configuration
     daemon start        Start background daemon
+    binary install      Install llama.cpp binary
+    binary list         List installed binaries
+    binary info         Show binary details
+    binary remove       Remove a binary
+    binary latest       Show latest available version
 """
 
 from pathlib import Path
@@ -34,9 +39,11 @@ app = typer.Typer(
 # Sub-apps for grouped commands
 config_app = typer.Typer(help="Configuration management")
 daemon_app = typer.Typer(help="Daemon management")
+binary_app = typer.Typer(help="Binary version management")
 
 app.add_typer(config_app, name="config")
 app.add_typer(daemon_app, name="daemon")
+app.add_typer(binary_app, name="binary")
 
 # Rich console for pretty output
 console = Console()
@@ -78,6 +85,7 @@ def up(
     Example:
         llama-orch up gpt-oss
     """
+    from llama_orchestrator.config import get_instance_config
     from llama_orchestrator.engine import (
         ProcessError,
         build_command,
@@ -87,12 +95,25 @@ def up(
     )
     from rich.panel import Panel
     
-    # Check executable
-    exe_valid, exe_msg = validate_executable()
+    # Load config first for UUID-aware binary resolution
+    try:
+        config = get_instance_config(name)
+    except FileNotFoundError:
+        console.print(Panel(
+            f"[red]Instance '{name}' not found.[/red]\n\n"
+            "Check that the instance config exists in instances/{name}/config.json",
+            title="❌ Instance Not Found",
+            border_style="red"
+        ))
+        raise typer.Exit(1)
+    
+    # Check executable with config for UUID-based resolution
+    exe_valid, exe_msg = validate_executable(config)
     if not exe_valid:
         console.print(Panel(
             f"[red]{exe_msg}[/red]\n\n"
-            "Please ensure llama-server.exe is in the bin/ directory.",
+            "Please install a binary with 'llama-orch binary install'\n"
+            "or ensure llama-server.exe is in the bin/ directory.",
             title="❌ Executable Not Found",
             border_style="red"
         ))
@@ -968,6 +989,309 @@ def daemon_status() -> None:
             title="Daemon Status",
             border_style="dim"
         ))
+
+
+# =============================================================================
+# Binary Version Management Commands
+# =============================================================================
+
+
+@binary_app.command("install")
+def binary_install(
+    version: Annotated[str, typer.Argument(help="Version to install (e.g., b7572 or 'latest')")] = "latest",
+    variant: Annotated[
+        str, typer.Option("--variant", "-var", help="Binary variant (e.g., win-vulkan-x64)")
+    ] = "win-vulkan-x64",
+) -> None:
+    """
+    Install a llama.cpp server binary from GitHub releases.
+    
+    Downloads and extracts the binary to bins/<uuid>/ directory.
+    The binary is registered with a unique UUID for unambiguous identification.
+    
+    Available variants for Windows:
+        win-cpu-x64, win-vulkan-x64, win-cuda-12.4-x64, 
+        win-cuda-13.1-x64, win-hip-radeon-x64, win-sycl-x64
+    
+    Example:
+        llama-orch binary install
+        llama-orch binary install b7572 --variant win-vulkan-x64
+        llama-orch binary install latest --variant win-cuda-12.4-x64
+    """
+    from rich.panel import Panel
+    from rich.progress import Progress, SpinnerColumn, TextColumn
+    
+    from llama_orchestrator.binaries import BinaryManager
+    from llama_orchestrator.config import get_project_root
+    
+    project_root = get_project_root()
+    manager = BinaryManager(project_root)
+    
+    console.print(f"[cyan]Installing llama.cpp binary[/cyan]")
+    console.print(f"  Version: {version}")
+    console.print(f"  Variant: {variant}")
+    console.print()
+    
+    try:
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            console=console,
+        ) as progress:
+            task = progress.add_task("Downloading and installing...", total=None)
+            
+            try:
+                binary = manager.install(
+                    version=version if version != "latest" else None,
+                    variant=variant,
+                )
+                progress.update(task, description="Installation complete!")
+            except Exception as e:
+                progress.update(task, description=f"[red]Error: {e}[/red]")
+                raise
+        
+        console.print()
+        console.print(Panel(
+            f"[green]Binary installed successfully![/green]\n\n"
+            f"  UUID:    [cyan]{binary.id}[/cyan]\n"
+            f"  Version: {binary.version}\n"
+            f"  Variant: {binary.variant}\n"
+            f"  Path:    {binary.path}\n\n"
+            f"[dim]Use this UUID in your instance config.json:[/dim]\n"
+            f'  "binary": {{"binary_id": "{binary.id}"}}',
+            title="✅ Binary Installed",
+            border_style="green"
+        ))
+    except Exception as e:
+        console.print(Panel(
+            f"[red]Failed to install binary:[/red]\n{e}",
+            title="❌ Install Failed",
+            border_style="red"
+        ))
+        raise typer.Exit(1)
+
+
+@binary_app.command("list")
+def binary_list() -> None:
+    """
+    List all installed llama.cpp binaries.
+    
+    Shows all binaries in the bins/ directory with their UUIDs,
+    versions, variants, and installation dates.
+    
+    Example:
+        llama-orch binary list
+    """
+    from llama_orchestrator.binaries.registry import load_registry
+    from llama_orchestrator.config import get_bins_dir
+    
+    bins_dir = get_bins_dir()
+    registry = load_registry(bins_dir)
+    
+    if not registry.binaries:
+        console.print("[dim]No binaries installed.[/dim]")
+        console.print("Use 'llama-orch binary install' to install one.")
+        return
+    
+    table = Table(title="Installed llama.cpp Binaries")
+    
+    table.add_column("UUID", style="cyan", no_wrap=True, max_width=36)
+    table.add_column("Version", style="green")
+    table.add_column("Variant", style="yellow")
+    table.add_column("Installed", style="dim")
+    table.add_column("Path", style="dim", max_width=40)
+    
+    for binary in sorted(registry.binaries, key=lambda b: b.installed_at, reverse=True):
+        table.add_row(
+            str(binary.id),
+            binary.version,
+            binary.variant,
+            binary.installed_at.strftime("%Y-%m-%d %H:%M"),
+            str(binary.path) if binary.path else "-",
+        )
+    
+    console.print(table)
+    console.print()
+    console.print(f"[dim]Total: {len(registry.binaries)} binary/binaries[/dim]")
+
+
+@binary_app.command("info")
+def binary_info(
+    binary_id: Annotated[str, typer.Argument(help="Binary UUID or partial UUID")],
+) -> None:
+    """
+    Show detailed information about an installed binary.
+    
+    Example:
+        llama-orch binary info 550e8400-e29b-41d4-a716-446655440000
+        llama-orch binary info 550e8400  # partial UUID match
+    """
+    from uuid import UUID
+    
+    from rich.panel import Panel
+    
+    from llama_orchestrator.binaries.registry import load_registry
+    from llama_orchestrator.config import get_bins_dir
+    
+    bins_dir = get_bins_dir()
+    registry = load_registry(bins_dir)
+    
+    # Find matching binary (exact or partial UUID match)
+    matches = []
+    for binary in registry.binaries:
+        if str(binary.id) == binary_id:
+            matches = [binary]
+            break
+        if str(binary.id).startswith(binary_id):
+            matches.append(binary)
+    
+    if not matches:
+        console.print(f"[red]No binary found matching '{binary_id}'[/red]")
+        raise typer.Exit(1)
+    
+    if len(matches) > 1:
+        console.print(f"[yellow]Multiple binaries match '{binary_id}':[/yellow]")
+        for m in matches:
+            console.print(f"  - {m.id}")
+        console.print("\nPlease provide a more specific UUID.")
+        raise typer.Exit(1)
+    
+    binary = matches[0]
+    
+    info = f"""
+[cyan]UUID:[/cyan]         {binary.id}
+[cyan]Version:[/cyan]      {binary.version}
+[cyan]Variant:[/cyan]      {binary.variant}
+[cyan]Path:[/cyan]         {binary.path}
+[cyan]Download URL:[/cyan] {binary.download_url or 'N/A'}
+[cyan]Installed:[/cyan]    {binary.installed_at.strftime("%Y-%m-%d %H:%M:%S")}
+[cyan]SHA256:[/cyan]       {binary.sha256 or 'N/A'}
+"""
+    
+    console.print(Panel(
+        info.strip(),
+        title=f"Binary {binary.version}-{binary.variant}",
+        border_style="cyan"
+    ))
+
+
+@binary_app.command("remove")
+def binary_remove(
+    binary_id: Annotated[str, typer.Argument(help="Binary UUID to remove")],
+    force: Annotated[bool, typer.Option("--force", "-f", help="Skip confirmation")] = False,
+) -> None:
+    """
+    Remove an installed llama.cpp binary.
+    
+    Removes the binary directory and unregisters it from the registry.
+    
+    Example:
+        llama-orch binary remove 550e8400-e29b-41d4-a716-446655440000
+        llama-orch binary remove 550e8400 --force
+    """
+    import shutil
+    from uuid import UUID
+    
+    from rich.panel import Panel
+    
+    from llama_orchestrator.binaries.registry import load_registry, remove_binary
+    from llama_orchestrator.config import get_bins_dir
+    
+    bins_dir = get_bins_dir()
+    registry = load_registry(bins_dir)
+    
+    # Find matching binary
+    matches = []
+    for binary in registry.binaries:
+        if str(binary.id) == binary_id:
+            matches = [binary]
+            break
+        if str(binary.id).startswith(binary_id):
+            matches.append(binary)
+    
+    if not matches:
+        console.print(f"[red]No binary found matching '{binary_id}'[/red]")
+        raise typer.Exit(1)
+    
+    if len(matches) > 1:
+        console.print(f"[yellow]Multiple binaries match '{binary_id}':[/yellow]")
+        for m in matches:
+            console.print(f"  - {m.id} ({m.version}-{m.variant})")
+        console.print("\nPlease provide a more specific UUID.")
+        raise typer.Exit(1)
+    
+    binary = matches[0]
+    
+    # Confirm deletion
+    if not force:
+        console.print(f"[yellow]About to remove binary:[/yellow]")
+        console.print(f"  UUID:    {binary.id}")
+        console.print(f"  Version: {binary.version}")
+        console.print(f"  Variant: {binary.variant}")
+        console.print()
+        
+        confirm = typer.confirm("Are you sure you want to remove this binary?")
+        if not confirm:
+            console.print("[dim]Cancelled.[/dim]")
+            raise typer.Exit(0)
+    
+    # Remove directory
+    if binary.path and binary.path.exists():
+        shutil.rmtree(binary.path)
+        console.print(f"[dim]Removed directory: {binary.path}[/dim]")
+    
+    # Remove from registry
+    remove_binary(bins_dir, binary.id)
+    
+    console.print(Panel(
+        f"[green]Binary removed successfully![/green]\n\n"
+        f"  UUID:    {binary.id}\n"
+        f"  Version: {binary.version}\n"
+        f"  Variant: {binary.variant}",
+        title="✅ Binary Removed",
+        border_style="green"
+    ))
+
+
+@binary_app.command("latest")
+def binary_latest(
+    variant: Annotated[
+        str, typer.Option("--variant", "-var", help="Binary variant")
+    ] = "win-vulkan-x64",
+) -> None:
+    """
+    Show the latest available llama.cpp version from GitHub.
+    
+    Example:
+        llama-orch binary latest
+        llama-orch binary latest --variant win-cuda-12.4-x64
+    """
+    from rich.panel import Panel
+    
+    from llama_orchestrator.binaries import GitHubClient
+    from llama_orchestrator.binaries.schema import build_download_url
+    
+    console.print("[cyan]Fetching latest release from GitHub...[/cyan]")
+    
+    try:
+        client = GitHubClient()
+        release = client.get_latest_release()
+        download_url = build_download_url(release.version, variant)
+        
+        console.print(Panel(
+            f"[green]Latest llama.cpp release:[/green]\n\n"
+            f"  Version:      [cyan]{release.version}[/cyan]\n"
+            f"  Published:    {release.published_at.strftime('%Y-%m-%d %H:%M')}\n"
+            f"  Variant:      {variant}\n"
+            f"  Download URL: {download_url}\n\n"
+            f"[dim]Install with:[/dim]\n"
+            f"  llama-orch binary install {release.version} --variant {variant}",
+            title="Latest Release",
+            border_style="cyan"
+        ))
+    except Exception as e:
+        console.print(f"[red]Failed to fetch latest release:[/red] {e}")
+        raise typer.Exit(1)
 
 
 if __name__ == "__main__":

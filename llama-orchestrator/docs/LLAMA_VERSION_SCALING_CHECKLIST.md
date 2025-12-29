@@ -1,6 +1,7 @@
 # llama.cpp Version Scaling - Implementation Checklist
 
 > Generated: 2025-12-29
+> Updated: 2025-01-XX (Phase 1-4 Complete)
 > Complexity: **Complex** (multi-module, new dependencies, schema changes)
 > Estimated Total Effort: **8-12 hours**
 
@@ -11,115 +12,119 @@
 This checklist covers the implementation of a scalable llama.cpp binary version management system for `llama-orchestrator`. The system enables:
 
 - Multiple llama.cpp versions to coexist
-- UUID4-based binary folder isolation
+- **UUID4-based binary identification (PRIMARY KEY)**
 - Automatic download and installation from GitHub releases
 - Per-instance version pinning via config.json
+
+**Key Design Decision:** UUID is the PRIMARY identifier for binaries. Version+variant are supplementary hints for fallback resolution.
 
 ---
 
 ## Phase 1: Schema & Configuration Updates
 
-**Estimated Effort:** 2 hours
+**Estimated Effort:** 2 hours | **Status:** ✅ COMPLETE
 
 ### 1.1 Extend Instance Config Schema
-- [ ] Add `binary` section to `InstanceConfig` (Pydantic model)
-  - [ ] `version`: str (e.g., "b7572", "latest")
-  - [ ] `variant`: Literal["cpu-x64", "vulkan-x64", "cuda-12.4-x64", ...]
-  - [ ] `source_url`: Optional[str] (custom download URL override)
-  - [ ] `sha256`: Optional[str] (checksum verification)
-- [ ] Acceptance: New fields validated by Pydantic, optional with defaults
-- [ ] Update JSON Schema file if exists
+- [x] Add `binary` section to `InstanceConfig` (Pydantic model)
+  - [x] `binary_id`: UUID (PRIMARY KEY)
+  - [x] `version`: str (e.g., "b7572", "latest") - fallback hint
+  - [x] `variant`: Literal["cpu-x64", "vulkan-x64", "cuda-12.4-x64", ...]
+  - [x] `source_url`: Optional[str] (custom download URL override)
+- [x] Acceptance: New fields validated by Pydantic, optional with defaults
+- [x] Update JSON Schema file if exists
 
 ### 1.2 Create Binary Registry Schema
-- [ ] Create `BinaryVersion` Pydantic model
-  - [ ] `id`: UUID4 (unique identifier)
-  - [ ] `version`: str (llama.cpp version tag)
-  - [ ] `variant`: str (platform/GPU variant)
-  - [ ] `download_url`: str
-  - [ ] `sha256`: Optional[str]
-  - [ ] `installed_at`: datetime
-  - [ ] `path`: Path (relative path under `bins/`)
-- [ ] Create `BinaryRegistry` model for tracking all installed versions
-- [ ] Acceptance: Models serialize/deserialize correctly
+- [x] Create `BinaryVersion` Pydantic model
+  - [x] `binary_id`: UUID4 (PRIMARY KEY)
+  - [x] `version`: str (llama.cpp version tag)
+  - [x] `variant`: str (platform/GPU variant)
+  - [x] `download_url`: str
+  - [x] `sha256`: Optional[str]
+  - [x] `installed_at`: datetime
+  - [x] `path`: Path (relative path under `bins/`)
+- [x] Create `BinaryRegistry` model for tracking all installed versions
+- [x] Acceptance: Models serialize/deserialize correctly
 
 ### 1.3 Update Instance Config Template
-- [ ] Update `instances/<name>/config.json` to include `binary` section
-- [ ] Add example config for `gpt-oss` with Vulkan binary reference
-- [ ] Acceptance: Existing configs still load (backward compatible)
+- [x] Update `instances/<name>/config.json` to include `binary` section
+- [x] Add example config for `gpt-oss` with Vulkan binary reference
+- [x] Acceptance: Existing configs still load (backward compatible)
 
 ---
 
 ## Phase 2: Binary Management Module
 
-**Estimated Effort:** 3-4 hours
+**Estimated Effort:** 3-4 hours | **Status:** ✅ COMPLETE
 
 ### 2.1 Create Binary Manager Module
-- [ ] Create `src/llama_orchestrator/binaries/__init__.py`
-- [ ] Create `src/llama_orchestrator/binaries/manager.py`
-  - [ ] `BinaryManager` class with methods:
-    - [ ] `install(version, variant) -> BinaryVersion`
-    - [ ] `uninstall(binary_id: UUID) -> bool`
-    - [ ] `get(binary_id: UUID) -> BinaryVersion | None`
-    - [ ] `list_installed() -> list[BinaryVersion]`
-    - [ ] `get_by_version(version, variant) -> BinaryVersion | None`
-    - [ ] `resolve_latest() -> str` (fetch latest version from GitHub API)
+- [x] Create `src/llama_orchestrator/binaries/__init__.py`
+- [x] Create `src/llama_orchestrator/binaries/manager.py`
+  - [x] `BinaryManager` class with methods:
+    - [x] `install(version, variant) -> BinaryVersion`
+    - [x] `uninstall(binary_id: UUID) -> bool`
+    - [x] `get(binary_id: UUID) -> BinaryVersion | None`
+    - [x] `list_installed() -> list[BinaryVersion]`
+    - [x] `get_by_version(version, variant) -> BinaryVersion | None`
+    - [x] `resolve_latest() -> str` (fetch latest version from GitHub API)
 - [ ] Acceptance: All methods have unit tests
 
 ### 2.2 Implement Download & Extraction
-- [ ] Create `src/llama_orchestrator/binaries/downloader.py`
-  - [ ] `download_binary(url, dest_path) -> Path`
-  - [ ] `extract_archive(archive_path, dest_dir) -> Path`
-  - [ ] `verify_checksum(file_path, expected_sha256) -> bool`
-- [ ] Use `httpx` for async downloads with progress
-- [ ] Support `.zip` (Windows) and `.tar.gz` (Linux/macOS)
-- [ ] Acceptance: Downloads complete, checksums verified, archives extracted
+- [x] Create `src/llama_orchestrator/binaries/downloader.py`
+  - [x] `download_binary(url, dest_path) -> Path`
+  - [x] `extract_archive(archive_path, dest_dir) -> Path`
+  - [x] `verify_checksum(file_path, expected_sha256) -> bool`
+- [x] Use `httpx` for async downloads with progress
+- [x] Support `.zip` (Windows) and `.tar.gz` (Linux/macOS)
+- [x] Acceptance: Downloads complete, checksums verified, archives extracted
 
 ### 2.3 Implement GitHub API Client
-- [ ] Create `src/llama_orchestrator/binaries/github.py`
-  - [ ] `get_latest_release() -> dict` (version, assets)
-  - [ ] `get_release(version: str) -> dict`
-  - [ ] `build_download_url(version, variant) -> str`
-  - [ ] Handle rate limiting gracefully
-- [ ] Acceptance: API calls return expected data, rate limits handled
+- [x] Create `src/llama_orchestrator/binaries/github.py`
+  - [x] `get_latest_release() -> dict` (version, assets)
+  - [x] `get_release(version: str) -> dict`
+  - [x] `build_download_url(version, variant) -> str`
+  - [x] Handle rate limiting gracefully
+- [x] Acceptance: API calls return expected data, rate limits handled
 
 ### 2.4 Create Binary Registry Storage
-- [ ] Create `src/llama_orchestrator/binaries/registry.py`
-  - [ ] Store registry in `state/binaries.json`
-  - [ ] CRUD operations for binary versions
-  - [ ] Atomic writes with temp file + rename
-- [ ] Acceptance: Registry persists across restarts
+- [x] Create `src/llama_orchestrator/binaries/registry.py`
+  - [x] Store registry in `bins/registry.json`
+  - [x] CRUD operations for binary versions
+  - [x] UUID-based lookups (primary) and version+variant lookups (fallback)
+  - [x] Atomic writes with temp file + rename
+- [x] Acceptance: Registry persists across restarts
 
 ---
 
 ## Phase 3: Directory Structure Changes
 
-**Estimated Effort:** 1-2 hours
+**Estimated Effort:** 1-2 hours | **Status:** ✅ COMPLETE
 
 ### 3.1 Implement Scalable Bin Directory Structure
-- [ ] Create new directory layout:
+- [x] Create new directory layout:
   ```
   llama-orchestrator/
   ├── bins/                          # NEW: Versioned binaries
+  │   ├── registry.json              # Central registry with UUIDs
   │   ├── {uuid4}/                   # Unique ID per installation
-  │   │   ├── version.json           # Metadata
   │   │   ├── llama-server.exe
   │   │   ├── *.dll
   │   │   └── ...
   │   └── {uuid4}/
   │       └── ...
   ├── bin/                           # DEPRECATED: Keep for backward compat
-  │   └── llama-server.exe           # Symlink or fallback
+  │   └── llama-server.exe           # Fallback
   ```
-- [ ] Update `get_bin_dir()` to return version-specific path
-- [ ] Create `get_bins_root()` for the `bins/` directory
-- [ ] Acceptance: Old and new paths both work
+- [x] Update `get_bin_dir()` to return version-specific path
+- [x] Create `get_bins_dir()` for the `bins/` directory
+- [x] Acceptance: Old and new paths both work
 
 ### 3.2 Update Path Resolution
-- [ ] Modify `get_llama_server_path(config: InstanceConfig) -> Path`
-  - [ ] Accept config to resolve binary version
-  - [ ] Fall back to legacy `bin/` if no version specified
-- [ ] Update `build_command()` to use instance-specific binary
-- [ ] Acceptance: Commands use correct binary per instance
+- [x] Modify `get_llama_server_path(config: InstanceConfig) -> Path`
+  - [x] Accept config to resolve binary by UUID first
+  - [x] Fall back to version+variant if no UUID
+  - [x] Fall back to legacy `bin/` if no binary section
+- [x] Update `build_command()` to use instance-specific binary
+- [x] Acceptance: Commands use correct binary per instance
 
 ### 3.3 Migration Script
 - [ ] Create `scripts/migrate-bins.py`
@@ -132,26 +137,28 @@ This checklist covers the implementation of a scalable llama.cpp binary version 
 
 ## Phase 4: CLI Commands
 
-**Estimated Effort:** 2 hours
+**Estimated Effort:** 2 hours | **Status:** ✅ COMPLETE
 
 ### 4.1 Add Binary Management Commands
-- [ ] `llama-orch binary install <version> [--variant vulkan-x64]`
-  - [ ] Downloads and installs specified version
-  - [ ] Returns UUID of installed binary
-- [ ] `llama-orch binary list`
-  - [ ] Lists all installed binary versions
-- [ ] `llama-orch binary remove <uuid|version>`
-  - [ ] Removes binary (with safety check for in-use)
-- [ ] `llama-orch binary info <uuid|version>`
-  - [ ] Shows detailed info about binary
-- [ ] Acceptance: All commands work end-to-end
+- [x] `llama-orch binary install <version> [--variant vulkan-x64]`
+  - [x] Downloads and installs specified version
+  - [x] Returns UUID of installed binary
+- [x] `llama-orch binary list`
+  - [x] Lists all installed binary versions
+- [x] `llama-orch binary remove <uuid>`
+  - [x] Removes binary (with confirmation)
+- [x] `llama-orch binary info <uuid>`
+  - [x] Shows detailed info about binary
+- [x] `llama-orch binary latest`
+  - [x] Shows latest available version from GitHub
+- [x] Acceptance: All commands work end-to-end
 
 ### 4.2 Update Instance Commands
 - [ ] Update `llama-orch init` to accept `--binary-version`
-- [ ] Update `llama-orch up` to validate binary exists before start
+- [x] Update `llama-orch up` to validate binary exists before start
 - [ ] Add `llama-orch upgrade <name> [--binary-version]`
   - [ ] Upgrades instance to new binary version
-- [ ] Acceptance: Instance lifecycle respects binary versions
+- [x] Acceptance: Instance lifecycle respects binary versions
 
 ### 4.3 Add Configuration Command
 - [ ] `llama-orch config set-binary <name> <uuid|version>`
@@ -162,7 +169,7 @@ This checklist covers the implementation of a scalable llama.cpp binary version 
 
 ## Phase 5: Testing & Documentation
 
-**Estimated Effort:** 2 hours
+**Estimated Effort:** 2 hours | **Status:** 🔄 NOT STARTED
 
 ### 5.1 Unit Tests
 - [ ] `tests/test_binary_manager.py`
@@ -215,13 +222,13 @@ This checklist covers the implementation of a scalable llama.cpp binary version 
 
 | Criteria | Status |
 |----------|--------|
-| Multiple llama.cpp versions can coexist | [ ] |
-| Each binary has unique UUID4 identifier | [ ] |
-| Instances can pin specific binary versions | [ ] |
-| Automatic download from GitHub releases | [ ] |
-| SHA256 checksum verification | [ ] |
-| Backward compatible with legacy `bin/` | [ ] |
-| CLI commands for binary management | [ ] |
+| Multiple llama.cpp versions can coexist | [x] |
+| Each binary has unique UUID4 identifier | [x] |
+| Instances can pin specific binary versions | [x] |
+| Automatic download from GitHub releases | [x] |
+| SHA256 checksum verification | [x] |
+| Backward compatible with legacy `bin/` | [x] |
+| CLI commands for binary management | [x] |
 | Unit tests with >80% coverage | [ ] |
 | Documentation complete | [ ] |
 
