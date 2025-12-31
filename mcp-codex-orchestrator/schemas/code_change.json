@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Codex Code Change Output Schema",
+  "description": "Output schema for code modification tasks",
+  "type": "object",
+  "properties": {
+    "summary": {
+      "type": "string",
+      "description": "Brief summary of the code changes"
+    },
+    "changed_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {"type": "string"},
+          "action": {"type": "string", "enum": ["created", "modified", "deleted"]},
+          "description": {"type": "string"}
+        },
+        "required": ["path", "action"]
+      },
+      "description": "Detailed list of file changes"
+    },
+    "commands_run": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Shell commands executed during the task"
+    },
+    "imports_added": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "New imports or dependencies added"
+    },
+    "breaking_changes": {
+      "type": "boolean",
+      "description": "Whether the changes include breaking API changes"
+    },
+    "tests_affected": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Test files that may need updates"
+    }
+  },
+  "required": ["summary", "changed_files"]
+}

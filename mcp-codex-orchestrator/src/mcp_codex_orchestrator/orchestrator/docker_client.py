@@ -6,6 +6,7 @@ Wrapper pro Docker SDK pro správu Codex kontejnerů.
 
 import asyncio
 import os
+import shutil
 from pathlib import Path
 from typing import AsyncGenerator
 
@@ -126,6 +127,11 @@ class DockerCodexClient:
         timeout: int,
         env_vars: dict[str, str] | None = None,
         working_dir: str | None = None,
+        json_output: bool = True,
+        output_schema: Path | None = None,
+        security_mode: str = "workspace_write",
+        sandbox_flags: list[str] | None = None,
+        schemas_path: Path | None = None,
     ) -> AsyncGenerator[str, None]:
         """
         Run Codex CLI in a Docker container.
@@ -139,6 +145,11 @@ class DockerCodexClient:
             timeout: Timeout in seconds
             env_vars: Additional environment variables
             working_dir: Working directory inside workspace
+            json_output: Enable JSONL streaming output (--json)
+            output_schema: Path to output schema for validation
+            security_mode: Security mode (readonly, workspace_write, full_access)
+            sandbox_flags: Additional sandbox security flags
+            schemas_path: Path to schemas directory
             
         Yields:
             Log lines from the container
@@ -149,14 +160,26 @@ class DockerCodexClient:
         # Ensure image exists
         await self.ensure_image_exists()
         
-        # Build command
-        command = self._build_command(prompt, mode)
+        # Build command with new parameters
+        command = self._build_command(
+            prompt=prompt,
+            mode=mode,
+            json_output=json_output,
+            output_schema=output_schema,
+            sandbox_flags=sandbox_flags,
+        )
         
         # Build environment
         environment = self._build_environment(env_vars)
         
-        # Build volumes
-        volumes = self._build_volumes(workspace_path, runs_path, run_id)
+        # Build volumes with security mode
+        volumes = self._build_volumes(
+            workspace_path=workspace_path,
+            runs_path=runs_path,
+            run_id=run_id,
+            security_mode=security_mode,
+            schemas_path=schemas_path,
+        )
         
         # Container working directory
         container_workdir = "/workspace"
@@ -345,10 +368,27 @@ class DockerCodexClient:
                 error=str(e),
             )
     
-    def _build_command(self, prompt: str, mode: str) -> list[str]:
+    def _build_command(
+        self,
+        prompt: str,
+        mode: str,
+        json_output: bool = True,
+        output_schema: Path | None = None,
+        sandbox_flags: list[str] | None = None,
+    ) -> list[str]:
         """Build Docker command for Codex CLI.
         
         Uses 'exec' subcommand for non-interactive execution.
+        
+        Args:
+            prompt: The task prompt
+            mode: Execution mode (full-auto, suggest, ask)
+            json_output: Enable JSONL streaming output (--json)
+            output_schema: Path to output schema for validation
+            sandbox_flags: Additional sandbox security flags
+            
+        Returns:
+            Command list for Docker execution
         """
         # Use 'exec' subcommand for non-interactive mode
         cmd = ["exec"]
@@ -359,6 +399,18 @@ class DockerCodexClient:
         elif mode == "suggest":
             cmd.append("--suggest")
         # "ask" is the default, no flag needed
+        
+        # NEW: Enable JSONL streaming output
+        if json_output:
+            cmd.append("--json")
+        
+        # NEW: Add output schema validation
+        if output_schema:
+            cmd.extend(["--output-schema", str(output_schema)])
+        
+        # NEW: Add sandbox security flags
+        if sandbox_flags:
+            cmd.extend(sandbox_flags)
         
         # Add prompt as the task
         cmd.append(prompt)
@@ -385,22 +437,41 @@ class DockerCodexClient:
         workspace_path: Path,
         runs_path: Path,
         run_id: str,
+        security_mode: str = "workspace_write",
+        schemas_path: Path | None = None,
     ) -> dict[str, dict[str, str]]:
         """Build volume mounts for container.
         
         Includes:
-        - Workspace directory (read-write)
+        - Workspace directory (read-only or read-write based on security_mode)
         - Run-specific logs directory (read-write)
-        - Codex auth.json for OAuth/ChatGPT Plus authentication (read-only)
+        - Codex home directory with auth.json (read-write for session/state files)
+        - Schemas directory for output validation (read-only)
+        
+        Args:
+            workspace_path: Path to workspace directory
+            runs_path: Path to runs directory
+            run_id: Unique run identifier
+            security_mode: Security mode (readonly, workspace_write, full_access)
+            schemas_path: Path to schemas directory (optional)
+            
+        Returns:
+            Dictionary of volume mounts for Docker
         """
         # Create run-specific directory
         run_dir = runs_path / run_id
         run_dir.mkdir(parents=True, exist_ok=True)
         
+        # Determine workspace mount mode based on security_mode
+        if security_mode == "readonly":
+            ws_mode = "ro"
+        else:
+            ws_mode = "rw"
+        
         volumes = {
             str(workspace_path.resolve()): {
                 "bind": "/workspace",
-                "mode": "rw",
+                "mode": ws_mode,
             },
             str(run_dir.resolve()): {
                 "bind": f"/runs/{run_id}",
@@ -408,21 +479,53 @@ class DockerCodexClient:
             },
         }
         
-        # Mount auth.json for OAuth/ChatGPT Plus authentication
-        # This is required for Codex CLI to authenticate with ChatGPT Plus subscription
+        # NEW: Mount schemas directory for output validation
+        if schemas_path and schemas_path.exists():
+            volumes[str(schemas_path.resolve())] = {
+                "bind": "/schemas",
+                "mode": "ro",
+            }
+            logger.debug("Mounting schemas directory", schemas_path=str(schemas_path))
+        
+        # FIX: Create writable .codex directory for Codex CLI session/state files
+        # Codex CLI needs to write to ~/.codex for session management, cache, and state
+        # We create a run-specific .codex directory and copy auth.json into it
+        codex_temp_dir = run_dir / ".codex"
+        codex_temp_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Copy auth.json if it exists (required for ChatGPT Plus authentication)
         auth_file = DEFAULT_CODEX_AUTH_PATH / "auth.json"
         if auth_file.exists():
-            volumes[str(auth_file.resolve())] = {
-                "bind": "/home/node/.codex/auth.json",
-                "mode": "ro",  # Read-only for security
-            }
-            logger.debug("Mounting auth.json for OAuth authentication", auth_file=str(auth_file))
+            try:
+                shutil.copy2(auth_file, codex_temp_dir / "auth.json")
+                logger.debug(
+                    "Copied auth.json for OAuth authentication",
+                    src=str(auth_file),
+                    dst=str(codex_temp_dir / "auth.json"),
+                )
+            except Exception as e:
+                logger.warning(
+                    "Failed to copy auth.json",
+                    error=str(e),
+                    src=str(auth_file),
+                )
         else:
             logger.warning(
                 "auth.json not found - OAuth authentication may fail",
                 expected_path=str(auth_file),
                 hint="Run 'codex login' to authenticate with ChatGPT Plus"
             )
+        
+        # Mount the entire .codex directory as read-write
+        # This allows Codex CLI to write session data, cache, and state files
+        volumes[str(codex_temp_dir.resolve())] = {
+            "bind": "/home/node/.codex",
+            "mode": "rw",
+        }
+        logger.debug(
+            "Mounting writable .codex directory",
+            codex_dir=str(codex_temp_dir),
+        )
         
         return volumes
     

@@ -1,12 +1,13 @@
 """
-MCP Codex Orchestrator - Run Result Model
+MCP Codex Orchestrator - Run Result Model v2.0
 
 Model pro výsledek běhu Codex CLI.
+Rozšířeno o verify_result a SUCCESS status.
 """
 
 from datetime import datetime
 from enum import Enum
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
@@ -14,12 +15,14 @@ from pydantic import BaseModel, Field
 class RunStatus(str, Enum):
     """Status běhu Codex."""
     
+    SUCCESS = "success"  # V2.0: explicit success
     DONE = "done"
     NEED_USER = "need_user"
     ERROR = "error"
     TIMEOUT = "timeout"
     RUNNING = "running"
     PENDING = "pending"
+    CANCELLED = "cancelled"  # V2.0: cancelled runs
 
 
 class RunOutput(BaseModel):
@@ -38,6 +41,17 @@ class RunOutput(BaseModel):
     full_log: str = Field(
         default="",
         description="Kompletní log výstup",
+    )
+    
+    # V2.0 fields
+    verify_result: dict[str, Any] | None = Field(
+        default=None,
+        description="Výsledek verify loop (testy, lint)",
+    )
+    
+    jsonl_events: list[dict[str, Any]] = Field(
+        default_factory=list,
+        description="Parsed JSONL events z Codex --json output",
     )
 
 

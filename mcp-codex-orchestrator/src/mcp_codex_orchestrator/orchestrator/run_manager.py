@@ -1,7 +1,8 @@
 """
-MCP Codex Orchestrator - Run Manager
+MCP Codex Orchestrator - Run Manager v2.0
 
 Správa životního cyklu Codex běhů.
+Rozšířeno o security_mode, verify loop, JSONL output.
 """
 
 import asyncio
@@ -18,6 +19,8 @@ from mcp_codex_orchestrator.models.run_request import CodexRunRequest
 from mcp_codex_orchestrator.models.run_result import CodexRunResult, RunOutput, RunStatus
 from mcp_codex_orchestrator.orchestrator.docker_client import DockerCodexClient
 from mcp_codex_orchestrator.orchestrator.result_collector import ResultCollector
+from mcp_codex_orchestrator.security.modes import SecurityMode
+from mcp_codex_orchestrator.verify.verify_loop import VerifyConfig, VerifyLoop
 from mcp_codex_orchestrator.utils.markers import inject_mcp_instructions
 
 logger = structlog.get_logger(__name__)
@@ -30,6 +33,7 @@ class RunManager:
         self,
         workspace_path: Path,
         runs_path: Path,
+        schemas_path: Path | None = None,
         default_timeout: int = 300,
     ) -> None:
         """
@@ -38,10 +42,12 @@ class RunManager:
         Args:
             workspace_path: Path to workspace directory
             runs_path: Path to runs directory
+            schemas_path: Path to JSON schemas directory
             default_timeout: Default timeout in seconds
         """
         self.workspace_path = Path(workspace_path).resolve()
         self.runs_path = Path(runs_path).resolve()
+        self.schemas_path = Path(schemas_path).resolve() if schemas_path else None
         self.default_timeout = default_timeout
         
         # Ensure directories exist
@@ -84,6 +90,11 @@ class RunManager:
             "workingDir": request.working_dir,
             "timeout": request.timeout,
             "envVars": request.env_vars,
+            # V2.0 fields
+            "securityMode": request.security_mode,
+            "verify": request.verify,
+            "outputSchema": request.output_schema,
+            "jsonOutput": request.json_output,
         }
         
         async with aiofiles.open(request_file, "w", encoding="utf-8") as f:
@@ -118,6 +129,12 @@ class RunManager:
         working_dir = request_data.get("workingDir")
         env_vars = request_data.get("envVars")
         repo = request_data.get("repo")
+        # V2.0 fields
+        security_mode_str = request_data.get("securityMode", "workspace_write")
+        security_mode = SecurityMode(security_mode_str)
+        verify_enabled = request_data.get("verify", False)
+        output_schema = request_data.get("outputSchema")
+        json_output = request_data.get("jsonOutput", True)
         
         # Determine workspace path
         workspace = Path(repo) if repo else self.workspace_path
@@ -152,6 +169,11 @@ class RunManager:
                 timeout=timeout,
                 env_vars=env_vars,
                 working_dir=working_dir,
+                # V2.0 parameters
+                json_output=json_output,
+                output_schema=output_schema,
+                security_mode=security_mode,
+                schemas_path=self.schemas_path,
             ):
                 log_lines.append(line)
                 
@@ -171,6 +193,33 @@ class RunManager:
                 started_at=started_at,
                 finished_at=finished_at,
             )
+            
+            # Run verify loop if enabled and run was successful
+            if verify_enabled and result.status == RunStatus.SUCCESS:
+                logger.info("Running verify loop", run_id=run_id)
+                verify_config = VerifyConfig(
+                    run_tests=True,
+                    run_lint=True,
+                    run_build=False,  # Optional, can be enabled later
+                    max_iterations=3,
+                )
+                verify_loop = VerifyLoop(
+                    workspace_path=workspace,
+                    config=verify_config,
+                )
+                verify_result = await verify_loop.run()
+                
+                # Add verify results to output
+                if result.output:
+                    result.output.verify_result = verify_result
+                
+                # Update status if verify failed
+                if not verify_result.get("success", False):
+                    logger.warning(
+                        "Verify loop failed",
+                        run_id=run_id,
+                        errors=verify_result.get("errors"),
+                    )
             
             # Save result
             await self._save_result(run_id, result)
@@ -279,6 +328,9 @@ class RunManager:
                 "summary": result.output.summary,
                 "filesChanged": result.output.files_changed,
                 "fullLog": result.output.full_log,
+                # V2.0 fields
+                "verifyResult": result.output.verify_result,
+                "jsonlEvents": result.output.jsonl_events,
             },
             "error": result.error,
             "startedAt": result.started_at.isoformat() if result.started_at else None,
