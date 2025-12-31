@@ -32,11 +32,12 @@ required:
     - compliance
 
 weights:
-  complexity: 0.9
-  documentation: 0.95
-  enterprise: 0.95
-  compliance: 0.9
-  governance: 0.85
+  default:
+    complexity: 0.9
+    documentation: 0.95
+    enterprise: 0.95
+    compliance: 0.9
+    governance: 0.85
 ---
 
 # Instrukce pro agenta: Enterprise dokumentace (ENTERPRISE)

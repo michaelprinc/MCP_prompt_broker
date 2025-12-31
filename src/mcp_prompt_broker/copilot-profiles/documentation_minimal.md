@@ -27,10 +27,11 @@ required:
     - documentation
 
 weights:
-  complexity: 0.2
-  documentation: 0.9
-  structure: 0.4
-  simplicity: 0.95
+  default:
+    complexity: 0.2
+    documentation: 0.9
+    structure: 0.4
+    simplicity: 0.95
 ---
 
 # Instrukce pro agenta: Minimalistická dokumentace (MINIMAL)

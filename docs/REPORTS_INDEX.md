@@ -63,6 +63,13 @@ timeline
 | 09 | [Companion Agent Implementation](../reports/09_companion_agent_implementation.md) | Companion agent integration and configuration | Medium | ✅ Implemented |
 | 10 | [Registry Refactoring Evaluation](../reports/10_registry_refactoring_evaluation.md) | Evaluation of metadata registry refactoring | Medium | ✅ Completed |
 | 11 | [Codex CLI Routing Analysis](../reports/11_codex_cli_profile_routing_analysis.md) | Deep analysis of Codex CLI profile routing failure | Critical | ✅ Analyzed |
+| 22 | [Complexity-Based Routing Plan](../reports/22_complexity_routing_implementation_plan.md) | Implementation plan for automatic _complex profile preference | High | 🚧 Planning |
+
+### 📋 Implementation Checklists
+
+| # | Report | Description | Priority | Status |
+|---|--------|-------------|----------|--------|
+| 22 | [Complexity Routing Checklist](../reports/22_complexity_routing_checklist.md) | Detailed checklist for complexity-based routing implementation | High | 🚧 In Progress |
 
 ---
 

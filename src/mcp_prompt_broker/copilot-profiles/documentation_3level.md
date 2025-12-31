@@ -30,10 +30,11 @@ required:
     - project_structure
 
 weights:
-  complexity: 0.5
-  documentation: 0.95
-  structure: 0.8
-  project_setup: 0.7
+  default:
+    complexity: 0.5
+    documentation: 0.95
+    structure: 0.8
+    project_setup: 0.7
 ---
 
 # Instrukce pro agenta: Tříúrovňová dokumentace (3LEVEL)

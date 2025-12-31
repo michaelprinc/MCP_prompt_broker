@@ -29,10 +29,11 @@ required:
     - project_structure
 
 weights:
-  complexity: 0.7
-  documentation: 0.95
-  structure: 0.9
-  enterprise: 0.6
+  default:
+    complexity: 0.7
+    documentation: 0.95
+    structure: 0.9
+    enterprise: 0.6
 ---
 
 # Instrukce pro agenta: Čtyřúrovňová dokumentace (4LEVEL)

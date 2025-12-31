@@ -28,11 +28,12 @@ required:
     - agile
 
 weights:
-  complexity: 0.5
-  documentation: 0.9
-  agile: 0.95
-  velocity: 0.8
-  collaboration: 0.85
+  default:
+    complexity: 0.5
+    documentation: 0.9
+    agile: 0.95
+    velocity: 0.8
+    collaboration: 0.85
 ---
 
 # Instrukce pro agenta: Agilní dokumentace (AGILE-DOCS)

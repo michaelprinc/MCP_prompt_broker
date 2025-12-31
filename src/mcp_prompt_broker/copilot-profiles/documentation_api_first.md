@@ -29,11 +29,12 @@ required:
     - api
 
 weights:
-  complexity: 0.6
-  documentation: 0.95
-  api: 0.95
-  developer_experience: 0.9
-  integration: 0.85
+  default:
+    complexity: 0.6
+    documentation: 0.95
+    api: 0.95
+    developer_experience: 0.9
+    integration: 0.85
 ---
 
 # Instrukce pro agenta: API-First dokumentace (API-FIRST)
