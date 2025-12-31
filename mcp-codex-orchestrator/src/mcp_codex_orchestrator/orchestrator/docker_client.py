@@ -197,6 +197,20 @@ class DockerCodexClient:
             )
             
             # Create and start container
+            # Determine user for container execution
+            # On Windows/Docker Desktop, run as root to avoid permission issues
+            # with volume mounts (Windows filesystem doesn't have proper Unix permissions)
+            if os.name == "nt":
+                container_user = "root"
+                logger.debug("Running container as root (Windows/Docker Desktop)")
+            else:
+                # On Linux/Mac, run as current user's UID:GID for proper permissions
+                container_user = f"{os.getuid()}:{os.getgid()}"
+                logger.debug(
+                    "Running container as current user",
+                    user=container_user,
+                )
+            
             loop = asyncio.get_event_loop()
             container = await loop.run_in_executor(
                 None,
@@ -207,6 +221,7 @@ class DockerCodexClient:
                     volumes=volumes,
                     working_dir=container_workdir,
                     name=f"codex-run-{run_id}",
+                    user=container_user,  # FIX: Set user for proper permissions
                     detach=True,
                     remove=False,  # We'll remove manually after getting logs
                     mem_limit="4g",
