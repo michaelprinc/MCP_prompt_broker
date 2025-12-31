@@ -24,14 +24,16 @@ keywords:
   - medium project
   - modular docs
   - hub and spoke
+required:
+  context_tags:
+    - documentation
+    - project_structure
+
 weights:
   complexity: 0.5
   documentation: 0.95
   structure: 0.8
   project_setup: 0.7
-required_context_tags:
-  - documentation
-  - project_structure
 ---
 
 # Instrukce pro agenta: Tříúrovňová dokumentace (3LEVEL)

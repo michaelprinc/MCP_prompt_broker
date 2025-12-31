@@ -143,14 +143,30 @@ def _parse_required(data: Any) -> Mapping[str, Iterable[str]]:
 
 
 def _parse_weights(data: Any) -> Mapping[str, Mapping[str, int]]:
-    """Parse weights field from YAML into proper format."""
+    """Parse weights field from YAML into proper format.
+    
+    Supports both nested and flat structures:
+    - Nested: {keywords: {keyword1: 10}, domain: {python: 5}}
+    - Flat: {complexity: 0.5, documentation: 0.95}
+    """
     if not data:
         return {}
     
     result: Dict[str, Dict[str, int]] = {}
-    for key, value_weights in data.items():
-        if isinstance(value_weights, dict):
-            result[key] = {str(k): int(v) for k, v in value_weights.items()}
+    
+    # Check if this is a nested structure (all values are dicts)
+    # or a flat structure (values are numbers/strings)
+    is_nested = all(isinstance(v, dict) for v in data.values() if v is not None)
+    
+    if is_nested:
+        # Nested structure: {keywords: {kw1: 10}, domain: {d1: 5}}
+        for key, value_weights in data.items():
+            if isinstance(value_weights, dict):
+                result[key] = {str(k): int(v) for k, v in value_weights.items()}
+    else:
+        # Flat structure: {complexity: 0.5, documentation: 0.95}
+        # Wrap in a 'default' category
+        result['default'] = {str(k): int(float(v) * 10) for k, v in data.items() if isinstance(v, (int, float))}
     
     return result
 

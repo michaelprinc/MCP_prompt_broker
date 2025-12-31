@@ -25,16 +25,18 @@ keywords:
   - stakeholders
   - adr
   - architecture decision records
+required:
+  context_tags:
+    - documentation
+    - enterprise
+    - compliance
+
 weights:
   complexity: 0.9
   documentation: 0.95
   enterprise: 0.95
   compliance: 0.9
   governance: 0.85
-required_context_tags:
-  - documentation
-  - enterprise
-  - compliance
 ---
 
 # Instrukce pro agenta: Enterprise dokumentace (ENTERPRISE)

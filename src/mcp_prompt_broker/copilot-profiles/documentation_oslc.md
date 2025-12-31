@@ -23,15 +23,17 @@ keywords:
   - changelog
   - issue template
   - pull request
+required:
+  context_tags:
+    - documentation
+    - open_source
+
 weights:
   complexity: 0.5
   documentation: 0.9
   open_source: 0.95
   community: 0.9
   collaboration: 0.85
-required_context_tags:
-  - documentation
-  - open_source
 ---
 
 # Instrukce pro agenta: Open Source Lightweight Documentation (OSLC)

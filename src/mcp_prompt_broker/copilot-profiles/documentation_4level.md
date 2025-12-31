@@ -23,14 +23,16 @@ keywords:
   - modular docs
   - hub and spoke
   - comprehensive
+required:
+  context_tags:
+    - documentation
+    - project_structure
+
 weights:
   complexity: 0.7
   documentation: 0.95
   structure: 0.9
   enterprise: 0.6
-required_context_tags:
-  - documentation
-  - project_structure
 ---
 
 # Instrukce pro agenta: Čtyřúrovňová dokumentace (4LEVEL)

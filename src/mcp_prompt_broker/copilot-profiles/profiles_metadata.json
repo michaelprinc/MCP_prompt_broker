@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2025-12-31T16:43:27.796051+00:00",
+  "generated_at": "2025-12-31T17:01:03.335067+00:00",
   "profiles": {
     "codex_cli": {
       "name": "codex_cli",
@@ -179,7 +179,11 @@
       "fallback": true,
       "complexity": "standard",
       "extends": null,
-      "required": {},
+      "required": {
+        "context_tags": [
+          "general"
+        ]
+      },
       "weights": {
         "priority": {
           "high": 1,
@@ -204,7 +208,7 @@
       ],
       "checklist_count": 5,
       "instructions_length": 1013,
-      "last_modified": "2025-12-31T16:18:58.400054+00:00"
+      "last_modified": "2025-12-31T16:55:18.291666+00:00"
     },
     "general_default_complex": {
       "name": "general_default_complex",
@@ -214,7 +218,11 @@
       "fallback": true,
       "complexity": "complex",
       "extends": "general_default",
-      "required": {},
+      "required": {
+        "context_tags": [
+          "general"
+        ]
+      },
       "weights": {
         "priority": {
           "high": 2,
@@ -249,7 +257,7 @@
       ],
       "checklist_count": 12,
       "instructions_length": 4506,
-      "last_modified": "2025-12-25T19:02:02.893485+00:00"
+      "last_modified": "2025-12-31T16:55:18.296167+00:00"
     },
     "implementation_planner": {
       "name": "implementation_planner",
@@ -454,12 +462,18 @@
           "debug": 6,
           "diagnose": 6,
           "profile": 5,
+          "profiles": 5,
           "routing": 6,
           "hot reload": 8,
           "metadata": 5,
           "parser": 6,
           "funkčnost": 5,
-          "kontrola": 5
+          "kontrola": 8,
+          "zkontroluj": 8,
+          "ověř": 6,
+          "copilot-profiles": 10,
+          "definice": 5,
+          "správnost": 5
         }
       },
       "capabilities": [
@@ -483,7 +497,7 @@
       ],
       "checklist_count": 40,
       "instructions_length": 7018,
-      "last_modified": "2025-12-31T16:27:47.397878+00:00"
+      "last_modified": "2025-12-31T17:00:22.326081+00:00"
     },
     "podman_container_management": {
       "name": "podman_container_management",
@@ -2684,13 +2698,25 @@
       "fallback": false,
       "complexity": "standard",
       "extends": null,
-      "required": {},
-      "weights": {},
+      "required": {
+        "context_tags": [
+          "documentation",
+          "project_structure"
+        ]
+      },
+      "weights": {
+        "default": {
+          "complexity": 5,
+          "documentation": 9,
+          "structure": 8,
+          "project_setup": 7
+        }
+      },
       "capabilities": [],
       "domains": [],
       "checklist_count": 15,
       "instructions_length": 247,
-      "last_modified": "2025-12-31T16:41:58.806043+00:00"
+      "last_modified": "2025-12-31T16:55:18.293665+00:00"
     },
     "documentation_4level": {
       "name": "documentation_4level",
@@ -2700,13 +2726,25 @@
       "fallback": false,
       "complexity": "standard",
       "extends": null,
-      "required": {},
-      "weights": {},
+      "required": {
+        "context_tags": [
+          "documentation",
+          "project_structure"
+        ]
+      },
+      "weights": {
+        "default": {
+          "complexity": 7,
+          "documentation": 9,
+          "structure": 9,
+          "enterprise": 6
+        }
+      },
       "capabilities": [],
       "domains": [],
       "checklist_count": 19,
       "instructions_length": 296,
-      "last_modified": "2025-12-31T16:43:08.017794+00:00"
+      "last_modified": "2025-12-31T16:55:18.293665+00:00"
     },
     "documentation_agile": {
       "name": "documentation_agile",
@@ -2716,13 +2754,26 @@
       "fallback": false,
       "complexity": "standard",
       "extends": null,
-      "required": {},
-      "weights": {},
+      "required": {
+        "context_tags": [
+          "agile",
+          "documentation"
+        ]
+      },
+      "weights": {
+        "default": {
+          "complexity": 5,
+          "documentation": 9,
+          "agile": 9,
+          "velocity": 8,
+          "collaboration": 8
+        }
+      },
       "capabilities": [],
       "domains": [],
       "checklist_count": 10,
       "instructions_length": 157,
-      "last_modified": "2025-12-31T16:43:08.026877+00:00"
+      "last_modified": "2025-12-31T16:55:18.293665+00:00"
     },
     "documentation_api_first": {
       "name": "documentation_api_first",
@@ -2732,15 +2783,28 @@
       "fallback": false,
       "complexity": "standard",
       "extends": null,
-      "required": {},
-      "weights": {},
+      "required": {
+        "context_tags": [
+          "api",
+          "documentation"
+        ]
+      },
+      "weights": {
+        "default": {
+          "complexity": 6,
+          "documentation": 9,
+          "api": 9,
+          "developer_experience": 9,
+          "integration": 8
+        }
+      },
       "capabilities": [],
       "domains": [
         "engineering"
       ],
       "checklist_count": 10,
       "instructions_length": 165,
-      "last_modified": "2025-12-31T16:43:08.026877+00:00"
+      "last_modified": "2025-12-31T16:55:18.293665+00:00"
     },
     "documentation_enterprise": {
       "name": "documentation_enterprise",
@@ -2750,8 +2814,22 @@
       "fallback": false,
       "complexity": "standard",
       "extends": null,
-      "required": {},
-      "weights": {},
+      "required": {
+        "context_tags": [
+          "compliance",
+          "documentation",
+          "enterprise"
+        ]
+      },
+      "weights": {
+        "default": {
+          "complexity": 9,
+          "documentation": 9,
+          "enterprise": 9,
+          "compliance": 9,
+          "governance": 8
+        }
+      },
       "capabilities": [
         "compliance"
       ],
@@ -2760,7 +2838,7 @@
       ],
       "checklist_count": 10,
       "instructions_length": 172,
-      "last_modified": "2025-12-31T16:43:08.026877+00:00"
+      "last_modified": "2025-12-31T16:55:18.296167+00:00"
     },
     "documentation_minimal": {
       "name": "documentation_minimal",
@@ -2770,13 +2848,24 @@
       "fallback": false,
       "complexity": "standard",
       "extends": null,
-      "required": {},
-      "weights": {},
+      "required": {
+        "context_tags": [
+          "documentation"
+        ]
+      },
+      "weights": {
+        "default": {
+          "complexity": 2,
+          "documentation": 9,
+          "structure": 4,
+          "simplicity": 9
+        }
+      },
       "capabilities": [],
       "domains": [],
       "checklist_count": 7,
       "instructions_length": 198,
-      "last_modified": "2025-12-31T16:43:08.026877+00:00"
+      "last_modified": "2025-12-31T16:55:18.296167+00:00"
     },
     "documentation_oslc": {
       "name": "documentation_oslc",
@@ -2786,8 +2875,21 @@
       "fallback": false,
       "complexity": "standard",
       "extends": null,
-      "required": {},
-      "weights": {},
+      "required": {
+        "context_tags": [
+          "documentation",
+          "open_source"
+        ]
+      },
+      "weights": {
+        "default": {
+          "complexity": 5,
+          "documentation": 9,
+          "open_source": 9,
+          "community": 9,
+          "collaboration": 8
+        }
+      },
       "capabilities": [
         "compliance"
       ],
@@ -2796,7 +2898,7 @@
       ],
       "checklist_count": 6,
       "instructions_length": 165,
-      "last_modified": "2025-12-31T16:43:08.026877+00:00"
+      "last_modified": "2025-12-31T16:55:18.296167+00:00"
     }
   },
   "statistics": {

@@ -13,6 +13,10 @@ utterances:
   - "Verify hot reload updates the profiles properly"
   - "Otestuj funkčnost MCP serveru"
   - "Debug why profiles are not matching correctly"
+  - "Zkontroluj profily MCP serveru"
+  - "Check if profiles are correctly defined"
+  - "Kontrola profilů ve složce copilot-profiles"
+  - "Ověř správnost definice profilů"
 utterance_threshold: 0.75
 min_match_ratio: 0.3
 
@@ -43,12 +47,18 @@ weights:
     debug: 6
     diagnose: 6
     profile: 5
+    profiles: 5
     routing: 6
     hot reload: 8
     metadata: 5
     parser: 6
     funkčnost: 5
-    kontrola: 5
+    kontrola: 8
+    zkontroluj: 8
+    ověř: 6
+    copilot-profiles: 10
+    definice: 5
+    správnost: 5
 ---
 
 ## Instructions
@@ -875,3 +885,242 @@ The `tests/test_mcp_server_validation.py` script provides:
 $env:PYTHONIOENCODING='utf-8'
 python tests/test_mcp_server_validation.py
 ```
+
+---
+
+## Profile Structure Fix Procedure (December 31, 2025)
+
+### Quick Diagnostic Commands
+
+**Step 1: Check profile loading status**
+```python
+from mcp_prompt_broker.profile_parser import ProfileLoader
+loader = ProfileLoader()
+loader.reload()
+print(f'Profiles loaded: {len(loader.profiles)}')
+print(f'Load errors: {len(loader.load_errors)}')
+
+# Check for profiles with empty required/weights
+for p in loader.profiles:
+    if not p.required:
+        print(f'{p.name}: Empty required field')
+    if not p.weights:
+        print(f'{p.name}: Empty weights field')
+```
+
+**Step 2: Identify format issues**
+```python
+import yaml
+from pathlib import Path
+
+profiles_dir = Path('src/mcp_prompt_broker/copilot-profiles')
+for md_file in sorted(profiles_dir.glob('*.md')):
+    content = md_file.read_text(encoding='utf-8')
+    if not content.startswith('---'):
+        continue
+    
+    try:
+        yaml_end = content.index('---', 3)
+        yaml_content = content[3:yaml_end]
+        data = yaml.safe_load(yaml_content)
+        
+        # Check for old format
+        if 'required_context_tags' in data and 'required' not in data:
+            print(f'{md_file.name}: OLD FORMAT - has required_context_tags instead of required.context_tags')
+        elif not data.get('required') or data.get('required') == {}:
+            print(f'{md_file.name}: EMPTY required field')
+    except Exception as e:
+        print(f'{md_file.name}: YAML ERROR - {e}')
+```
+
+### Common Issues and Solutions
+
+#### Issue 1: Old YAML Format (`required_context_tags`)
+
+**Symptom:** Profile loaded but `required` field is empty, `required_context_tags` exists at root level.
+
+**Before (broken):**
+```yaml
+weights:
+  complexity: 0.5
+  documentation: 0.95
+required_context_tags:
+  - documentation
+  - project_structure
+---
+```
+
+**After (fixed):**
+```yaml
+required:
+  context_tags:
+    - documentation
+    - project_structure
+
+weights:
+  complexity: 0.5
+  documentation: 0.95
+---
+```
+
+**Affected profiles (December 2025):**
+- `documentation_3level.md`
+- `documentation_4level.md`
+- `documentation_agile.md`
+- `documentation_api_first.md`
+- `documentation_enterprise.md`
+- `documentation_minimal.md`
+- `documentation_oslc.md`
+
+#### Issue 2: Empty `required` Field in Fallback Profiles
+
+**Symptom:** Fallback profiles have `required: {}` which may affect routing.
+
+**Before:**
+```yaml
+fallback: true
+
+required: {}
+
+weights:
+```
+
+**After:**
+```yaml
+fallback: true
+
+required:
+  context_tags:
+    - general
+
+weights:
+```
+
+**Affected profiles:**
+- `general_default.md`
+- `general_default_complex.md`
+
+#### Issue 3: Flat vs Nested Weights Structure
+
+**Symptom:** Profiles with flat weights structure (`weights: {key: value}`) had empty weights after parsing.
+
+**Root cause:** Parser `_parse_weights()` function only handled nested structures.
+
+**Fix applied to `src/mcp_prompt_broker/profile_parser.py`:**
+```python
+def _parse_weights(data: Any) -> Mapping[str, Mapping[str, int]]:
+    """Parse weights field from YAML into proper format.
+    
+    Supports both nested and flat structures:
+    - Nested: {keywords: {keyword1: 10}, domain: {python: 5}}
+    - Flat: {complexity: 0.5, documentation: 0.95}
+    """
+    if not data:
+        return {}
+    
+    result: Dict[str, Dict[str, int]] = {}
+    
+    # Check if this is a nested structure (all values are dicts)
+    is_nested = all(isinstance(v, dict) for v in data.values() if v is not None)
+    
+    if is_nested:
+        # Nested structure: {keywords: {kw1: 10}, domain: {d1: 5}}
+        for key, value_weights in data.items():
+            if isinstance(value_weights, dict):
+                result[key] = {str(k): int(v) for k, v in value_weights.items()}
+    else:
+        # Flat structure: {complexity: 0.5, documentation: 0.95}
+        # Wrap in a 'default' category
+        result['default'] = {str(k): int(float(v) * 10) for k, v in data.items() if isinstance(v, (int, float))}
+    
+    return result
+```
+
+### Valid Profile Template
+
+Use this template when creating or fixing profiles:
+
+```yaml
+---
+name: profile_name
+short_description: Brief description for registry
+default_score: 0  # Use 0 for specialized, 4-5 for fallback
+fallback: false   # true only for general_default profiles
+
+utterances:
+  - "Example prompt that should match this profile"
+  - "Another example in English"
+  - "Příklad v češtině"
+utterance_threshold: 0.7
+min_match_ratio: 0.3
+
+required:
+  context_tags:
+    - tag1
+    - tag2
+
+weights:
+  keywords:
+    keyword1: 10
+    keyword2: 8
+  priority:
+    high: 3
+  domain:
+    engineering: 5
+---
+
+## Instructions
+
+[Profile instructions here - THIS SECTION IS MANDATORY]
+
+## Checklist
+
+- [ ] Item 1
+- [ ] Item 2
+```
+
+### Verification After Fixes
+
+**Run full verification:**
+```python
+from mcp_prompt_broker.profile_parser import ProfileLoader
+loader = ProfileLoader()
+result = loader.reload()
+
+print(f'Profiles loaded: {len(loader.profiles)}')
+print(f'Load errors: {len(loader.load_errors)}')
+
+# Verify no empty required/weights
+issues = []
+for p in loader.profiles:
+    if not p.required:
+        issues.append(f'{p.name}: Empty required')
+    if not p.weights:
+        issues.append(f'{p.name}: Empty weights')
+
+if issues:
+    print(f'Issues found: {len(issues)}')
+    for i in issues:
+        print(f'  - {i}')
+else:
+    print('✅ All profiles have required and weights fields!')
+```
+
+**Run pytest:**
+```powershell
+python -m pytest tests/test_profile_parser.py -v --tb=short
+```
+
+### Summary of December 31, 2025 Fixes
+
+| Issue | Files Affected | Fix Applied |
+|-------|----------------|-------------|
+| `required_context_tags` → `required.context_tags` | 7 documentation profiles | YAML restructure |
+| Empty `required: {}` | 2 fallback profiles | Added `context_tags: ['general']` |
+| Flat weights not parsed | Parser function | Support both nested and flat |
+| Missing `## Instructions` | 7 documentation profiles | Added section header |
+
+**Results after fixes:**
+- Profiles loaded: **47/47 (100%)**
+- Parse errors: **0**
+- All profiles have `required` and `weights`: **✅**

@@ -5,7 +5,9 @@ extends: general_default
 default_score: 5
 fallback: true
 
-required: {}
+required:
+  context_tags:
+    - general
 
 weights:
   priority:

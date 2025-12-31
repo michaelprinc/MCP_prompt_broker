@@ -14,7 +14,9 @@ utterances:
   - "What would you recommend for this situation?"
 utterance_threshold: 0.6
 
-required: {}
+required:
+  context_tags:
+    - general
 
 weights:
   priority:

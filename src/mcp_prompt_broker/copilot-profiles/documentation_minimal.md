@@ -22,13 +22,15 @@ keywords:
   - small project
   - jednoduchá dokumentace
   - simple docs
+required:
+  context_tags:
+    - documentation
+
 weights:
   complexity: 0.2
   documentation: 0.9
   structure: 0.4
   simplicity: 0.95
-required_context_tags:
-  - documentation
 ---
 
 # Instrukce pro agenta: Minimalistická dokumentace (MINIMAL)
