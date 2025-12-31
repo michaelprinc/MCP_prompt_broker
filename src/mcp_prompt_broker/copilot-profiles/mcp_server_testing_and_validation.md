@@ -14,9 +14,10 @@ utterances:
   - "Otestuj funkčnost MCP serveru"
   - "Debug why profiles are not matching correctly"
 utterance_threshold: 0.75
+min_match_ratio: 0.3
 
 required:
-  context_tags: ["testing", "mcp_server", "validation"]
+  context_tags: ["mcp_server_testing_and_validation"]
 
 weights:
   priority:

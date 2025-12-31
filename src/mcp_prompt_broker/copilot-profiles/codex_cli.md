@@ -14,6 +14,7 @@ utterances:
   - "Spusť Codex CLI pro tento úkol"
   - "Let Codex handle the autonomous implementation"
 utterance_threshold: 0.75
+min_match_ratio: 0.3
 
 required:
   context_tags: ["codex_cli", "mcp_integration", "codex_orchestrator"]

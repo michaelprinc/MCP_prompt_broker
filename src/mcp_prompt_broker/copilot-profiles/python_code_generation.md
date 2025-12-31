@@ -12,9 +12,10 @@ utterances:
   - "Napiš Python funkci pro výpočet"
   - "Generate Python module with type hints"
 utterance_threshold: 0.7
+min_match_ratio: 0.4
 
 required:
-  context_tags: ["code_generation", "python"]
+  context_tags: ["python_code_generation"]
 
 weights:
   priority:

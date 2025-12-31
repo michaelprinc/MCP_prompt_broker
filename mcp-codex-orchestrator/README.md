@@ -99,7 +99,7 @@ python -m mcp_codex_orchestrator
 
 | Variable | Required | Default | Popis |
 |----------|----------|---------|-------|
-| `OPENAI_API_KEY` | ✅ | - | OpenAI API klíč |
+| `OPENAI_API_KEY` | ❌ | - | OpenAI API klíč (volitelně při integraci přes API)|
 | `WORKSPACE_PATH` | ❌ | `./workspace` | Cesta k workspace |
 | `RUNS_PATH` | ❌ | `./runs` | Cesta k run artefaktům |
 | `CODEX_IMAGE` | ❌ | `codex-runner:latest` | Docker image name |

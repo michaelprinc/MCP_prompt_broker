@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2025-12-31T16:14:22.632822+00:00",
+  "generated_at": "2025-12-31T16:27:56.973161+00:00",
   "profiles": {
     "codex_cli": {
       "name": "codex_cli",
@@ -55,7 +55,7 @@
       ],
       "checklist_count": 7,
       "instructions_length": 3264,
-      "last_modified": "2025-12-26T11:12:19.929687+00:00"
+      "last_modified": "2025-12-31T16:27:47.394872+00:00"
     },
     "creative_brainstorm": {
       "name": "creative_brainstorm",
@@ -106,7 +106,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 1860,
-      "last_modified": "2025-12-25T19:09:37.148460+00:00"
+      "last_modified": "2025-12-31T16:18:58.400054+00:00"
     },
     "creative_brainstorm_complex": {
       "name": "creative_brainstorm_complex",
@@ -204,7 +204,7 @@
       ],
       "checklist_count": 5,
       "instructions_length": 1013,
-      "last_modified": "2025-12-25T19:07:16.130318+00:00"
+      "last_modified": "2025-12-31T16:18:58.400054+00:00"
     },
     "general_default_complex": {
       "name": "general_default_complex",
@@ -333,7 +333,7 @@
       ],
       "checklist_count": 22,
       "instructions_length": 2247,
-      "last_modified": "2025-12-27T13:46:22.716563+00:00"
+      "last_modified": "2025-12-31T16:18:58.403615+00:00"
     },
     "implementation_planner_complex": {
       "name": "implementation_planner_complex",
@@ -424,9 +424,7 @@
       "extends": null,
       "required": {
         "context_tags": [
-          "mcp_server",
-          "testing",
-          "validation"
+          "mcp_server_testing_and_validation"
         ]
       },
       "weights": {
@@ -485,7 +483,7 @@
       ],
       "checklist_count": 40,
       "instructions_length": 7018,
-      "last_modified": "2025-12-25T20:06:56.158304+00:00"
+      "last_modified": "2025-12-31T16:27:47.397878+00:00"
     },
     "podman_container_management": {
       "name": "podman_container_management",
@@ -659,7 +657,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 1640,
-      "last_modified": "2025-12-25T19:08:32.364850+00:00"
+      "last_modified": "2025-12-31T16:18:58.401611+00:00"
     },
     "privacy_sensitive_complex": {
       "name": "privacy_sensitive_complex",
@@ -744,8 +742,7 @@
       "extends": null,
       "required": {
         "context_tags": [
-          "code_generation",
-          "python"
+          "python_code_generation"
         ]
       },
       "weights": {
@@ -782,7 +779,7 @@
       ],
       "checklist_count": 7,
       "instructions_length": 3033,
-      "last_modified": "2025-12-25T19:08:32.364850+00:00"
+      "last_modified": "2025-12-31T16:27:47.395879+00:00"
     },
     "python_code_generation_complex": {
       "name": "python_code_generation_complex",
@@ -1093,7 +1090,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 1494,
-      "last_modified": "2025-12-25T19:07:16.134184+00:00"
+      "last_modified": "2025-12-31T16:18:58.401611+00:00"
     },
     "technical_support_complex": {
       "name": "technical_support_complex",
@@ -2266,7 +2263,7 @@
       ],
       "checklist_count": 11,
       "instructions_length": 7550,
-      "last_modified": "2025-12-31T14:29:52.147836+00:00"
+      "last_modified": "2025-12-31T16:18:58.403615+00:00"
     },
     "skeptical_peer_reviewer": {
       "name": "skeptical_peer_reviewer",

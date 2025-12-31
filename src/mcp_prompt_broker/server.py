@@ -15,6 +15,8 @@ from mcp.server.models import InitializationOptions
 from .config.profiles import InstructionProfile, get_instruction_profiles, reload_instruction_profiles
 from .metadata.parser import ParsedMetadata, analyze_prompt
 from .router.profile_router import EnhancedMetadata, ProfileRouter, RoutingResult
+from .router.hybrid_router import HybridProfileRouter, HybridRoutingResult, get_router
+from .router.semantic_scorer import is_semantic_available
 from .profile_parser import (
     get_profile_loader,
     reload_profiles,
@@ -43,9 +45,10 @@ def _build_server(loader: ProfileLoader) -> Server:
     server = Server("mcp-prompt-broker")
     
     # Create router that references the loader's profiles
-    def get_router() -> ProfileRouter:
+    # Uses HybridProfileRouter when USE_SEMANTIC_ROUTING=true
+    def get_current_router() -> ProfileRouter:
         """Get router with current profiles from loader."""
-        return ProfileRouter(loader.profiles)
+        return get_router(loader.profiles)
 
     @server.list_tools()
     async def list_tools() -> List[types.Tool]:
@@ -208,17 +211,32 @@ def _build_server(loader: ProfileLoader) -> Server:
                 overrides: Mapping[str, object] | None = arguments.get("metadata")
                 parsed: ParsedMetadata = analyze_prompt(prompt)
                 enhanced: EnhancedMetadata = parsed.to_enhanced_metadata(overrides)
-                router = get_router()
-                routing: RoutingResult = router.route(enhanced)
+                router = get_current_router()
+                routing = router.route(enhanced)
+                
+                # Build response with extended info for hybrid router
+                routing_info: Dict[str, Any] = {
+                    "score": routing.score,
+                    "consistency": routing.consistency,
+                }
+                
+                # Add hybrid routing details if available
+                if isinstance(routing, HybridRoutingResult):
+                    routing_info.update({
+                        "keyword_score": routing.keyword_score,
+                        "semantic_score": routing.semantic_score,
+                        "combined_score": routing.combined_score,
+                        "alpha": routing.alpha,
+                        "semantic_enabled": routing.semantic_enabled,
+                        "best_utterance": routing.best_utterance,
+                    })
+                
                 return [types.TextContent(
                     type="text",
                     text=json.dumps({
                         "profile": _profile_to_dict(routing.profile),
                         "metadata": parsed.as_dict(),
-                        "routing": {
-                            "score": routing.score,
-                            "consistency": routing.consistency,
-                        },
+                        "routing": routing_info,
                     }, indent=2)
                 )]
             except (ValueError, LookupError) as exc:
