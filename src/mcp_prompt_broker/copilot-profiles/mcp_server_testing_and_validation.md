@@ -826,6 +826,32 @@ weights:
 | `privacy_sensitive_complex.md` | capabilities never matched | Changed to context_tags + keywords |
 | `podman_container_management_complex.md` | capabilities never matched | Changed to context_tags + keywords |
 
+#### 7. Documentation Profiles Fixing - Example
+
+**Issue:** documentation profile had missing `## Instructions` section causing parse failures.
+
+**Root Cause:** These profiles used `# Instrukce pro agenta:` as title but parser requires `## Instructions` section header.
+
+| Profile | Fix Applied |
+|---------|-------------|
+| `documentation_3level.md` | Added `## Instructions` after title |
+
+**Result:**
+- Profile loading: **47/47 (100%)**
+- Parse errors: **0**
+- All tests passing: **45/45 (100%)**
+
+**Pattern applied:**
+```markdown
+# Instrukce pro agenta: [Profile Name]
+
+## Instructions
+
+[Profile description and instructions...]
+```
+
+This ensures parser can extract instructions section while maintaining human-readable Czech titles.
+
 ### Remaining Work
 
 **Profiles with warnings (9/17):**
