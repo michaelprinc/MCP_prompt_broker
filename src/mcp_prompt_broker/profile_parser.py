@@ -20,6 +20,39 @@ from .metadata.parser import (
 )
 
 
+def _merge_profile_weights(
+    parent_weights: Mapping[str, Mapping[str, int]],
+    child_weights: Mapping[str, Mapping[str, int]],
+) -> Dict[str, Dict[str, int]]:
+    """Merge parent and child weights, with child taking precedence.
+    
+    This enables keyword inheritance when a profile uses `extends`.
+    Child keywords override parent keywords with the same key.
+    
+    Args:
+        parent_weights: Weights from parent profile (extends target)
+        child_weights: Weights from child profile
+        
+    Returns:
+        Merged weights dictionary
+    """
+    merged: Dict[str, Dict[str, int]] = {}
+    
+    # Start with parent weights
+    for key, value_dict in parent_weights.items():
+        merged[key] = dict(value_dict)
+    
+    # Override/extend with child weights
+    for key, value_dict in child_weights.items():
+        if key in merged:
+            # Merge the nested dict (child overrides parent)
+            merged[key].update(value_dict)
+        else:
+            merged[key] = dict(value_dict)
+    
+    return merged
+
+
 @dataclass(frozen=True)
 class ProfileChecklist:
     """Represents a checklist extracted from a profile markdown file."""
@@ -403,13 +436,17 @@ class ProfileLoader:
                 parsed = parse_profile_markdown(md_file)
                 self._parsed_profiles[parsed.profile.name] = parsed
                 
-                # Update central metadata registry
-                self._update_registry_from_profile(parsed)
-                
             except ProfileParseError as e:
                 self._load_errors.append(str(e))
             except Exception as e:
                 self._load_errors.append(f"Unexpected error parsing {md_file}: {e}")
+        
+        # Resolve extends relationships (keyword inheritance)
+        extends_result = self._resolve_extends()
+        
+        # Update central metadata registry (after extends resolution)
+        for parsed in self._parsed_profiles.values():
+            self._update_registry_from_profile(parsed)
         
         # Update metadata parser with keywords from profiles
         parser_update_result = self._update_parser_from_profiles()
@@ -421,8 +458,155 @@ class ProfileLoader:
         except Exception as e:
             self._load_errors.append(f"Error saving metadata registry: {e}")
         
-        return self._get_reload_summary(registry_result, parser_update_result)
+        return self._get_reload_summary(registry_result, parser_update_result, extends_result)
     
+    def _check_circular_extends(self) -> List[str]:
+        """Detect circular extends dependencies.
+        
+        Returns:
+            List of error messages for circular dependencies.
+        """
+        errors: List[str] = []
+        
+        for name in self._parsed_profiles:
+            visited: Set[str] = set()
+            current: Optional[str] = name
+            
+            while current:
+                if current in visited:
+                    errors.append(f"Circular extends detected: {name} -> ... -> {current}")
+                    break
+                visited.add(current)
+                
+                parsed = self._parsed_profiles.get(current)
+                if not parsed:
+                    break
+                current = parsed.yaml_metadata.get("extends")
+                # Skip null/None extends
+                if current is None or current == "null":
+                    break
+        
+        return errors
+    
+    def _get_extends_order(self) -> List[str]:
+        """Get profiles in topological order (parents before children).
+        
+        Returns:
+            List of profile names in order for processing extends.
+        """
+        # Build dependency graph
+        depends_on: Dict[str, Optional[str]] = {}
+        for name, parsed in self._parsed_profiles.items():
+            extends = parsed.yaml_metadata.get("extends")
+            if extends and extends != "null":
+                depends_on[name] = extends
+            else:
+                depends_on[name] = None
+        
+        # Topological sort
+        result: List[str] = []
+        visited: Set[str] = set()
+        
+        def visit(name: str) -> None:
+            if name in visited:
+                return
+            visited.add(name)
+            
+            parent = depends_on.get(name)
+            if parent and parent in self._parsed_profiles:
+                visit(parent)
+            
+            result.append(name)
+        
+        for name in self._parsed_profiles:
+            visit(name)
+        
+        return result
+    
+    def _resolve_extends(self) -> Dict[str, Any]:
+        """Resolve extends relationships and merge inherited weights.
+        
+        This enables keyword inheritance from parent profiles.
+        
+        Returns:
+            Summary of extends resolution.
+        """
+        # Check for circular dependencies first
+        circular_errors = self._check_circular_extends()
+        if circular_errors:
+            self._load_errors.extend(circular_errors)
+            return {"success": False, "errors": circular_errors}
+        
+        # Get processing order (parents first)
+        order = self._get_extends_order()
+        
+        resolved_count = 0
+        resolution_details: List[Dict[str, Any]] = []
+        
+        for name in order:
+            parsed = self._parsed_profiles.get(name)
+            if not parsed:
+                continue
+            
+            extends = parsed.yaml_metadata.get("extends")
+            if not extends or extends == "null":
+                continue
+            
+            parent = self._parsed_profiles.get(extends)
+            if not parent:
+                self._load_errors.append(
+                    f"Profile '{name}' extends unknown profile: '{extends}'"
+                )
+                continue
+            
+            # Merge weights from parent
+            merged_weights = _merge_profile_weights(
+                parent.profile.weights,
+                parsed.profile.weights,
+            )
+            
+            # Track what was merged
+            parent_keyword_count = len(parent.profile.weights.get("keywords", {}))
+            child_keyword_count = len(parsed.profile.weights.get("keywords", {}))
+            merged_keyword_count = len(merged_weights.get("keywords", {}))
+            
+            # Create new profile with merged weights
+            new_profile = InstructionProfile(
+                name=parsed.profile.name,
+                instructions=parsed.profile.instructions,
+                required=parsed.profile.required,
+                weights=merged_weights,
+                default_score=parsed.profile.default_score,
+                fallback=parsed.profile.fallback,
+                utterances=parsed.profile.utterances,
+                utterance_threshold=parsed.profile.utterance_threshold,
+                min_match_ratio=parsed.profile.min_match_ratio,
+            )
+            
+            # Update the parsed profile (need to create new dataclass since it's not frozen)
+            self._parsed_profiles[name] = ParsedProfile(
+                profile=new_profile,
+                checklist=parsed.checklist,
+                source_path=parsed.source_path,
+                raw_instructions=parsed.raw_instructions,
+                yaml_metadata=parsed.yaml_metadata,
+            )
+            
+            resolved_count += 1
+            resolution_details.append({
+                "child": name,
+                "parent": extends,
+                "parent_keywords": parent_keyword_count,
+                "child_keywords": child_keyword_count,
+                "merged_keywords": merged_keyword_count,
+            })
+        
+        return {
+            "success": True,
+            "resolved_count": resolved_count,
+            "details": resolution_details,
+        }
+
     def _update_parser_from_profiles(self) -> Dict[str, Any]:
         """Extract keywords from profiles and update the metadata parser.
         
@@ -482,6 +666,7 @@ class ProfileLoader:
         self, 
         registry_result: Optional[Dict[str, Any]] = None,
         parser_result: Optional[Dict[str, Any]] = None,
+        extends_result: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """Generate a summary of the last reload operation."""
         summary = {
@@ -497,6 +682,9 @@ class ProfileLoader:
         
         if parser_result:
             summary["parser_update"] = parser_result
+        
+        if extends_result:
+            summary["extends_resolution"] = extends_result
         
         return summary
     

@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2025-12-31T21:08:00.842165+00:00",
+  "generated_at": "2025-12-31T23:47:26.243806+00:00",
   "profiles": {
     "code_reviewer_senior": {
       "name": "code_reviewer_senior",
@@ -765,19 +765,21 @@
           "urgent": 3,
           "critical": 4
         },
-        "complexity": {
-          "high": 2,
-          "complex": 2
-        },
         "keywords": {
-          "general": 3,
-          "question": 4,
           "help": 4,
+          "question": 4,
           "explain": 4,
+          "what": 2,
+          "how": 2,
+          "general": 3,
           "what is": 4,
           "how to": 4,
           "just": 3,
           "simple": 3
+        },
+        "complexity": {
+          "high": 2,
+          "complex": 2
         }
       },
       "capabilities": [
@@ -898,6 +900,7 @@
           "critical": 5
         },
         "complexity": {
+          "medium": 2,
           "high": 5,
           "complex": 7,
           "critical": 8
@@ -910,6 +913,42 @@
           "enterprise": 6
         },
         "keywords": {
+          "implementační plán": 18,
+          "implementacni plan": 18,
+          "implementace": 12,
+          "plán": 10,
+          "plan": 10,
+          "checklist": 15,
+          "kontrolní seznam": 15,
+          "kontrolni seznam": 15,
+          "naplánuj": 12,
+          "naplanuj": 12,
+          "rozplánuj": 12,
+          "rozplanuj": 12,
+          "vytvoř plán": 15,
+          "vytvor plan": 15,
+          "projekt": 6,
+          "postup": 8,
+          "kroky": 6,
+          "úkoly": 6,
+          "ukoly": 6,
+          "milníky": 8,
+          "milniky": 8,
+          "implementation plan": 18,
+          "implementation": 12,
+          "planning": 12,
+          "roadmap": 12,
+          "task list": 12,
+          "breakdown": 10,
+          "steps": 6,
+          "tasks": 6,
+          "milestones": 8,
+          "project plan": 15,
+          "action items": 12,
+          "deliverables": 10,
+          "acceptance criteria": 12,
+          "spec": 8,
+          "specification": 10,
           "komplexní plán": 18,
           "komplexni plan": 18,
           "architektura": 14,
@@ -1472,11 +1511,8 @@
       "weights": {
         "priority": {
           "high": 3,
+          "urgent": 1,
           "critical": 4
-        },
-        "complexity": {
-          "high": 3,
-          "complex": 4
         },
         "domain": {
           "containers": 5,
@@ -1487,16 +1523,24 @@
         },
         "keywords": {
           "podman": 15,
-          "docker": 10,
           "container": 12,
+          "containerfile": 8,
+          "dockerfile": 8,
+          "pod": 6,
+          "image": 5,
+          "podman compose": 10,
+          "docker": 10,
           "containers": 12,
           "kubernetes": 8,
           "k8s": 8,
           "quadlet": 15,
           "systemd": 6,
-          "image": 5,
           "volume": 5,
           "network": 5
+        },
+        "complexity": {
+          "high": 3,
+          "complex": 4
         }
       },
       "capabilities": [
@@ -1613,14 +1657,17 @@
           "classified": 6
         },
         "keywords": {
+          "privacy": 10,
+          "sensitive": 6,
+          "pii": 10,
+          "gdpr": 10,
+          "hipaa": 10,
+          "compliance": 6,
+          "redact": 8,
           "patient": 8,
           "medical": 6,
-          "sensitive": 6,
           "private": 6,
           "confidential": 8,
-          "hipaa": 10,
-          "gdpr": 10,
-          "pii": 10,
           "ssn": 10,
           "credit card": 8,
           "personal data": 8
@@ -1936,19 +1983,24 @@
       "weights": {
         "priority": {
           "high": 3,
+          "urgent": 1,
           "critical": 4
-        },
-        "complexity": {
-          "high": 3,
-          "complex": 4
         },
         "domain": {
           "python": 5,
           "backend": 3,
+          "scripting": 3,
           "architecture": 4,
           "performance": 3
         },
         "keywords": {
+          "write python": 10,
+          "generate python": 10,
+          "create python": 8,
+          "python script": 8,
+          "implement python": 8,
+          "python function": 8,
+          "python class": 8,
           "python": 10,
           "advanced python": 12,
           "python architecture": 12,
@@ -1958,6 +2010,10 @@
           "def": 5,
           "class": 5,
           "import": 3
+        },
+        "complexity": {
+          "high": 3,
+          "complex": 4
         }
       },
       "capabilities": [
@@ -1976,6 +2032,7 @@
         "healthcare",
         "performance",
         "python",
+        "scripting",
         "security"
       ],
       "checklist_count": 12,
@@ -2000,26 +2057,35 @@
       "weights": {
         "priority": {
           "high": 3,
+          "urgent": 1,
           "critical": 4
-        },
-        "complexity": {
-          "high": 3,
-          "complex": 4
         },
         "domain": {
           "python": 5,
           "backend": 3,
+          "scripting": 3,
           "architecture": 4,
           "performance": 3,
           "data_science": 4,
           "machine_learning": 4
         },
         "keywords": {
+          "write python": 10,
+          "generate python": 10,
+          "create python": 8,
+          "python script": 8,
+          "implement python": 8,
+          "python function": 8,
+          "python class": 8,
+          "python": 10,
           "advanced python": 3,
           "python architecture": 3,
           "optimize python": 2,
           "scalable python": 2,
           "enterprise python": 2,
+          "def": 5,
+          "class": 5,
+          "import": 3,
           "codex orchestrator": 18,
           "mcp codex": 15,
           "Codex CLI": 15,
@@ -2034,6 +2100,10 @@
           "sci-kit learn": 6,
           "classification": 5,
           "regression": 5
+        },
+        "complexity": {
+          "high": 3,
+          "complex": 4
         }
       },
       "capabilities": [
@@ -2048,7 +2118,8 @@
         "engineering",
         "machine_learning",
         "performance",
-        "python"
+        "python",
+        "scripting"
       ],
       "checklist_count": 45,
       "instructions_length": 1288,
@@ -2123,11 +2194,8 @@
       "weights": {
         "priority": {
           "high": 3,
+          "urgent": 1,
           "critical": 4
-        },
-        "complexity": {
-          "high": 3,
-          "complex": 4
         },
         "domain": {
           "python": 5,
@@ -2136,6 +2204,13 @@
           "performance": 3
         },
         "keywords": {
+          "test python": 10,
+          "review python": 10,
+          "fix python": 8,
+          "unittest": 8,
+          "pytest": 10,
+          "debug python": 8,
+          "refactor python": 8,
           "advanced testing": 12,
           "mutation testing": 12,
           "property testing": 10,
@@ -2143,10 +2218,11 @@
           "integration testing": 10,
           "tdd": 10,
           "bdd": 8,
-          "pytest": 10,
-          "unittest": 8,
-          "test python": 10,
           "review code": 8
+        },
+        "complexity": {
+          "high": 3,
+          "complex": 4
         }
       },
       "capabilities": [
@@ -2783,16 +2859,6 @@
           "troubleshooting": 3,
           "incident": 4
         },
-        "keywords": {
-          "troubleshoot": 10,
-          "root cause": 12,
-          "incident": 10,
-          "outage": 10,
-          "crash": 8,
-          "error": 6,
-          "debug": 8,
-          "diagnose": 8
-        },
         "context_tags": {
           "outage": 3,
           "incident": 2,
@@ -2801,6 +2867,19 @@
           "performance": 2,
           "production": 3,
           "critical": 3
+        },
+        "keywords": {
+          "troubleshoot": 10,
+          "fix": 6,
+          "error": 6,
+          "crash": 8,
+          "issue": 5,
+          "problem": 5,
+          "debug": 8,
+          "root cause": 12,
+          "incident": 10,
+          "outage": 10,
+          "diagnose": 8
         }
       },
       "capabilities": [
@@ -2973,7 +3052,7 @@
       "backend": 4,
       "optimization": 1,
       "methodology": 1,
-      "scripting": 1,
+      "scripting": 3,
       "code_quality": 1,
       "refactoring": 1,
       "operations": 1,

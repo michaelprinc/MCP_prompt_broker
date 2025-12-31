@@ -597,6 +597,55 @@ For `*_complex` profiles:
 3. **Chain-of-Thought**: Provide structured reasoning frameworks
 4. **Higher Default Score**: Set `default_score` higher than base profile
 
+### Keyword Inheritance via `extends`
+
+When a profile uses `extends`, it automatically inherits `weights.keywords` from the parent profile:
+
+```yaml
+---
+name: my_profile_complex
+extends: my_profile  # Inherits keywords from my_profile
+weights:
+  keywords:
+    # These keywords are ADDED to parent keywords
+    complex: 15
+    enterprise: 12
+    # Child keywords override parent if same key exists
+---
+```
+
+**How it works:**
+
+1. Parent profile's `weights.keywords` are loaded first
+2. Child profile's `weights.keywords` are merged on top
+3. If the same keyword exists in both, child value takes precedence
+4. The merged weights are used for scoring
+
+**Example:**
+
+```
+Parent (my_profile):
+  weights.keywords: {python: 10, code: 8}
+
+Child (my_profile_complex):
+  weights.keywords: {python: 15, complex: 12}
+
+Merged result:
+  weights.keywords: {python: 15, code: 8, complex: 12}
+                     ↑ child     ↑ inherited  ↑ child
+                     overrides
+```
+
+**Multi-level inheritance:**
+
+Extends chains are resolved in topological order (parents first):
+
+```
+A (base) → B (extends A) → C (extends B)
+
+C inherits from B, which already includes A's keywords.
+```
+
 ---
 
 ## Metadata System
