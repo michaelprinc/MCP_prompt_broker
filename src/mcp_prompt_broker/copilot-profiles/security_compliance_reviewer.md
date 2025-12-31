@@ -5,6 +5,16 @@ extends: null
 default_score: 2
 fallback: false
 
+utterances:
+  - "Review this code for security vulnerabilities"
+  - "Check if this implementation complies with GDPR"
+  - "Audit this system for regulatory compliance"
+  - "Identify potential security risks in this architecture"
+  - "Zkontroluj bezpečnostní rizika v tomto kódu"
+  - "Ensure banking data handling meets compliance standards"
+  - "What security improvements does this need?"
+utterance_threshold: 0.75
+
 required:
   context_tags: ["security", "compliance"]
 

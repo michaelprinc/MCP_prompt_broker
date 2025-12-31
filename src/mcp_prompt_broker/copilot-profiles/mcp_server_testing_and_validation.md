@@ -5,6 +5,16 @@ extends: null
 default_score: 1
 fallback: false
 
+utterances:
+  - "Test the MCP Prompt Broker server functionality"
+  - "Validate profile routing is working correctly"
+  - "Check if the MCP server tools are responding"
+  - "Run diagnostics on the profile selection logic"
+  - "Verify hot reload updates the profiles properly"
+  - "Otestuj funkčnost MCP serveru"
+  - "Debug why profiles are not matching correctly"
+utterance_threshold: 0.75
+
 required:
   context_tags: ["testing", "mcp_server", "validation"]
 

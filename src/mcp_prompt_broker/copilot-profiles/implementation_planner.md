@@ -5,6 +5,16 @@ extends: null
 default_score: 2
 fallback: false
 
+utterances:
+  - "Create an implementation plan for this feature"
+  - "Generate a detailed checklist for this project"
+  - "Plan the steps to implement this system"
+  - "Break down this task into implementation phases"
+  - "Vytvoř implementační plán pro tuto funkci"
+  - "Design a roadmap for this engineering project"
+  - "What are the steps needed to build this?"
+utterance_threshold: 0.75
+
 required:
   context_tags: ["implementation_planner"]
 

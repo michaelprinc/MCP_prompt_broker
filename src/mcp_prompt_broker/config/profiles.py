@@ -23,6 +23,9 @@ class InstructionProfile:
         weights: Optional weighting rules where matches add to the profile score.
         default_score: Base score applied before weighting.
         fallback: Whether the profile should be used when no other profile matches.
+        utterances: Sample prompts that should route to this profile (for semantic matching).
+        utterance_threshold: Minimum semantic similarity to consider an utterance match.
+        min_match_ratio: Minimum match_score() ratio for soft matching (0-1).
     """
 
     name: str
@@ -31,37 +34,65 @@ class InstructionProfile:
     weights: Mapping[str, Mapping[str, int]] = field(default_factory=dict)
     default_score: int = 0
     fallback: bool = False
+    utterances: tuple[str, ...] = field(default_factory=tuple)
+    utterance_threshold: float = 0.7
+    min_match_ratio: float = 0.5
 
-    def is_match(self, metadata: MutableMapping[str, object]) -> bool:
-        """Return True if the metadata satisfies the profile requirements.
+    def match_score(self, metadata: MutableMapping[str, object]) -> float:
+        """Calculate a soft match score (0.0-1.0) for how well metadata matches requirements.
         
-        Note: Profiles without required fields always match (scored by weights).
+        This replaces the binary is_match() with a gradient score that enables
+        better profile ranking when multiple profiles partially match.
+        
+        Returns:
+            0.0 if no required fields are defined or no matches.
+            1.0 if all required fields match perfectly.
+            Intermediate values for partial matches.
         """
         if not self.required:
-            # No requirements = always matches (will be scored by weights)
-            return True
-
+            # No requirements = neutral score (will be ranked by weights)
+            return 1.0
+        
+        total_requirements = 0
+        matched_requirements = 0
+        
         for key, allowed_values in self.required.items():
-            value = metadata.get(key)
-            
             # Skip capabilities check - we match on keywords instead
             if key == "capabilities":
                 continue
             
+            total_requirements += 1
+            value = metadata.get(key)
+            
             if value is None:
-                return False
-
-            # context_tags are represented as iterables that may contain multiple
-            # tags, so we need to verify intersection.
+                continue
+            
+            # context_tags: check intersection ratio
             if key == "context_tags":
-                if not isinstance(value, Iterable):
-                    return False
-                if not set(allowed_values).intersection(set(value)):
-                    return False
-            elif value not in allowed_values:
-                return False
+                if isinstance(value, Iterable):
+                    value_set = set(value)
+                    allowed_set = set(allowed_values)
+                    if allowed_set:
+                        intersection = value_set.intersection(allowed_set)
+                        # Partial credit for partial overlap
+                        matched_requirements += len(intersection) / len(allowed_set)
+            elif value in allowed_values:
+                matched_requirements += 1.0
+        
+        if total_requirements == 0:
+            return 1.0
+        
+        return matched_requirements / total_requirements
 
-        return True
+    def is_match(self, metadata: MutableMapping[str, object]) -> bool:
+        """Return True if the metadata satisfies the minimum match threshold.
+        
+        This is now a wrapper around match_score() for backward compatibility.
+        A profile matches if match_score() >= min_match_ratio.
+        
+        Note: Profiles without required fields always match (scored by weights).
+        """
+        return self.match_score(metadata) >= self.min_match_ratio
 
     def score(self, metadata: MutableMapping[str, object]) -> int:
         """Calculate a score for the profile based on metadata weights and prompt keywords."""

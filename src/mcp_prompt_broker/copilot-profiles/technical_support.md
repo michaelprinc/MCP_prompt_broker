@@ -4,6 +4,16 @@ short_description: Concise technical troubleshooting steps for software and infr
 default_score: 2
 fallback: false
 
+utterances:
+  - "I'm getting an error when running this command"
+  - "Help me debug this crash in my application"
+  - "Why is my service not starting correctly?"
+  - "Troubleshoot this connection timeout issue"
+  - "Fix the bug in my code that causes this error"
+  - "Moje aplikace pádá s touto chybou"
+  - "Diagnose what's causing this performance problem"
+utterance_threshold: 0.7
+
 required:
   domain:
     - engineering

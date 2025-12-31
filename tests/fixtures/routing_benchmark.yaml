@@ -1,0 +1,365 @@
+# Routing Benchmark Dataset
+# Contains 50+ test cases for evaluating profile routing accuracy
+# Format: prompt -> expected_profile with metadata
+
+metadata:
+  version: "1.0"
+  created: "2025-12-31"
+  description: "Benchmark dataset for MCP Prompt Broker routing evaluation"
+  total_cases: 55
+
+test_cases:
+  # === Python Code Generation (8 cases) ===
+  - id: "py_001"
+    prompt: "Write a Python function to calculate the factorial of a number"
+    expected_profile: "python_code_generation"
+    min_score: 5
+    tags: ["python", "code_generation"]
+
+  - id: "py_002"
+    prompt: "Generate a Python script for parsing CSV files with pandas"
+    expected_profile: "python_code_generation"
+    min_score: 5
+    tags: ["python", "data_processing"]
+
+  - id: "py_003"
+    prompt: "Create a Python class for handling HTTP requests"
+    expected_profile: "python_code_generation"
+    min_score: 5
+    tags: ["python", "networking"]
+
+  - id: "py_004"
+    prompt: "Implement a binary search algorithm in Python"
+    expected_profile: "python_code_generation"
+    min_score: 5
+    tags: ["python", "algorithms"]
+
+  - id: "py_005"
+    prompt: "Napiš Python funkci pro výpočet Fibonacciho posloupnosti"
+    expected_profile: "python_code_generation"
+    min_score: 4
+    tags: ["python", "czech"]
+
+  - id: "py_006"
+    prompt: "Write a Python decorator for caching function results"
+    expected_profile: "python_code_generation"
+    min_score: 5
+    tags: ["python", "advanced"]
+
+  - id: "py_007"
+    prompt: "Generate Python code for a REST API endpoint"
+    expected_profile: "python_code_generation"
+    min_score: 5
+    tags: ["python", "api"]
+
+  - id: "py_008"
+    prompt: "Implement a Python context manager for file handling"
+    expected_profile: "python_code_generation"
+    min_score: 5
+    tags: ["python", "patterns"]
+
+  # === Codex CLI Integration (6 cases) ===
+  - id: "codex_001"
+    prompt: "Use Codex CLI to implement a new authentication module"
+    expected_profile: "codex_cli"
+    min_score: 8
+    tags: ["codex", "autonomous"]
+
+  - id: "codex_002"
+    prompt: "Run the Codex orchestrator to generate tests"
+    expected_profile: "codex_cli"
+    min_score: 10
+    tags: ["codex", "testing"]
+
+  - id: "codex_003"
+    prompt: "Delegate this refactoring task to Codex in Docker"
+    expected_profile: "codex_cli"
+    min_score: 8
+    tags: ["codex", "refactoring"]
+
+  - id: "codex_004"
+    prompt: "Use MCP codex server to fix these bugs automatically"
+    expected_profile: "codex_cli"
+    min_score: 10
+    tags: ["codex", "debugging"]
+
+  - id: "codex_005"
+    prompt: "Spusť Codex CLI pro implementaci této funkce"
+    expected_profile: "codex_cli"
+    min_score: 8
+    tags: ["codex", "czech"]
+
+  - id: "codex_006"
+    prompt: "Execute autonomous code generation using codex orchestrator with timeout"
+    expected_profile: "codex_cli"
+    min_score: 12
+    tags: ["codex", "advanced"]
+
+  # === Creative Brainstorm (6 cases) ===
+  - id: "creative_001"
+    prompt: "Let's brainstorm some innovative solutions for this challenge"
+    expected_profile: "creative_brainstorm"
+    min_score: 6
+    tags: ["creative", "ideation"]
+
+  - id: "creative_002"
+    prompt: "I need creative ideas for improving user engagement"
+    expected_profile: "creative_brainstorm"
+    min_score: 5
+    tags: ["creative", "product"]
+
+  - id: "creative_003"
+    prompt: "Help me think outside the box for this marketing campaign"
+    expected_profile: "creative_brainstorm"
+    min_score: 5
+    tags: ["creative", "marketing"]
+
+  - id: "creative_004"
+    prompt: "Generate unconventional approaches to this design problem"
+    expected_profile: "creative_brainstorm"
+    min_score: 5
+    tags: ["creative", "design"]
+
+  - id: "creative_005"
+    prompt: "Pomůž mi vymyslet nové nápady pro tento projekt"
+    expected_profile: "creative_brainstorm"
+    min_score: 4
+    tags: ["creative", "czech"]
+
+  - id: "creative_006"
+    prompt: "What are 10 different ways we could solve this problem?"
+    expected_profile: "creative_brainstorm"
+    min_score: 5
+    tags: ["creative", "quantity"]
+
+  # === Technical Support (6 cases) ===
+  - id: "tech_001"
+    prompt: "My application crashes when I try to connect to the database"
+    expected_profile: "technical_support"
+    min_score: 6
+    tags: ["debugging", "database"]
+
+  - id: "tech_002"
+    prompt: "Help me troubleshoot this network timeout error"
+    expected_profile: "technical_support"
+    min_score: 8
+    tags: ["debugging", "network"]
+
+  - id: "tech_003"
+    prompt: "Debug why my service is not starting correctly"
+    expected_profile: "technical_support"
+    min_score: 6
+    tags: ["debugging", "service"]
+
+  - id: "tech_004"
+    prompt: "Fix the issue with memory leaks in my Python process"
+    expected_profile: "technical_support"
+    min_score: 6
+    tags: ["debugging", "memory"]
+
+  - id: "tech_005"
+    prompt: "Moje aplikace padá s touto chybou: MemoryError"
+    expected_profile: "technical_support"
+    min_score: 5
+    tags: ["debugging", "czech"]
+
+  - id: "tech_006"
+    prompt: "Diagnose what's causing this performance degradation"
+    expected_profile: "technical_support"
+    min_score: 6
+    tags: ["debugging", "performance"]
+
+  # === MCP Server Testing (6 cases) ===
+  - id: "mcp_001"
+    prompt: "Test the MCP Prompt Broker server functionality"
+    expected_profile: "mcp_server_testing_and_validation"
+    min_score: 15
+    tags: ["mcp", "testing"]
+
+  - id: "mcp_002"
+    prompt: "Validate that profile routing is working correctly"
+    expected_profile: "mcp_server_testing_and_validation"
+    min_score: 10
+    tags: ["mcp", "validation"]
+
+  - id: "mcp_003"
+    prompt: "Check if the MCP tools are responding properly"
+    expected_profile: "mcp_server_testing_and_validation"
+    min_score: 10
+    tags: ["mcp", "tools"]
+
+  - id: "mcp_004"
+    prompt: "Debug why profiles are not matching prompts correctly"
+    expected_profile: "mcp_server_testing_and_validation"
+    min_score: 8
+    tags: ["mcp", "debugging"]
+
+  - id: "mcp_005"
+    prompt: "Otestuj funkčnost MCP serveru a hot reload"
+    expected_profile: "mcp_server_testing_and_validation"
+    min_score: 12
+    tags: ["mcp", "czech"]
+
+  - id: "mcp_006"
+    prompt: "Verify the metadata parser is extracting keywords correctly"
+    expected_profile: "mcp_server_testing_and_validation"
+    min_score: 8
+    tags: ["mcp", "parser"]
+
+  # === Privacy Sensitive (5 cases) ===
+  - id: "priv_001"
+    prompt: "I need to handle sensitive PII data according to GDPR"
+    expected_profile: "privacy_sensitive"
+    min_score: 15
+    tags: ["privacy", "gdpr"]
+
+  - id: "priv_002"
+    prompt: "Make sure this data processing complies with privacy regulations"
+    expected_profile: "privacy_sensitive"
+    min_score: 10
+    tags: ["privacy", "compliance"]
+
+  - id: "priv_003"
+    prompt: "How do I properly redact personal information from logs?"
+    expected_profile: "privacy_sensitive"
+    min_score: 10
+    tags: ["privacy", "redaction"]
+
+  - id: "priv_004"
+    prompt: "Ensure patient health data is handled according to HIPAA"
+    expected_profile: "privacy_sensitive"
+    min_score: 10
+    tags: ["privacy", "hipaa"]
+
+  - id: "priv_005"
+    prompt: "Ochrana osobních údajů musí být prioritou při zpracování dat"
+    expected_profile: "privacy_sensitive"
+    min_score: 8
+    tags: ["privacy", "czech"]
+
+  # === Implementation Planner (5 cases) ===
+  - id: "plan_001"
+    prompt: "Create a detailed implementation plan for this feature"
+    expected_profile: "implementation_planner"
+    min_score: 10
+    tags: ["planning", "implementation"]
+
+  - id: "plan_002"
+    prompt: "Generate a checklist for the project rollout"
+    expected_profile: "implementation_planner"
+    min_score: 12
+    tags: ["planning", "checklist"]
+
+  - id: "plan_003"
+    prompt: "Plan the steps needed to implement this architecture"
+    expected_profile: "implementation_planner"
+    min_score: 10
+    tags: ["planning", "architecture"]
+
+  - id: "plan_004"
+    prompt: "Vytvoř implementační plán pro tuto komplexní funkci"
+    expected_profile: "implementation_planner"
+    min_score: 15
+    tags: ["planning", "czech"]
+
+  - id: "plan_005"
+    prompt: "Break down this project into implementation phases with milestones"
+    expected_profile: "implementation_planner"
+    min_score: 8
+    tags: ["planning", "phases"]
+
+  # === Security Compliance (5 cases) ===
+  - id: "sec_001"
+    prompt: "Review this code for potential security vulnerabilities"
+    expected_profile: "security_compliance_reviewer"
+    min_score: 10
+    tags: ["security", "review"]
+
+  - id: "sec_002"
+    prompt: "Check if this implementation complies with banking regulations"
+    expected_profile: "security_compliance_reviewer"
+    min_score: 8
+    tags: ["security", "banking"]
+
+  - id: "sec_003"
+    prompt: "Audit the authentication flow for security issues"
+    expected_profile: "security_compliance_reviewer"
+    min_score: 10
+    tags: ["security", "audit"]
+
+  - id: "sec_004"
+    prompt: "Zkontroluj bezpečnostní rizika v tomto kódu"
+    expected_profile: "security_compliance_reviewer"
+    min_score: 15
+    tags: ["security", "czech"]
+
+  - id: "sec_005"
+    prompt: "Ensure encryption standards meet compliance requirements"
+    expected_profile: "security_compliance_reviewer"
+    min_score: 10
+    tags: ["security", "encryption"]
+
+  # === Documentation Diataxis (5 cases) ===
+  - id: "doc_001"
+    prompt: "Write documentation following the Diataxis framework"
+    expected_profile: "documentation_diataxis"
+    min_score: 12
+    tags: ["documentation", "diataxis"]
+
+  - id: "doc_002"
+    prompt: "Create a tutorial for new users of this API"
+    expected_profile: "documentation_diataxis"
+    min_score: 6
+    tags: ["documentation", "tutorial"]
+
+  - id: "doc_003"
+    prompt: "Generate reference documentation for this module"
+    expected_profile: "documentation_diataxis"
+    min_score: 6
+    tags: ["documentation", "reference"]
+
+  - id: "doc_004"
+    prompt: "Napiš dokumentaci podle Diátaxis frameworku"
+    expected_profile: "documentation_diataxis"
+    min_score: 12
+    tags: ["documentation", "czech"]
+
+  - id: "doc_005"
+    prompt: "Explain the concepts behind this architecture in a how-to guide"
+    expected_profile: "documentation_diataxis"
+    min_score: 6
+    tags: ["documentation", "how-to"]
+
+  # === General Default / Fallback (3 cases) ===
+  - id: "gen_001"
+    prompt: "Can you help me understand how this works?"
+    expected_profile: "general_default"
+    min_score: 3
+    tags: ["general", "help"]
+
+  - id: "gen_002"
+    prompt: "What is the best approach for this situation?"
+    expected_profile: "general_default"
+    min_score: 3
+    tags: ["general", "advice"]
+
+  - id: "gen_003"
+    prompt: "Explain this concept in simple terms"
+    expected_profile: "general_default"
+    min_score: 3
+    tags: ["general", "explanation"]
+
+# Critical profiles that must have high recall (>90%)
+critical_profiles:
+  - codex_cli
+  - python_code_generation
+  - privacy_sensitive
+  - security_compliance_reviewer
+  - mcp_server_testing_and_validation
+
+# Metrics thresholds
+thresholds:
+  minimum_accuracy: 0.75
+  target_accuracy: 0.85
+  maximum_fallback_rate: 0.15
+  critical_profile_recall: 0.90

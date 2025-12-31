@@ -5,6 +5,16 @@ extends: null
 default_score: 0
 fallback: false
 
+utterances:
+  - "Use Codex CLI to implement this feature"
+  - "Run this task with the Codex orchestrator"
+  - "Execute code generation using Codex in Docker"
+  - "Delegate this implementation to Codex"
+  - "Use MCP Codex server for this coding task"
+  - "Spusť Codex CLI pro tento úkol"
+  - "Let Codex handle the autonomous implementation"
+utterance_threshold: 0.75
+
 required:
   context_tags: ["codex_cli", "mcp_integration", "codex_orchestrator"]
 

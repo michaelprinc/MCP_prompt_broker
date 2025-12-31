@@ -4,6 +4,16 @@ short_description: Privacy-first responses with data protection, redaction, and 
 default_score: 0
 fallback: false
 
+utterances:
+  - "I need to handle sensitive PII data securely"
+  - "Make sure this complies with GDPR requirements"
+  - "How do I redact personal information from this dataset?"
+  - "Ensure patient data is handled according to HIPAA"
+  - "Process this data with privacy considerations"
+  - "Ochrana osobních údajů musí být prioritou"
+  - "Review this for compliance with data protection regulations"
+utterance_threshold: 0.75
+
 required:
   sensitivity:
     - high

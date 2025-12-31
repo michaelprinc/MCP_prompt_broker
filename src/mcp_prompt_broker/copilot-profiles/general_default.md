@@ -4,6 +4,16 @@ short_description: Balanced general-purpose assistant for adaptive, helpful resp
 default_score: 4
 fallback: true
 
+utterances:
+  - "Can you help me understand this concept?"
+  - "What is the best way to approach this problem?"
+  - "Explain how this works in simple terms"
+  - "I have a quick question about"
+  - "Help me figure out the next steps"
+  - "Poraď mi prosím s tímto problémem"
+  - "What would you recommend for this situation?"
+utterance_threshold: 0.6
+
 required: {}
 
 weights:

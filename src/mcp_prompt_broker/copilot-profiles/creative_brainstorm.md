@@ -4,6 +4,16 @@ short_description: Encourage creative exploration and divergent thinking for ide
 default_score: 2
 fallback: false
 
+utterances:
+  - "Let's brainstorm some ideas for this project"
+  - "I need creative solutions for this problem"
+  - "Help me come up with innovative approaches"
+  - "What are some unconventional ways to solve this?"
+  - "Generate a list of creative ideas for"
+  - "Pomůž mi vymyslet nové nápady"
+  - "Think outside the box about this challenge"
+utterance_threshold: 0.7
+
 required:
   intent:
     - brainstorm

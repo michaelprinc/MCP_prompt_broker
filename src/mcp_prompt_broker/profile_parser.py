@@ -274,6 +274,13 @@ def parse_profile_markdown(file_path: Path) -> ParsedProfile:
         checklist_items = _extract_checklist_items(markdown)
     
     # Build profile
+    # Parse utterances as tuple of strings
+    raw_utterances = metadata.get("utterances", [])
+    if isinstance(raw_utterances, list):
+        utterances = tuple(str(u) for u in raw_utterances)
+    else:
+        utterances = tuple()
+    
     profile = InstructionProfile(
         name=str(name),
         instructions=instructions,
@@ -281,6 +288,9 @@ def parse_profile_markdown(file_path: Path) -> ParsedProfile:
         weights=_parse_weights(metadata.get("weights")),
         default_score=int(metadata.get("default_score", 0)),
         fallback=bool(metadata.get("fallback", False)),
+        utterances=utterances,
+        utterance_threshold=float(metadata.get("utterance_threshold", 0.7)),
+        min_match_ratio=float(metadata.get("min_match_ratio", 0.5)),
     )
     
     checklist = ProfileChecklist(

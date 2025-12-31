@@ -3,6 +3,16 @@ name: python_code_generation
 short_description: Generate clean, idiomatic Python code with best practices and type hints
 default_score: 1
 
+utterances:
+  - "Write a Python function that calculates"
+  - "Generate Python code for data processing"
+  - "Create a Python script to automate"
+  - "Implement this algorithm in Python"
+  - "Write a Python class for handling"
+  - "Napiš Python funkci pro výpočet"
+  - "Generate Python module with type hints"
+utterance_threshold: 0.7
+
 required:
   context_tags: ["code_generation", "python"]
 

@@ -1,35 +1,35 @@
 ---
 name: documentation_diataxis
-description: Dokumentace podle frameworku Diátaxis s jasným rozdělením na tutorials, how-to, reference a explanation
-version: "1.0"
-author: MCP Prompt Broker Team
-domain: documentation
-keywords:
-  - dokumentace
-  - documentation
-  - diataxis
-  - diátaxis
-  - tutorials
-  - tutoriály
-  - how-to
-  - návody
-  - reference
-  - explanation
-  - vysvětlení
-  - koncepty
-  - concepts
-  - user-oriented
-  - uživatelsky orientovaná
-  - getting started
-  - začínáme
+short_description: Documentation following the Diátaxis framework with clear separation into tutorials, how-to, reference, and explanation
+default_score: 2
+fallback: false
+
+utterances:
+  - "Write documentation following the Diataxis framework"
+  - "Create a tutorial explaining how to use this feature"
+  - "Generate reference documentation for this API"
+  - "Write a how-to guide for this common task"
+  - "Explain the concepts behind this architecture"
+  - "Napiš dokumentaci podle Diátaxis frameworku"
+  - "Structure this documentation into tutorials and guides"
+utterance_threshold: 0.7
+
+required:
+  context_tags: ["documentation", "diataxis"]
+
 weights:
-  complexity: 0.6
-  documentation: 0.95
-  structure: 0.85
-  user_focus: 0.9
-required_context_tags:
-  - documentation
-  - user_experience
+  domain:
+    documentation: 8
+    technical_writing: 6
+  keywords:
+    documentation: 8
+    dokumentace: 8
+    diataxis: 12
+    diátaxis: 12
+    tutorial: 6
+    how-to: 6
+    reference: 4
+    explanation: 4
 ---
 
 # Instrukce pro agenta: Diátaxis dokumentace (DIATAXIS)

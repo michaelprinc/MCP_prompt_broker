@@ -61,7 +61,7 @@ Test-Path "$env:USERPROFILE\.codex\auth.json"
 .\scripts\setup-auth.ps1
 ```
 
-**Method 2: OpenAI API Key**
+**Method 2: OpenAI API Key (Fallback - not used in the project)**
 ```powershell
 # Konfigurace
 cp docker/.env.example docker/.env
