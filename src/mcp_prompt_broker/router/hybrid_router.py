@@ -20,6 +20,12 @@ from .semantic_scorer import (
     get_semantic_scorer,
     is_semantic_available,
 )
+from .complexity_config import (
+    COMPLEXITY_ROUTING_ENABLED,
+    COMPLEX_SUFFIX,
+    COMPLEX_VARIANT_MIN_SCORE_RATIO,
+    SIMPLE_VARIANT_MIN_SCORE_RATIO,
+)
 from ..config.profiles import InstructionProfile, get_instruction_profiles
 
 
@@ -56,6 +62,8 @@ class HybridRoutingResult(RoutingResult):
             "alpha": self.alpha,
             "best_utterance": self.best_utterance,
             "semantic_enabled": self.semantic_enabled,
+            "complexity_adjusted": self.complexity_adjusted,
+            "original_profile_name": self.original_profile_name,
         }
 
 
@@ -280,6 +288,37 @@ class HybridProfileRouter(ProfileRouter):
         best_combined = best[4]
         best_utterance = best[5]
         
+        # Track complexity adjustment
+        original_name: str | None = None
+        complexity_adjusted = False
+        
+        # === COMPLEXITY-BASED PROFILE ADJUSTMENT ===
+        if COMPLEXITY_ROUTING_ENABLED:
+            if self._should_prefer_complex(metadata):
+                # Prefer _complex variant for complex/long prompts
+                if not best_profile.name.endswith(COMPLEX_SUFFIX):
+                    complex_variant = self._find_complex_variant(best_profile.name)
+                    if complex_variant:
+                        complex_score = complex_variant.score(metadata_map)
+                        if complex_score >= best_keyword * COMPLEX_VARIANT_MIN_SCORE_RATIO:
+                            original_name = best_profile.name
+                            best_profile = complex_variant
+                            best_keyword = complex_score
+                            complexity_adjusted = True
+            
+            elif self._should_prefer_simple(metadata):
+                # Prefer base variant for simple/short prompts
+                if best_profile.name.endswith(COMPLEX_SUFFIX):
+                    simple_variant = self._find_simple_variant(best_profile.name)
+                    if simple_variant:
+                        simple_score = simple_variant.score(metadata_map)
+                        if simple_score >= best_keyword * SIMPLE_VARIANT_MIN_SCORE_RATIO:
+                            original_name = best_profile.name
+                            best_profile = simple_variant
+                            best_keyword = simple_score
+                            complexity_adjusted = True
+        # === END COMPLEXITY ADJUSTMENT ===
+        
         # Calculate consistency using original method
         consistency = self._normalize_consistency(
             best_keyword,
@@ -296,6 +335,8 @@ class HybridProfileRouter(ProfileRouter):
             alpha=self._alpha,
             best_utterance=best_utterance,
             semantic_enabled=self._semantic_enabled,
+            complexity_adjusted=complexity_adjusted,
+            original_profile_name=original_name,
         )
     
     def get_stats(self) -> Dict[str, Any]:

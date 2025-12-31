@@ -12,6 +12,11 @@ from .hybrid_router import (
     HybridRoutingResult,
     get_router,
 )
+from .complexity_config import (
+    COMPLEXITY_ROUTING_ENABLED,
+    COMPLEX_SUFFIX,
+    get_complexity_config,
+)
 
 __all__ = [
     # Base router
@@ -27,4 +32,8 @@ __all__ = [
     "SemanticMatch",
     "get_semantic_scorer",
     "is_semantic_available",
+    # Complexity routing
+    "COMPLEXITY_ROUTING_ENABLED",
+    "COMPLEX_SUFFIX",
+    "get_complexity_config",
 ]

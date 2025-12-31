@@ -212,6 +212,38 @@ TONE_KEYWORDS: Mapping[str, str] = {
     "annoyed": "frustrated",
 }
 
+# Complexity detection keywords with weights
+COMPLEXITY_KEYWORDS: Mapping[str, int] = {
+    # Explicit complexity indicators (English)
+    "complex": 3,
+    "enterprise": 3,
+    "migration": 2,
+    "refactor": 2,
+    "refactoring": 2,
+    "multi-module": 3,
+    "microservices": 2,
+    "architecture": 2,
+    "scalable": 2,
+    "distributed": 2,
+    "infrastructure": 2,
+    "cross-team": 2,
+    "large-scale": 3,
+    "cross-functional": 2,
+    "multi-service": 3,
+    "system design": 3,
+    # Czech equivalents
+    "komplexní": 3,
+    "komplexni": 3,
+    "migrace": 2,
+    "architektura": 2,
+    "velký projekt": 3,
+    "velky projekt": 3,
+    "více modulů": 3,
+    "vice modulu": 3,
+    "škálovatelné": 2,
+    "skalovatelne": 2,
+}
+
 
 @dataclass(frozen=True)
 class ParsedMetadata:
@@ -225,6 +257,8 @@ class ParsedMetadata:
     safety_score: int = 0
     tone: str = "neutral"
     complexity: str = "low"
+    prompt_length: int = 0  # Word count of the prompt
+    complexity_keyword_bonus: int = 0  # Bonus from complexity keywords
 
     def to_enhanced_metadata(self, overrides: Mapping[str, object] | None = None) -> EnhancedMetadata:
         """Convert the parsed metadata to :class:`EnhancedMetadata` with overrides."""
@@ -235,6 +269,8 @@ class ParsedMetadata:
             "sensitivity": self.sensitivity,
             "intent": self.intent,
             "context_tags": set(self.topics),
+            "complexity": self.complexity,
+            "prompt_length": self.prompt_length,
         }
 
         if overrides:
@@ -266,6 +302,8 @@ class ParsedMetadata:
             "safety_score": self.safety_score,
             "tone": self.tone,
             "complexity": self.complexity,
+            "prompt_length": self.prompt_length,
+            "complexity_keyword_bonus": self.complexity_keyword_bonus,
         }
 
 
@@ -329,15 +367,32 @@ def _detect_tone(normalized: str) -> str:
     return "neutral"
 
 
-def _estimate_complexity(prompt: str) -> str:
+def _calculate_complexity_keyword_bonus(normalized: str) -> int:
+    """Calculate bonus score from complexity keywords in the prompt."""
+    return sum(
+        weight for keyword, weight in COMPLEXITY_KEYWORDS.items()
+        if keyword in normalized
+    )
+
+
+def _estimate_complexity(prompt: str) -> tuple[str, int, int]:
+    """Estimate complexity based on word count and keywords.
+    
+    Returns:
+        Tuple of (complexity_level, word_count, keyword_bonus)
+    """
     word_count = len(prompt.split())
-    if word_count > 80:
-        return "high"
-    if word_count > 40:
-        return "medium"
+    normalized = prompt.lower()
+    keyword_bonus = _calculate_complexity_keyword_bonus(normalized)
+    
+    # Combined decision: high complexity if word count OR keyword bonus exceeds thresholds
+    if word_count > 80 or keyword_bonus >= 4:
+        return "high", word_count, keyword_bonus
+    if word_count > 40 or keyword_bonus >= 2:
+        return "medium", word_count, keyword_bonus
     if word_count > 15:
-        return "low-medium"
-    return "low"
+        return "low-medium", word_count, keyword_bonus
+    return "low", word_count, keyword_bonus
 
 
 def analyze_prompt(prompt: str) -> ParsedMetadata:
@@ -352,7 +407,7 @@ def analyze_prompt(prompt: str) -> ParsedMetadata:
     topics = _collect_topics(normalized)
     safety_score, sensitivity = _score_safety(normalized)
     tone = _detect_tone(normalized)
-    complexity = _estimate_complexity(prompt)
+    complexity, word_count, keyword_bonus = _estimate_complexity(prompt)
 
     return ParsedMetadata(
         prompt=prompt.strip(),
@@ -363,4 +418,6 @@ def analyze_prompt(prompt: str) -> ParsedMetadata:
         safety_score=safety_score,
         tone=tone,
         complexity=complexity,
+        prompt_length=word_count,
+        complexity_keyword_bonus=keyword_bonus,
     )

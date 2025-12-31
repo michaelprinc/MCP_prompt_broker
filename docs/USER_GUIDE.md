@@ -391,6 +391,66 @@ To use MCP Prompt Broker with GitHub Copilot Chat in VS Code:
 |--------|-------------|---------|
 | `--profiles-dir` | Path to custom profiles directory | Built-in profiles |
 
+### Environment Variables
+
+MCP Prompt Broker supports several environment variables for fine-tuning:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `MCP_COMPLEXITY_ROUTING` | Enable/disable automatic complexity-based profile selection | `true` |
+| `MCP_COMPLEXITY_WORD_HIGH` | Word count threshold for high complexity | `80` |
+| `MCP_COMPLEXITY_WORD_MEDIUM` | Word count threshold for medium complexity | `40` |
+| `MCP_COMPLEXITY_PREFER_THRESHOLD` | Word count to prefer `_complex` variants | `60` |
+| `USE_SEMANTIC_ROUTING` | Enable semantic similarity routing | `false` |
+| `SEMANTIC_ROUTING_ALPHA` | Weight for semantic vs keyword scoring (0-1) | `0.5` |
+
+### Complexity-Based Profile Selection
+
+MCP Prompt Broker automatically selects the appropriate profile variant based on prompt complexity:
+
+```mermaid
+graph TD
+    A[Prompt] --> B{Analyze Complexity}
+    B -->|Short & Simple| C[Base Profile]
+    B -->|Long or Complex| D[_complex Variant]
+    
+    C --> E[Concise Instructions]
+    D --> F[Detailed Instructions]
+    
+    subgraph "Complexity Detection"
+        G[Word Count > 60]
+        H[Keywords: enterprise, migration, architecture...]
+        I[Complexity Level: high, medium]
+    end
+```
+
+**How it works:**
+
+1. **Word Count Analysis**: Prompts with 60+ words automatically prefer `_complex` variants
+2. **Keyword Detection**: Terms like "enterprise", "migration", "architecture" trigger complexity preference
+3. **Automatic Switching**: If `python_code_generation` is selected but prompt is complex, the router may switch to `python_code_generation_complex`
+
+**Available Profile Pairs:**
+
+| Base Profile | Complex Variant |
+|--------------|-----------------|
+| `implementation_planner` | `implementation_planner_complex` |
+| `python_code_generation` | `python_code_generation_complex` |
+| `creative_brainstorm` | `creative_brainstorm_complex` |
+| `technical_support` | `technical_support_complex` |
+| `privacy_sensitive` | `privacy_sensitive_complex` |
+| `general_default` | `general_default_complex` |
+
+**Disabling Complexity Routing:**
+
+```bash
+# On Windows
+$env:MCP_COMPLEXITY_ROUTING = "false"
+
+# On Linux/macOS
+export MCP_COMPLEXITY_ROUTING=false
+```
+
 ---
 
 ## Using the MCP Tools

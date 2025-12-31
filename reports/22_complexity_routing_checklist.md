@@ -1,9 +1,10 @@
 # Complexity-Based Profile Routing - Implementation Checklist
 
 > Generated: 2024-12-31  
+> Completed: 2024-12-31  
 > Complexity: **Complex**  
-> Estimated Total Effort: **4-6 hours**  
-> Status: 🚧 In Progress
+> Actual Effort: **~3 hours**  
+> Status: ✅ Completed
 
 ---
 
@@ -13,40 +14,40 @@ Implementace automatického preferování `_complex` variant profilů u dlouhýc
 
 ---
 
-## Phase 1: Metadata Extension (Est: 1 hour)
+## Phase 1: Metadata Extension (Est: 1 hour) ✅
 
 ### 1.1 Parser Enhancement
 
-- [ ] **1.1.1** Přidat konstanty `COMPLEXITY_KEYWORDS` do [parser.py](../src/mcp_prompt_broker/metadata/parser.py)
-  - Acceptance: Slovník s 10+ klíčových slov a jejich váhami
+- [x] **1.1.1** Přidat konstanty `COMPLEXITY_KEYWORDS` do [parser.py](../src/mcp_prompt_broker/metadata/parser.py)
+  - Acceptance: Slovník s 10+ klíčových slov a jejich váhami ✅ (26 keywords)
   - Keywords: `complex`, `enterprise`, `migration`, `refactor`, `architecture`, `distributed`, `scalable`, `multi-module`, `infrastructure`, `cross-team`
 
-- [ ] **1.1.2** Rozšířit funkci `_estimate_complexity()` o detekci klíčových slov
-  - Acceptance: Funkce vrací tuple `(complexity_level: str, word_count: int, keyword_bonus: int)`
-  - Acceptance: Testy projdou s 90%+ přesností
+- [x] **1.1.2** Rozšířit funkci `_estimate_complexity()` o detekci klíčových slov
+  - Acceptance: Funkce vrací tuple `(complexity_level: str, word_count: int, keyword_bonus: int)` ✅
+  - Acceptance: Testy projdou s 90%+ přesností ✅
 
-- [ ] **1.1.3** Přidat atribut `prompt_length: int` do dataclass `ParsedMetadata`
-  - Acceptance: Atribut je dostupný v `as_dict()` výstupu
+- [x] **1.1.3** Přidat atribut `prompt_length: int` do dataclass `ParsedMetadata`
+  - Acceptance: Atribut je dostupný v `as_dict()` výstupu ✅
 
 ### 1.2 EnhancedMetadata Extension
 
-- [ ] **1.2.1** Přidat atribut `complexity: str | None` do [profile_router.py](../src/mcp_prompt_broker/router/profile_router.py) `EnhancedMetadata`
-  - Acceptance: Atribut je propagován z `ParsedMetadata`
+- [x] **1.2.1** Přidat atribut `complexity: str | None` do [profile_router.py](../src/mcp_prompt_broker/router/profile_router.py) `EnhancedMetadata`
+  - Acceptance: Atribut je propagován z `ParsedMetadata` ✅
 
-- [ ] **1.2.2** Přidat atribut `prompt_length: int` do `EnhancedMetadata`
-  - Acceptance: Atribut je dostupný přes `as_mutable()`
+- [x] **1.2.2** Přidat atribut `prompt_length: int` do `EnhancedMetadata`
+  - Acceptance: Atribut je dostupný přes `as_mutable()` ✅
 
-- [ ] **1.2.3** Upravit `ParsedMetadata.to_enhanced_metadata()` pro propagaci nových atributů
-  - Acceptance: Komplexita a délka promptu jsou předány do EnhancedMetadata
+- [x] **1.2.3** Upravit `ParsedMetadata.to_enhanced_metadata()` pro propagaci nových atributů
+  - Acceptance: Komplexita a délka promptu jsou předány do EnhancedMetadata ✅
 
 ---
 
-## Phase 2: Router Extension (Est: 2 hours)
+## Phase 2: Router Extension (Est: 2 hours) ✅
 
 ### 2.1 Configuration Constants
 
-- [ ] **2.1.1** Vytvořit konfigurační soubor [complexity_config.py](../src/mcp_prompt_broker/router/complexity_config.py)
-  - Acceptance: Obsahuje všechny konfigurační konstanty
+- [x] **2.1.1** Vytvořit konfigurační soubor [complexity_config.py](../src/mcp_prompt_broker/router/complexity_config.py)
+  - Acceptance: Obsahuje všechny konfigurační konstanty ✅
   
   ```python
   # Prahy pro preferenci _complex variant
@@ -67,17 +68,17 @@ Implementace automatického preferování `_complex` variant profilů u dlouhýc
 
 ### 2.2 Profile Variant Discovery
 
-- [ ] **2.2.1** Implementovat metodu `ProfileRouter._find_complex_variant()`
+- [x] **2.2.1** Implementovat metodu `ProfileRouter._find_complex_variant()`
   - Input: `profile_name: str`
   - Output: `InstructionProfile | None`
-  - Acceptance: Vrací `_complex` variantu pokud existuje, jinak None
+  - Acceptance: Vrací `_complex` variantu pokud existuje, jinak None ✅
 
-- [ ] **2.2.2** Implementovat metodu `ProfileRouter._find_simple_variant()`
+- [x] **2.2.2** Implementovat metodu `ProfileRouter._find_simple_variant()`
   - Input: `profile_name: str` (s `_complex` suffixem)
   - Output: `InstructionProfile | None`
-  - Acceptance: Vrací základní variantu pokud existuje
+  - Acceptance: Vrací základní variantu pokud existuje ✅
 
-- [ ] **2.2.3** Vytvořit index párových profilů při inicializaci routeru
+- [x] **2.2.3** Vytvořit index párových profilů při inicializaci routeru
   - Acceptance: `self._profile_pairs: Dict[str, str]` mapující base → complex
 
 ### 2.3 Complexity Preference Logic

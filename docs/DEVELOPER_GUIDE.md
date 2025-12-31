@@ -198,8 +198,14 @@ Implements the routing logic for matching prompts to profiles.
 classDiagram
     class ProfileRouter {
         +profiles: List[InstructionProfile]
+        +_profile_pairs: Dict[str, str]
         +route(metadata: EnhancedMetadata) RoutingResult
+        +_find_complex_variant(name: str) InstructionProfile
+        +_find_simple_variant(name: str) InstructionProfile
+        +_should_prefer_complex(metadata) bool
+        +_should_prefer_simple(metadata) bool
         -_normalize_consistency(best_score, candidates) float
+        -_build_profile_pairs() Dict
     }
     
     class EnhancedMetadata {
@@ -211,6 +217,8 @@ classDiagram
         +audience: str
         +intent: str
         +context_tags: frozenset[str]
+        +complexity: str
+        +prompt_length: int
         +from_dict(metadata) EnhancedMetadata
         +as_mutable() MutableMapping
     }
@@ -219,13 +227,15 @@ classDiagram
         +profile: InstructionProfile
         +score: int
         +consistency: float
+        +complexity_adjusted: bool
+        +original_profile_name: str
     }
     
     ProfileRouter --> RoutingResult
     ProfileRouter --> EnhancedMetadata
 ```
 
-**Scoring Algorithm:**
+**Scoring Algorithm with Complexity Routing:**
 
 ```mermaid
 flowchart TD
@@ -240,10 +250,32 @@ flowchart TD
     C -->|Done| H{Any Candidates?}
     H -->|Yes| I[Select Max Score]
     H -->|No| J[Use Fallback]
-    I --> K[Calculate Consistency]
-    K --> L[Return Result]
-    J --> L
+    I --> K{Complexity Routing?}
+    K -->|Yes| L{Should Prefer Complex?}
+    L -->|Yes| M[Find _complex Variant]
+    M -->|Found| N[Switch to Complex]
+    M -->|Not Found| O[Keep Original]
+    L -->|No| P{Should Prefer Simple?}
+    P -->|Yes| Q[Find Base Variant]
+    P -->|No| O
+    K -->|No| O
+    N --> R[Calculate Consistency]
+    O --> R
+    Q --> R
+    R --> S[Return Result]
+    J --> S
 ```
+
+### 3.1 Complexity Configuration (`router/complexity_config.py`)
+
+Configuration module for complexity-based profile routing.
+
+| Constant | Description | Default |
+|----------|-------------|---------|
+| `COMPLEXITY_ROUTING_ENABLED` | Feature toggle | `true` |
+| `COMPLEX_SUFFIX` | Suffix for complex variants | `_complex` |
+| `WORD_COUNT_PREFER_COMPLEX_THRESHOLD` | Words to prefer complex | `60` |
+| `COMPLEX_VARIANT_MIN_SCORE_RATIO` | Min score ratio for switch | `0.8` |
 
 ### 4. Metadata Parser (`metadata/parser.py`)
 

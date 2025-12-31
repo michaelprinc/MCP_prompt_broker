@@ -220,6 +220,12 @@ def _build_server(loader: ProfileLoader) -> Server:
                     "consistency": routing.consistency,
                 }
                 
+                # Add complexity routing details (always present in RoutingResult)
+                routing_info["complexity_routing"] = {
+                    "adjusted": routing.complexity_adjusted,
+                    "original_profile": routing.original_profile_name,
+                }
+                
                 # Add hybrid routing details if available
                 if isinstance(routing, HybridRoutingResult):
                     routing_info.update({
