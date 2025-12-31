@@ -1,0 +1,3074 @@
+{
+  "version": "1.0",
+  "generated_at": "2025-12-31T23:58:30.872887+00:00",
+  "profiles": {
+    "code_reviewer_senior": {
+      "name": "code_reviewer_senior",
+      "short_description": "Strict senior-level code review focusing on readability, maintainability, security risks, technical debt, and architectural concerns",
+      "source_file": "code_reviewer_senior.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "code_review",
+          "pr_review"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "medium": 2,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "engineering": 7,
+          "code_review": 10,
+          "security": 5,
+          "quality": 8
+        },
+        "keywords": {
+          "code review": 18,
+          "pr review": 15,
+          "pull request": 12,
+          "kvalita kódu": 15,
+          "kvalita kodu": 15,
+          "čitelnost": 12,
+          "citelnost": 12,
+          "technický dluh": 12,
+          "technicky dluh": 12,
+          "review": 10,
+          "code quality": 15,
+          "readability": 12,
+          "technical debt": 12,
+          "maintainability": 12,
+          "best practices": 10
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "quality_assurance",
+        "verification"
+      ],
+      "domains": [
+        "code_review",
+        "engineering",
+        "finance",
+        "quality",
+        "security"
+      ],
+      "checklist_count": 10,
+      "instructions_length": 6296,
+      "last_modified": "2025-12-31T14:29:52.147836+00:00"
+    },
+    "codex_cli": {
+      "name": "codex_cli",
+      "short_description": "Integration profile for Codex via MCP codex-orchestrator server with Docker isolation, timeout management, and structured responses",
+      "source_file": "codex_cli.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "codex_cli",
+          "codex_orchestrator",
+          "mcp_integration"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 2,
+          "critical": 3
+        },
+        "complexity": {
+          "medium": 2,
+          "high": 3
+        },
+        "domain": {
+          "engineering": 3,
+          "python": 3,
+          "code_generation": 4
+        },
+        "keywords": {
+          "codex cli": 12,
+          "codex": 10,
+          "codex orchestrator": 15,
+          "mcp server": 8,
+          "docker isolation": 6,
+          "timeout": 2,
+          "sandbox": 4
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "quality_assurance",
+        "systematic_analysis",
+        "verification"
+      ],
+      "domains": [
+        "code_generation",
+        "engineering",
+        "general",
+        "python"
+      ],
+      "checklist_count": 7,
+      "instructions_length": 3264,
+      "last_modified": "2025-12-31T16:27:47.394872+00:00"
+    },
+    "creative_brainstorm": {
+      "name": "creative_brainstorm",
+      "short_description": "Encourage creative exploration and divergent thinking for ideation sessions",
+      "source_file": "creative_brainstorm.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "intent": [
+          "brainstorm",
+          "creative",
+          "ideation"
+        ]
+      },
+      "weights": {
+        "audience": {
+          "marketing": 2,
+          "product": 1,
+          "design": 2
+        },
+        "language": {
+          "en": 1
+        },
+        "context_tags": {
+          "storytelling": 2,
+          "innovation": 2,
+          "design_thinking": 1
+        },
+        "keywords": {
+          "brainstorm": 8,
+          "creative": 6,
+          "ideas": 5,
+          "ideation": 6
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "cross_domain",
+        "divergent_thinking",
+        "ideation",
+        "quality_assurance"
+      ],
+      "domains": [
+        "creative",
+        "engineering"
+      ],
+      "checklist_count": 8,
+      "instructions_length": 1860,
+      "last_modified": "2025-12-31T16:18:58.400054+00:00"
+    },
+    "creative_brainstorm_complex": {
+      "name": "creative_brainstorm_complex",
+      "short_description": "Advanced creative ideation with meta-cognition, chain-of-thought reasoning, and structured divergent thinking",
+      "source_file": "creative_brainstorm_complex.md",
+      "default_score": 3,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "creative_brainstorm",
+      "required": {
+        "intent": [
+          "brainstorm",
+          "creative",
+          "ideation",
+          "innovation"
+        ]
+      },
+      "weights": {
+        "audience": {
+          "marketing": 3,
+          "product": 2,
+          "design": 3,
+          "executive": 2
+        },
+        "language": {
+          "en": 1
+        },
+        "context_tags": {
+          "storytelling": 3,
+          "innovation": 3,
+          "design_thinking": 2,
+          "strategy": 2,
+          "vision": 2
+        },
+        "keywords": {
+          "brainstorm": 10,
+          "creative": 8,
+          "ideas": 8,
+          "ideation": 10,
+          "innovation": 8,
+          "imagine": 6,
+          "marketing": 4,
+          "campaign": 4,
+          "design": 4
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "cross_domain",
+        "divergent_thinking",
+        "ideation",
+        "meta_cognition",
+        "quality_assurance",
+        "systematic_analysis",
+        "verification"
+      ],
+      "domains": [
+        "creative"
+      ],
+      "checklist_count": 12,
+      "instructions_length": 4183,
+      "last_modified": "2025-12-25T19:09:37.148460+00:00"
+    },
+    "decision_support_analyst": {
+      "name": "decision_support_analyst",
+      "short_description": "Structured decision analysis with clear options, trade-offs, risks, and recommendations for technical and architectural choices",
+      "source_file": "decision_support_analyst.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "decision",
+          "recommendation"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "medium": 3,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "architecture": 6,
+          "engineering": 5,
+          "strategy": 7,
+          "analysis": 8,
+          "consulting": 6
+        },
+        "keywords": {
+          "rozhodnutí": 15,
+          "rozhodnuti": 15,
+          "volba": 12,
+          "doporučení": 15,
+          "doporuceni": 15,
+          "varianty": 12,
+          "srovnání": 12,
+          "srovnani": 12,
+          "analýza možností": 15,
+          "analyza moznosti": 15,
+          "poradit": 10,
+          "výběr": 10,
+          "vyber": 10,
+          "decision": 15,
+          "choice": 12,
+          "recommendation": 15,
+          "options": 12,
+          "comparison": 12,
+          "trade-offs": 12,
+          "alternatives": 12,
+          "which should": 15,
+          "what should": 12,
+          "pros and cons": 12
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "systematic_analysis"
+      ],
+      "domains": [
+        "analysis",
+        "architecture",
+        "consulting",
+        "engineering",
+        "strategy"
+      ],
+      "checklist_count": 10,
+      "instructions_length": 3260,
+      "last_modified": "2025-12-31T14:29:52.147836+00:00"
+    },
+    "devops_mlops_engineer": {
+      "name": "devops_mlops_engineer",
+      "short_description": "CI/CD pipeline design, containerization, ML deployment workflows, and infrastructure automation for reproducible ML systems",
+      "source_file": "devops_mlops_engineer.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "devops",
+          "mlops",
+          "pipeline"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "medium": 3,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "devops": 10,
+          "mlops": 10,
+          "engineering": 5,
+          "infrastructure": 7,
+          "automation": 6
+        },
+        "keywords": {
+          "ci/cd": 15,
+          "pipeline": 15,
+          "automatizace": 12,
+          "nasazení": 12,
+          "nasazeni": 12,
+          "deployment": 12,
+          "docker": 12,
+          "kontejner": 10,
+          "kubernetes": 10,
+          "databricks": 10,
+          "automation": 12,
+          "container": 10,
+          "github actions": 12,
+          "mlflow": 10,
+          "model registry": 10,
+          "infrastructure as code": 12
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "verification"
+      ],
+      "domains": [
+        "automation",
+        "devops",
+        "engineering",
+        "general",
+        "infrastructure",
+        "mlops",
+        "security"
+      ],
+      "checklist_count": 10,
+      "instructions_length": 8638,
+      "last_modified": "2025-12-31T14:29:52.146836+00:00"
+    },
+    "documentation_3level": {
+      "name": "documentation_3level",
+      "short_description": "",
+      "source_file": "documentation_3level.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "documentation",
+          "project_structure"
+        ]
+      },
+      "weights": {
+        "default": {
+          "complexity": 0,
+          "documentation": 0,
+          "structure": 0,
+          "project_setup": 0
+        }
+      },
+      "capabilities": [],
+      "domains": [],
+      "checklist_count": 15,
+      "instructions_length": 247,
+      "last_modified": "2025-12-31T17:07:15.511262+00:00"
+    },
+    "documentation_4level": {
+      "name": "documentation_4level",
+      "short_description": "",
+      "source_file": "documentation_4level.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "documentation",
+          "project_structure"
+        ]
+      },
+      "weights": {
+        "default": {
+          "complexity": 0,
+          "documentation": 0,
+          "structure": 0,
+          "enterprise": 0
+        }
+      },
+      "capabilities": [],
+      "domains": [],
+      "checklist_count": 19,
+      "instructions_length": 296,
+      "last_modified": "2025-12-31T17:07:15.512262+00:00"
+    },
+    "documentation_agile": {
+      "name": "documentation_agile",
+      "short_description": "",
+      "source_file": "documentation_agile.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "agile",
+          "documentation"
+        ]
+      },
+      "weights": {
+        "default": {
+          "complexity": 0,
+          "documentation": 0,
+          "agile": 0,
+          "velocity": 0,
+          "collaboration": 0
+        }
+      },
+      "capabilities": [],
+      "domains": [],
+      "checklist_count": 10,
+      "instructions_length": 157,
+      "last_modified": "2025-12-31T17:07:15.512262+00:00"
+    },
+    "documentation_api_first": {
+      "name": "documentation_api_first",
+      "short_description": "",
+      "source_file": "documentation_api_first.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "api",
+          "documentation"
+        ]
+      },
+      "weights": {
+        "default": {
+          "complexity": 0,
+          "documentation": 0,
+          "api": 0,
+          "developer_experience": 0,
+          "integration": 0
+        }
+      },
+      "capabilities": [],
+      "domains": [
+        "engineering"
+      ],
+      "checklist_count": 10,
+      "instructions_length": 165,
+      "last_modified": "2025-12-31T17:07:15.514768+00:00"
+    },
+    "documentation_diataxis": {
+      "name": "documentation_diataxis",
+      "short_description": "Documentation following the Diátaxis framework with clear separation into tutorials, how-to, reference, and explanation",
+      "source_file": "documentation_diataxis.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "diataxis",
+          "documentation"
+        ]
+      },
+      "weights": {
+        "domain": {
+          "documentation": 8,
+          "technical_writing": 6
+        },
+        "keywords": {
+          "documentation": 8,
+          "dokumentace": 8,
+          "diataxis": 12,
+          "diátaxis": 12,
+          "tutorial": 6,
+          "how-to": 6,
+          "reference": 4,
+          "explanation": 4
+        }
+      },
+      "capabilities": [],
+      "domains": [
+        "documentation",
+        "technical_writing"
+      ],
+      "checklist_count": 8,
+      "instructions_length": 200,
+      "last_modified": "2025-12-31T16:41:58.801697+00:00"
+    },
+    "documentation_enterprise": {
+      "name": "documentation_enterprise",
+      "short_description": "",
+      "source_file": "documentation_enterprise.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "compliance",
+          "documentation",
+          "enterprise"
+        ]
+      },
+      "weights": {
+        "default": {
+          "complexity": 0,
+          "documentation": 0,
+          "enterprise": 0,
+          "compliance": 0,
+          "governance": 0
+        }
+      },
+      "capabilities": [
+        "compliance"
+      ],
+      "domains": [
+        "legal"
+      ],
+      "checklist_count": 10,
+      "instructions_length": 172,
+      "last_modified": "2025-12-31T17:07:15.515773+00:00"
+    },
+    "documentation_minimal": {
+      "name": "documentation_minimal",
+      "short_description": "",
+      "source_file": "documentation_minimal.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "documentation"
+        ]
+      },
+      "weights": {
+        "default": {
+          "complexity": 0,
+          "documentation": 0,
+          "structure": 0,
+          "simplicity": 0
+        }
+      },
+      "capabilities": [],
+      "domains": [],
+      "checklist_count": 7,
+      "instructions_length": 198,
+      "last_modified": "2025-12-31T17:07:15.514768+00:00"
+    },
+    "documentation_oslc": {
+      "name": "documentation_oslc",
+      "short_description": "",
+      "source_file": "documentation_oslc.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "documentation",
+          "open_source"
+        ]
+      },
+      "weights": {
+        "default": {
+          "complexity": 0,
+          "documentation": 0,
+          "open_source": 0,
+          "community": 0,
+          "collaboration": 0
+        }
+      },
+      "capabilities": [
+        "compliance"
+      ],
+      "domains": [
+        "finance"
+      ],
+      "checklist_count": 6,
+      "instructions_length": 165,
+      "last_modified": "2025-12-31T17:07:15.516775+00:00"
+    },
+    "econometrician": {
+      "name": "econometrician",
+      "short_description": "Regression-first statistical analysis with focus on inference, hypothesis testing, and interpretability over prediction",
+      "source_file": "econometrician.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "econometrics",
+          "inference",
+          "regression"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "medium": 3,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "data_science": 6,
+          "econometrics": 10,
+          "statistics": 8,
+          "research": 5,
+          "economics": 6
+        },
+        "keywords": {
+          "ekonometrie": 18,
+          "regrese": 15,
+          "inference": 12,
+          "hypotéza": 12,
+          "hypoteza": 12,
+          "statistická významnost": 15,
+          "statisticka vyznamnost": 15,
+          "panelová data": 15,
+          "panelova data": 15,
+          "heteroskedasticita": 12,
+          "autokorelace": 10,
+          "endogenita": 12,
+          "instrumentální proměnné": 12,
+          "instrumentalni promenne": 12,
+          "kauzalita": 12,
+          "econometrics": 18,
+          "regression": 15,
+          "hypothesis testing": 15,
+          "panel data": 15,
+          "heteroscedasticity": 12,
+          "autocorrelation": 10,
+          "endogeneity": 12,
+          "instrumental variables": 15,
+          "causality": 12,
+          "fixed effects": 12,
+          "random effects": 10,
+          "ols": 10,
+          "2sls": 12,
+          "gmm": 12
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "data_science",
+        "econometrics",
+        "economics",
+        "engineering",
+        "general",
+        "research",
+        "statistics"
+      ],
+      "checklist_count": 8,
+      "instructions_length": 4223,
+      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+    },
+    "general_default": {
+      "name": "general_default",
+      "short_description": "Balanced general-purpose assistant for adaptive, helpful responses",
+      "source_file": "general_default.md",
+      "default_score": 4,
+      "fallback": true,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "general"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 1,
+          "urgent": 2
+        },
+        "keywords": {
+          "help": 3,
+          "question": 3,
+          "explain": 3,
+          "what": 2,
+          "how": 2
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "quality_assurance",
+        "systematic_analysis"
+      ],
+      "domains": [
+        "engineering",
+        "general"
+      ],
+      "checklist_count": 5,
+      "instructions_length": 1013,
+      "last_modified": "2025-12-31T16:55:18.291666+00:00"
+    },
+    "general_default_complex": {
+      "name": "general_default_complex",
+      "short_description": "Advanced adaptive reasoning with multi-step verification, structured thinking, and quality assurance protocols",
+      "source_file": "general_default_complex.md",
+      "default_score": 5,
+      "fallback": true,
+      "complexity": "complex",
+      "extends": "general_default",
+      "required": {
+        "context_tags": [
+          "general"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 2,
+          "urgent": 3,
+          "critical": 4
+        },
+        "keywords": {
+          "help": 4,
+          "question": 4,
+          "explain": 4,
+          "what": 2,
+          "how": 2,
+          "general": 3,
+          "what is": 4,
+          "how to": 4,
+          "just": 3,
+          "simple": 3
+        },
+        "complexity": {
+          "high": 2,
+          "complex": 2
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "meta_cognition",
+        "quality_assurance",
+        "systematic_analysis",
+        "verification"
+      ],
+      "domains": [
+        "general"
+      ],
+      "checklist_count": 12,
+      "instructions_length": 4506,
+      "last_modified": "2025-12-31T16:55:18.296167+00:00"
+    },
+    "implementation_planner": {
+      "name": "implementation_planner",
+      "short_description": "Systematic planning profile that generates detailed checklists and implementation plans in separate markdown files with recommended implementation prompts",
+      "source_file": "implementation_planner.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "implementation_planner"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "medium": 2,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "engineering": 4,
+          "architecture": 5,
+          "project_management": 5,
+          "planning": 6
+        },
+        "keywords": {
+          "implementační plán": 18,
+          "implementacni plan": 18,
+          "implementace": 12,
+          "plán": 10,
+          "plan": 10,
+          "checklist": 15,
+          "kontrolní seznam": 15,
+          "kontrolni seznam": 15,
+          "naplánuj": 12,
+          "naplanuj": 12,
+          "rozplánuj": 12,
+          "rozplanuj": 12,
+          "vytvoř plán": 15,
+          "vytvor plan": 15,
+          "projekt": 6,
+          "postup": 8,
+          "kroky": 6,
+          "úkoly": 6,
+          "ukoly": 6,
+          "milníky": 8,
+          "milniky": 8,
+          "implementation plan": 18,
+          "implementation": 12,
+          "planning": 12,
+          "roadmap": 12,
+          "task list": 12,
+          "breakdown": 10,
+          "steps": 6,
+          "tasks": 6,
+          "milestones": 8,
+          "project plan": 15,
+          "action items": 12,
+          "deliverables": 10,
+          "acceptance criteria": 12,
+          "spec": 8,
+          "specification": 10
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "privacy_protection",
+        "verification"
+      ],
+      "domains": [
+        "architecture",
+        "engineering",
+        "planning",
+        "project_management",
+        "security"
+      ],
+      "checklist_count": 22,
+      "instructions_length": 2247,
+      "last_modified": "2025-12-31T16:18:58.403615+00:00"
+    },
+    "implementation_planner_complex": {
+      "name": "implementation_planner_complex",
+      "short_description": "Enterprise-grade planning profile for complex multi-module projects with detailed risk analysis, dependency mapping, and phased rollout strategies",
+      "source_file": "implementation_planner_complex.md",
+      "default_score": 1,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "implementation_planner",
+      "required": {
+        "context_tags": [
+          "implementation_planner_complex"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 4,
+          "critical": 5
+        },
+        "complexity": {
+          "medium": 2,
+          "high": 5,
+          "complex": 7,
+          "critical": 8
+        },
+        "domain": {
+          "engineering": 5,
+          "architecture": 7,
+          "project_management": 7,
+          "planning": 7,
+          "enterprise": 6
+        },
+        "keywords": {
+          "implementační plán": 18,
+          "implementacni plan": 18,
+          "implementace": 12,
+          "plán": 10,
+          "plan": 10,
+          "checklist": 15,
+          "kontrolní seznam": 15,
+          "kontrolni seznam": 15,
+          "naplánuj": 12,
+          "naplanuj": 12,
+          "rozplánuj": 12,
+          "rozplanuj": 12,
+          "vytvoř plán": 15,
+          "vytvor plan": 15,
+          "projekt": 6,
+          "postup": 8,
+          "kroky": 6,
+          "úkoly": 6,
+          "ukoly": 6,
+          "milníky": 8,
+          "milniky": 8,
+          "implementation plan": 18,
+          "implementation": 12,
+          "planning": 12,
+          "roadmap": 12,
+          "task list": 12,
+          "breakdown": 10,
+          "steps": 6,
+          "tasks": 6,
+          "milestones": 8,
+          "project plan": 15,
+          "action items": 12,
+          "deliverables": 10,
+          "acceptance criteria": 12,
+          "spec": 8,
+          "specification": 10,
+          "komplexní plán": 18,
+          "komplexni plan": 18,
+          "architektura": 14,
+          "migrace": 12,
+          "refaktoring": 12,
+          "refactoring": 12,
+          "systémový design": 15,
+          "systemovy design": 15,
+          "enterprise": 12,
+          "velký projekt": 15,
+          "velky projekt": 15,
+          "více modulů": 12,
+          "vice modulu": 12,
+          "complex implementation": 18,
+          "architecture design": 16,
+          "system design": 16,
+          "migration": 14,
+          "large project": 15,
+          "multi-module": 14,
+          "cross-team": 12,
+          "microservices": 12,
+          "distributed": 12,
+          "scalable": 10,
+          "infrastructure": 12,
+          "deployment": 10,
+          "ci/cd": 10,
+          "devops": 10
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "compliance",
+        "verification"
+      ],
+      "domains": [
+        "architecture",
+        "engineering",
+        "enterprise",
+        "finance",
+        "legal",
+        "planning",
+        "project_management",
+        "security"
+      ],
+      "checklist_count": 19,
+      "instructions_length": 2042,
+      "last_modified": "2025-12-27T13:46:22.716563+00:00"
+    },
+    "llm_behavior_debugger": {
+      "name": "llm_behavior_debugger",
+      "short_description": "Analytical debugging of LLM outputs focusing on hallucinations, drift, instruction following failures, and systematic output analysis",
+      "source_file": "llm_behavior_debugger.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "hallucination_analysis",
+          "llm_debugging"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 5
+        },
+        "complexity": {
+          "medium": 3,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "llm": 10,
+          "debugging": 8,
+          "analysis": 6,
+          "prompt_engineering": 5
+        },
+        "keywords": {
+          "halucinace": 18,
+          "drift": 12,
+          "chybný výstup": 15,
+          "chybny vystup": 15,
+          "analýza LLM": 15,
+          "analyza LLM": 15,
+          "selhání instrukce": 12,
+          "selhani instrukce": 12,
+          "debugování": 10,
+          "ladění": 10,
+          "ladeni": 10,
+          "hallucination": 18,
+          "incorrect output": 15,
+          "llm analysis": 15,
+          "instruction failure": 12,
+          "debugging llm": 12,
+          "output analysis": 12,
+          "prompt failure": 10,
+          "model behavior": 10,
+          "reasoning error": 12
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "ideation",
+        "systematic_analysis",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "analysis",
+        "creative",
+        "debugging",
+        "engineering",
+        "llm",
+        "prompt_engineering"
+      ],
+      "checklist_count": 9,
+      "instructions_length": 4263,
+      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+    },
+    "mcp_agent_orchestrator": {
+      "name": "mcp_agent_orchestrator",
+      "short_description": "Deterministic agent orchestration with routing logic, lifecycle management, state machines, and fallback strategies for MCP systems",
+      "source_file": "mcp_agent_orchestrator.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "agent_orchestration",
+          "mcp",
+          "routing"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "medium": 2,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "engineering": 4,
+          "mcp": 8,
+          "agents": 7,
+          "orchestration": 7,
+          "routing": 6
+        },
+        "keywords": {
+          "orchestrace": 15,
+          "routing": 12,
+          "agent": 10,
+          "stavový automat": 12,
+          "stavovy automat": 12,
+          "fallback": 10,
+          "životní cyklus": 10,
+          "zivotni cyklus": 10,
+          "chybový stav": 10,
+          "chybovy stav": 10,
+          "prioritizace": 8,
+          "delegace": 8,
+          "orchestration": 15,
+          "mcp server": 12,
+          "mcp": 10,
+          "agent routing": 15,
+          "state machine": 12,
+          "lifecycle": 10,
+          "error state": 10,
+          "agent lifecycle": 12,
+          "prompt broker": 12,
+          "tool selection": 10,
+          "multi-agent": 12
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "incident_response",
+        "quality_assurance",
+        "troubleshooting"
+      ],
+      "domains": [
+        "agents",
+        "creative",
+        "engineering",
+        "general",
+        "mcp",
+        "orchestration",
+        "routing"
+      ],
+      "checklist_count": 9,
+      "instructions_length": 4784,
+      "last_modified": "2025-12-31T14:29:52.138781+00:00"
+    },
+    "mcp_server_testing_and_validation": {
+      "name": "mcp_server_testing_and_validation",
+      "short_description": "Systematic testing and validation of MCP Prompt Broker server functionality, profile configuration, and routing logic",
+      "source_file": "mcp_server_testing_and_validation.md",
+      "default_score": 1,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "mcp_server_testing_and_validation"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "medium": 2,
+          "high": 3
+        },
+        "domain": {
+          "testing": 5,
+          "quality_assurance": 4,
+          "debugging": 4
+        },
+        "keywords": {
+          "mcp server": 12,
+          "prompt broker": 12,
+          "mcp": 10,
+          "test": 8,
+          "testing": 8,
+          "validation": 8,
+          "validate": 8,
+          "verify": 6,
+          "check": 5,
+          "debug": 6,
+          "diagnose": 6,
+          "profile": 5,
+          "profiles": 5,
+          "routing": 6,
+          "hot reload": 8,
+          "metadata": 5,
+          "parser": 6,
+          "funkčnost": 5,
+          "kontrola": 8,
+          "zkontroluj": 8,
+          "ověř": 6,
+          "copilot-profiles": 10,
+          "definice": 5,
+          "správnost": 5
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "compliance",
+        "ideation",
+        "privacy_protection",
+        "systematic_analysis",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "creative",
+        "debugging",
+        "engineering",
+        "general",
+        "healthcare",
+        "legal",
+        "quality_assurance",
+        "testing"
+      ],
+      "checklist_count": 40,
+      "instructions_length": 7018,
+      "last_modified": "2025-12-31T17:00:22.326081+00:00"
+    },
+    "ml_pragmatist": {
+      "name": "ml_pragmatist",
+      "short_description": "Practical ML solutions focused on real-world performance, data quality, and deployment constraints over theoretical purity",
+      "source_file": "ml_pragmatist.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "machine_learning",
+          "practical_ml"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "medium": 3,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "data_science": 6,
+          "machine_learning": 8,
+          "engineering": 4,
+          "production": 5
+        },
+        "keywords": {
+          "strojové učení": 15,
+          "strojove uceni": 15,
+          "ml model": 12,
+          "praktický": 10,
+          "prakticky": 10,
+          "reálná data": 12,
+          "realna data": 12,
+          "ensemble": 12,
+          "gradient boosting": 12,
+          "catboost": 12,
+          "xgboost": 12,
+          "lightgbm": 12,
+          "validace": 10,
+          "cross-validation": 10,
+          "machine learning": 15,
+          "practical ml": 15,
+          "real data": 12,
+          "feature engineering": 12,
+          "cross validation": 10,
+          "data quality": 10,
+          "baseline": 10,
+          "mvp": 8
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "quality_assurance",
+        "verification"
+      ],
+      "domains": [
+        "data_science",
+        "engineering",
+        "general",
+        "machine_learning",
+        "production"
+      ],
+      "checklist_count": 12,
+      "instructions_length": 7905,
+      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+    },
+    "model_evaluation_expert": {
+      "name": "model_evaluation_expert",
+      "short_description": "Critical model diagnostics with proper metrics, calibration analysis, distribution-aware evaluation, and honest uncertainty quantification",
+      "source_file": "model_evaluation_expert.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "diagnostics",
+          "metrics",
+          "model_evaluation"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "medium": 3,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "data_science": 6,
+          "machine_learning": 5,
+          "statistics": 6,
+          "evaluation": 10
+        },
+        "keywords": {
+          "evaluace modelu": 18,
+          "evaluace": 12,
+          "metriky": 15,
+          "kalibrace": 12,
+          "diagnostika": 12,
+          "wasserstein": 12,
+          "smearing": 12,
+          "křížová validace": 10,
+          "krizova validace": 10,
+          "confusion matrix": 10,
+          "roc křivka": 10,
+          "roc krivka": 10,
+          "model evaluation": 18,
+          "metrics": 15,
+          "calibration": 15,
+          "diagnostics": 12,
+          "roc curve": 10,
+          "precision recall": 10,
+          "lift curve": 10,
+          "expected calibration error": 12,
+          "proper scoring rules": 12
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "privacy_protection",
+        "quality_assurance",
+        "verification"
+      ],
+      "domains": [
+        "data_science",
+        "evaluation",
+        "general",
+        "machine_learning",
+        "statistics"
+      ],
+      "checklist_count": 9,
+      "instructions_length": 6411,
+      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+    },
+    "performance_optimizer": {
+      "name": "performance_optimizer",
+      "short_description": "Hardware-aware performance optimization for inference speed, memory efficiency, and resource utilization with GPU/CPU considerations",
+      "source_file": "performance_optimizer.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "hardware",
+          "optimization",
+          "performance"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 5
+        },
+        "complexity": {
+          "medium": 3,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "engineering": 5,
+          "performance": 10,
+          "infrastructure": 6,
+          "mlops": 5,
+          "hardware": 8
+        },
+        "keywords": {
+          "optimalizace výkonu": 18,
+          "optimalizace vykonu": 18,
+          "inference": 15,
+          "rychlost": 12,
+          "paměť": 10,
+          "pamet": 10,
+          "gpu": 12,
+          "cpu": 10,
+          "latence": 12,
+          "propustnost": 12,
+          "bottleneck": 10,
+          "performance": 15,
+          "optimization": 15,
+          "inference speed": 15,
+          "latency": 12,
+          "throughput": 12,
+          "memory": 10,
+          "llama.cpp": 15,
+          "quantization": 12,
+          "batching": 10,
+          "profiling": 10
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "quality_assurance",
+        "verification"
+      ],
+      "domains": [
+        "engineering",
+        "hardware",
+        "infrastructure",
+        "mlops",
+        "performance"
+      ],
+      "checklist_count": 10,
+      "instructions_length": 6028,
+      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+    },
+    "podman_container_management": {
+      "name": "podman_container_management",
+      "short_description": "Create, manage, and troubleshoot Podman containers and images",
+      "source_file": "podman_container_management.md",
+      "default_score": 1,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "container_management",
+          "devops",
+          "podman"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 2,
+          "urgent": 1
+        },
+        "domain": {
+          "containers": 5,
+          "devops": 4,
+          "infrastructure": 3
+        },
+        "keywords": {
+          "podman": 12,
+          "container": 10,
+          "containerfile": 8,
+          "dockerfile": 8,
+          "pod": 6,
+          "image": 5,
+          "podman compose": 10
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "privacy_protection",
+        "systematic_analysis",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "containers",
+        "devops",
+        "engineering",
+        "general",
+        "infrastructure",
+        "security"
+      ],
+      "checklist_count": 10,
+      "instructions_length": 8060,
+      "last_modified": "2025-12-25T19:08:32.364850+00:00"
+    },
+    "podman_container_management_complex": {
+      "name": "podman_container_management_complex",
+      "short_description": "Advanced Podman architecture with Quadlet, systemd integration, security hardening, orchestration, and CI/CD pipelines",
+      "source_file": "podman_container_management_complex.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "podman_container_management",
+      "required": {
+        "context_tags": [
+          "container_management"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "urgent": 1,
+          "critical": 4
+        },
+        "domain": {
+          "containers": 5,
+          "devops": 5,
+          "infrastructure": 4,
+          "security": 4,
+          "ci_cd": 3
+        },
+        "keywords": {
+          "podman": 15,
+          "container": 12,
+          "containerfile": 8,
+          "dockerfile": 8,
+          "pod": 6,
+          "image": 5,
+          "podman compose": 10,
+          "docker": 10,
+          "containers": 12,
+          "kubernetes": 8,
+          "k8s": 8,
+          "quadlet": 15,
+          "systemd": 6,
+          "volume": 5,
+          "network": 5
+        },
+        "complexity": {
+          "high": 3,
+          "complex": 4
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "compliance",
+        "incident_response",
+        "systematic_analysis",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "ci_cd",
+        "containers",
+        "creative",
+        "devops",
+        "engineering",
+        "general",
+        "infrastructure",
+        "legal",
+        "security"
+      ],
+      "checklist_count": 14,
+      "instructions_length": 14378,
+      "last_modified": "2025-12-25T19:02:02.893485+00:00"
+    },
+    "privacy_sensitive": {
+      "name": "privacy_sensitive",
+      "short_description": "Privacy-first responses with data protection, redaction, and regulatory compliance",
+      "source_file": "privacy_sensitive.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "sensitivity": [
+          "critical",
+          "high"
+        ]
+      },
+      "weights": {
+        "domain": {
+          "healthcare": 3,
+          "finance": 2,
+          "legal": 2
+        },
+        "language": {
+          "en": 1
+        },
+        "context_tags": {
+          "pii": 2,
+          "compliance": 1,
+          "gdpr": 2,
+          "hipaa": 2
+        },
+        "keywords": {
+          "privacy": 10,
+          "sensitive": 8,
+          "pii": 10,
+          "gdpr": 8,
+          "hipaa": 8,
+          "compliance": 6,
+          "redact": 8
+        }
+      },
+      "capabilities": [
+        "compliance",
+        "privacy_protection",
+        "verification"
+      ],
+      "domains": [
+        "finance",
+        "healthcare",
+        "legal"
+      ],
+      "checklist_count": 8,
+      "instructions_length": 1640,
+      "last_modified": "2025-12-31T16:18:58.401611+00:00"
+    },
+    "privacy_sensitive_complex": {
+      "name": "privacy_sensitive_complex",
+      "short_description": "Zero-trust privacy framework with adversarial awareness, comprehensive compliance matrix, and defense-in-depth data protection",
+      "source_file": "privacy_sensitive_complex.md",
+      "default_score": 1,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "privacy_sensitive",
+      "required": {
+        "context_tags": [
+          "compliance",
+          "pii"
+        ]
+      },
+      "weights": {
+        "domain": {
+          "healthcare": 4,
+          "finance": 3,
+          "legal": 3,
+          "government": 4,
+          "insurance": 3
+        },
+        "language": {
+          "en": 1
+        },
+        "context_tags": {
+          "pii": 5,
+          "compliance": 4,
+          "gdpr": 5,
+          "hipaa": 5,
+          "pci": 5,
+          "sox": 4,
+          "ferpa": 4,
+          "ccpa": 4,
+          "classified": 6
+        },
+        "keywords": {
+          "privacy": 10,
+          "sensitive": 6,
+          "pii": 10,
+          "gdpr": 10,
+          "hipaa": 10,
+          "compliance": 6,
+          "redact": 8,
+          "patient": 8,
+          "medical": 6,
+          "private": 6,
+          "confidential": 8,
+          "ssn": 10,
+          "credit card": 8,
+          "personal data": 8
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "compliance",
+        "incident_response",
+        "meta_cognition",
+        "privacy_protection",
+        "verification",
+        "zero_trust"
+      ],
+      "domains": [
+        "engineering",
+        "finance",
+        "general",
+        "government",
+        "healthcare",
+        "insurance",
+        "legal",
+        "security"
+      ],
+      "checklist_count": 16,
+      "instructions_length": 5730,
+      "last_modified": "2025-12-25T19:08:32.364850+00:00"
+    },
+    "production_grade_engineer": {
+      "name": "production_grade_engineer",
+      "short_description": "Strict production-ready code with comprehensive error handling, security considerations, edge cases, and operational readiness",
+      "source_file": "production_grade_engineer.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "production",
+          "robust_code"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 4,
+          "critical": 5
+        },
+        "complexity": {
+          "medium": 2,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "engineering": 6,
+          "production": 8,
+          "backend": 5,
+          "infrastructure": 5,
+          "security": 4
+        },
+        "keywords": {
+          "produkční kód": 18,
+          "produkcni kod": 18,
+          "robustní": 12,
+          "robustni": 12,
+          "edge case": 10,
+          "ošetření chyb": 12,
+          "osetreni chyb": 12,
+          "bezpečný kód": 12,
+          "bezpecny kod": 12,
+          "stabilní": 10,
+          "stabilni": 10,
+          "spolehlivý": 10,
+          "spolehliv": 10,
+          "production code": 18,
+          "production-ready": 18,
+          "robust": 12,
+          "edge cases": 12,
+          "error handling": 12,
+          "fault tolerant": 12,
+          "secure code": 12,
+          "defensive programming": 12,
+          "reliability": 10,
+          "resilience": 10,
+          "operational": 8,
+          "deploy": 6
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "quality_assurance",
+        "systematic_analysis",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "backend",
+        "engineering",
+        "general",
+        "infrastructure",
+        "production",
+        "security"
+      ],
+      "checklist_count": 11,
+      "instructions_length": 5869,
+      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+    },
+    "prompt_minimalist": {
+      "name": "prompt_minimalist",
+      "short_description": "Ultra-efficient prompt engineering focused on token economy, deterministic outputs, and minimal instruction sets for MCP and agent systems",
+      "source_file": "prompt_minimalist.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "prompt_engineering",
+          "token_efficiency"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "medium": 2,
+          "high": 3,
+          "complex": 4
+        },
+        "domain": {
+          "prompt_engineering": 10,
+          "mcp": 6,
+          "llm": 7,
+          "optimization": 5
+        },
+        "keywords": {
+          "tokenová efektivita": 18,
+          "tokenova efektivita": 18,
+          "minimální prompt": 15,
+          "minimalni prompt": 15,
+          "stručný": 12,
+          "strucny": 12,
+          "determinismus": 12,
+          "krátký prompt": 12,
+          "kratky prompt": 12,
+          "málo tokenů": 10,
+          "malo tokenu": 10,
+          "token efficiency": 18,
+          "minimal prompt": 15,
+          "concise": 12,
+          "deterministic": 12,
+          "short prompt": 12,
+          "fewer tokens": 12,
+          "prompt compression": 15,
+          "instruction tuning": 10,
+          "system prompt": 10,
+          "mcp instructions": 12
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "quality_assurance",
+        "systematic_analysis",
+        "verification"
+      ],
+      "domains": [
+        "creative",
+        "engineering",
+        "llm",
+        "mcp",
+        "optimization",
+        "prompt_engineering"
+      ],
+      "checklist_count": 8,
+      "instructions_length": 4125,
+      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+    },
+    "prompt_theorist": {
+      "name": "prompt_theorist",
+      "short_description": "Systematic prompt architecture using CO-STAR, POML, RPPC, and other meta-prompting frameworks for structured LLM instruction design",
+      "source_file": "prompt_theorist.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "meta_prompting",
+          "prompt_theory"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "medium": 3,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "prompt_engineering": 10,
+          "llm": 8,
+          "research": 5,
+          "methodology": 6
+        },
+        "keywords": {
+          "meta-prompting": 18,
+          "struktura promptu": 15,
+          "co-star": 15,
+          "poml": 15,
+          "rppc": 12,
+          "prompt framework": 15,
+          "vrstvení promptu": 12,
+          "vrstveni promptu": 12,
+          "návrh promptu": 12,
+          "navrh promptu": 12,
+          "prompt structure": 15,
+          "prompt layers": 12,
+          "prompt design": 12,
+          "chain of thought": 12,
+          "few-shot": 10,
+          "zero-shot": 10,
+          "instruction design": 12
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "meta_cognition",
+        "quality_assurance",
+        "systematic_analysis",
+        "verification"
+      ],
+      "domains": [
+        "creative",
+        "llm",
+        "methodology",
+        "prompt_engineering",
+        "research"
+      ],
+      "checklist_count": 10,
+      "instructions_length": 5366,
+      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+    },
+    "python_code_generation": {
+      "name": "python_code_generation",
+      "short_description": "Generate clean, idiomatic Python code with best practices and type hints",
+      "source_file": "python_code_generation.md",
+      "default_score": 1,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "python_code_generation"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 2,
+          "urgent": 1
+        },
+        "domain": {
+          "python": 5,
+          "backend": 2,
+          "scripting": 3
+        },
+        "keywords": {
+          "write python": 10,
+          "generate python": 10,
+          "create python": 8,
+          "python script": 8,
+          "implement python": 8,
+          "python function": 8,
+          "python class": 8
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "quality_assurance",
+        "verification"
+      ],
+      "domains": [
+        "backend",
+        "creative",
+        "engineering",
+        "python",
+        "scripting"
+      ],
+      "checklist_count": 7,
+      "instructions_length": 3033,
+      "last_modified": "2025-12-31T16:27:47.395879+00:00"
+    },
+    "python_code_generation_complex": {
+      "name": "python_code_generation_complex",
+      "short_description": "Advanced Python code generation with architecture patterns, performance optimization, and enterprise-grade practices",
+      "source_file": "python_code_generation_complex.md",
+      "default_score": 1,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "python_code_generation",
+      "required": {
+        "context_tags": [
+          "code_generation",
+          "python"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "urgent": 1,
+          "critical": 4
+        },
+        "domain": {
+          "python": 5,
+          "backend": 3,
+          "scripting": 3,
+          "architecture": 4,
+          "performance": 3
+        },
+        "keywords": {
+          "write python": 10,
+          "generate python": 10,
+          "create python": 8,
+          "python script": 8,
+          "implement python": 8,
+          "python function": 8,
+          "python class": 8,
+          "python": 10,
+          "advanced python": 12,
+          "python architecture": 12,
+          "optimize python": 10,
+          "scalable python": 10,
+          "enterprise python": 10,
+          "def": 5,
+          "class": 5,
+          "import": 3
+        },
+        "complexity": {
+          "high": 3,
+          "complex": 4
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "quality_assurance",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "architecture",
+        "backend",
+        "creative",
+        "engineering",
+        "general",
+        "healthcare",
+        "performance",
+        "python",
+        "scripting",
+        "security"
+      ],
+      "checklist_count": 12,
+      "instructions_length": 12140,
+      "last_modified": "2025-12-25T19:08:32.364850+00:00"
+    },
+    "python_code_generation_complex_with_codex": {
+      "name": "python_code_generation_complex_with_codex",
+      "short_description": "Advanced Python code generation with architecture patterns, performance optimization, and enterprise-grade practices using MCP codex-orchestrator",
+      "source_file": "python_code_generation_complex_with_codex.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "python_code_generation_complex",
+      "required": {
+        "context_tags": [
+          "codex_cli",
+          "codex_orchestrator",
+          "ml_modeling"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "urgent": 1,
+          "critical": 4
+        },
+        "domain": {
+          "python": 5,
+          "backend": 3,
+          "scripting": 3,
+          "architecture": 4,
+          "performance": 3,
+          "data_science": 4,
+          "machine_learning": 4
+        },
+        "keywords": {
+          "write python": 10,
+          "generate python": 10,
+          "create python": 8,
+          "python script": 8,
+          "implement python": 8,
+          "python function": 8,
+          "python class": 8,
+          "python": 10,
+          "advanced python": 3,
+          "python architecture": 3,
+          "optimize python": 2,
+          "scalable python": 2,
+          "enterprise python": 2,
+          "def": 5,
+          "class": 5,
+          "import": 3,
+          "codex orchestrator": 18,
+          "mcp codex": 15,
+          "Codex CLI": 15,
+          "Codex": 12,
+          "použij Codex": 15,
+          "codex cli": 15,
+          "complex code": 2,
+          "modelovací úloha": 8,
+          "klasifikační": 6,
+          "machine learning": 6,
+          "sklearn": 6,
+          "sci-kit learn": 6,
+          "classification": 5,
+          "regression": 5
+        },
+        "complexity": {
+          "high": 3,
+          "complex": 4
+        }
+      },
+      "capabilities": [
+        "quality_assurance",
+        "verification"
+      ],
+      "domains": [
+        "architecture",
+        "backend",
+        "creative",
+        "data_science",
+        "engineering",
+        "machine_learning",
+        "performance",
+        "python",
+        "scripting"
+      ],
+      "checklist_count": 45,
+      "instructions_length": 1288,
+      "last_modified": "2025-12-26T11:13:04.757982+00:00"
+    },
+    "python_testing_revision": {
+      "name": "python_testing_revision",
+      "short_description": "Review, test, and improve existing Python code with focus on quality",
+      "source_file": "python_testing_revision.md",
+      "default_score": 1,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "code_review",
+          "python",
+          "testing"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 2,
+          "urgent": 1
+        },
+        "domain": {
+          "python": 5,
+          "testing": 4,
+          "quality_assurance": 3
+        },
+        "keywords": {
+          "test python": 10,
+          "review python": 10,
+          "fix python": 8,
+          "unittest": 8,
+          "pytest": 10,
+          "debug python": 8,
+          "refactor python": 8
+        }
+      },
+      "capabilities": [
+        "compliance",
+        "quality_assurance",
+        "verification"
+      ],
+      "domains": [
+        "engineering",
+        "legal",
+        "python",
+        "quality_assurance",
+        "testing"
+      ],
+      "checklist_count": 20,
+      "instructions_length": 6977,
+      "last_modified": "2025-12-25T19:08:56.339326+00:00"
+    },
+    "python_testing_revision_complex": {
+      "name": "python_testing_revision_complex",
+      "short_description": "Advanced code review with mutation testing, property-based testing, performance profiling, and architectural analysis",
+      "source_file": "python_testing_revision_complex.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "python_testing_revision",
+      "required": {
+        "context_tags": [
+          "code_review",
+          "python",
+          "testing"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "urgent": 1,
+          "critical": 4
+        },
+        "domain": {
+          "python": 5,
+          "testing": 5,
+          "quality_assurance": 4,
+          "performance": 3
+        },
+        "keywords": {
+          "test python": 10,
+          "review python": 10,
+          "fix python": 8,
+          "unittest": 8,
+          "pytest": 10,
+          "debug python": 8,
+          "refactor python": 8,
+          "advanced testing": 12,
+          "mutation testing": 12,
+          "property testing": 10,
+          "performance profiling": 10,
+          "integration testing": 10,
+          "tdd": 10,
+          "bdd": 8,
+          "review code": 8
+        },
+        "complexity": {
+          "high": 3,
+          "complex": 4
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "incident_response",
+        "quality_assurance",
+        "verification"
+      ],
+      "domains": [
+        "creative",
+        "engineering",
+        "healthcare",
+        "legal",
+        "performance",
+        "python",
+        "quality_assurance",
+        "security",
+        "testing"
+      ],
+      "checklist_count": 22,
+      "instructions_length": 14241,
+      "last_modified": "2025-12-25T19:07:16.134184+00:00"
+    },
+    "refactoring_specialist": {
+      "name": "refactoring_specialist",
+      "short_description": "Systematic code simplification and restructuring without changing behavior, with emphasis on incremental changes and regression safety",
+      "source_file": "refactoring_specialist.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "code_improvement",
+          "refactoring"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "medium": 3,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "engineering": 6,
+          "refactoring": 10,
+          "code_quality": 7,
+          "architecture": 5
+        },
+        "keywords": {
+          "refaktoring": 18,
+          "refaktor": 15,
+          "zjednodušení": 12,
+          "zjednoduseni": 12,
+          "přepis": 10,
+          "prepis": 10,
+          "vyčištění kódu": 12,
+          "vycisteni kodu": 12,
+          "legacy": 10,
+          "technický dluh": 10,
+          "technicky dluh": 10,
+          "refactoring": 18,
+          "refactor": 15,
+          "simplify": 12,
+          "code cleanup": 12,
+          "legacy code": 12,
+          "technical debt": 12,
+          "restructure": 10,
+          "extract": 10,
+          "decompose": 10
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "verification"
+      ],
+      "domains": [
+        "architecture",
+        "code_quality",
+        "engineering",
+        "general",
+        "healthcare",
+        "refactoring"
+      ],
+      "checklist_count": 10,
+      "instructions_length": 8823,
+      "last_modified": "2025-12-31T14:29:52.147836+00:00"
+    },
+    "reliability_analyst": {
+      "name": "reliability_analyst",
+      "short_description": "Skeptical failure-mode analysis for long-running agents and systems with focus on identifying weak points, failure scenarios, and resilience gaps",
+      "source_file": "reliability_analyst.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "failure_analysis",
+          "reliability"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 5
+        },
+        "complexity": {
+          "medium": 3,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "engineering": 5,
+          "reliability": 10,
+          "infrastructure": 6,
+          "operations": 6,
+          "security": 4
+        },
+        "keywords": {
+          "spolehlivost": 15,
+          "selhání": 15,
+          "selhani": 15,
+          "failure mode": 15,
+          "slabé místo": 12,
+          "slabe misto": 12,
+          "riziko": 10,
+          "degradace": 10,
+          "výpadek": 12,
+          "vypadek": 12,
+          "resilience": 12,
+          "reliability": 15,
+          "weak point": 12,
+          "risk": 10,
+          "degradation": 10,
+          "outage": 12,
+          "fmea": 12,
+          "single point of failure": 15,
+          "chaos engineering": 10,
+          "fault tolerance": 12
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "incident_response",
+        "quality_assurance",
+        "systematic_analysis",
+        "verification"
+      ],
+      "domains": [
+        "engineering",
+        "general",
+        "infrastructure",
+        "legal",
+        "operations",
+        "reliability",
+        "security"
+      ],
+      "checklist_count": 10,
+      "instructions_length": 7381,
+      "last_modified": "2025-12-31T14:29:52.146836+00:00"
+    },
+    "security_compliance_reviewer": {
+      "name": "security_compliance_reviewer",
+      "short_description": "Conservative security and regulatory compliance review for banking and financial contexts with focus on data protection and audit requirements",
+      "source_file": "security_compliance_reviewer.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "compliance",
+          "security"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 4,
+          "critical": 6
+        },
+        "complexity": {
+          "medium": 3,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "security": 10,
+          "compliance": 10,
+          "banking": 7,
+          "engineering": 4,
+          "finance": 6
+        },
+        "keywords": {
+          "bezpečnost": 18,
+          "bezpecnost": 18,
+          "compliance": 15,
+          "gdpr": 15,
+          "regulace": 12,
+          "audit": 12,
+          "šifrování": 10,
+          "sifrovani": 10,
+          "autentizace": 10,
+          "autorizace": 10,
+          "osobní údaje": 12,
+          "osobni udaje": 12,
+          "security": 18,
+          "pci dss": 15,
+          "regulation": 12,
+          "encryption": 12,
+          "authentication": 12,
+          "authorization": 12,
+          "personal data": 12,
+          "vulnerability": 10,
+          "penetration": 10
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "compliance",
+        "incident_response",
+        "privacy_protection",
+        "quality_assurance",
+        "verification"
+      ],
+      "domains": [
+        "banking",
+        "compliance",
+        "creative",
+        "engineering",
+        "finance",
+        "general",
+        "healthcare",
+        "legal",
+        "security"
+      ],
+      "checklist_count": 11,
+      "instructions_length": 7550,
+      "last_modified": "2025-12-31T16:18:58.403615+00:00"
+    },
+    "skeptical_peer_reviewer": {
+      "name": "skeptical_peer_reviewer",
+      "short_description": "Critical peer review that challenges assumptions, questions conclusions, identifies logical gaps, and stress-tests proposals",
+      "source_file": "skeptical_peer_reviewer.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "critical_analysis",
+          "peer_review"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 5
+        },
+        "complexity": {
+          "medium": 3,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "research": 7,
+          "engineering": 5,
+          "analysis": 8,
+          "quality": 6,
+          "validation": 7
+        },
+        "keywords": {
+          "zpochybni": 18,
+          "kritický pohled": 15,
+          "kriticky pohled": 15,
+          "devil's advocate": 15,
+          "prověření": 12,
+          "provereni": 12,
+          "slabiny": 12,
+          "mezery": 10,
+          "předpoklady": 12,
+          "predpoklady": 12,
+          "závěry": 10,
+          "zavery": 10,
+          "kontrola": 8,
+          "challenge": 15,
+          "critical review": 15,
+          "question assumptions": 15,
+          "weaknesses": 12,
+          "gaps": 10,
+          "assumptions": 12,
+          "conclusions": 10,
+          "stress test": 12,
+          "scrutinize": 12,
+          "validate": 10
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "ideation",
+        "incident_response",
+        "meta_cognition",
+        "quality_assurance",
+        "verification"
+      ],
+      "domains": [
+        "analysis",
+        "engineering",
+        "general",
+        "quality",
+        "research",
+        "validation"
+      ],
+      "checklist_count": 10,
+      "instructions_length": 6563,
+      "last_modified": "2025-12-31T14:29:52.147836+00:00"
+    },
+    "system_architect": {
+      "name": "system_architect",
+      "short_description": "High-level architecture decisions with structured diagrams, trade-off analysis, and risk assessment for complex systems",
+      "source_file": "system_architect.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "architecture",
+          "system_design"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "high": 4,
+          "complex": 5,
+          "critical": 6
+        },
+        "domain": {
+          "engineering": 5,
+          "architecture": 8,
+          "infrastructure": 5,
+          "enterprise": 4,
+          "planning": 4
+        },
+        "keywords": {
+          "architektura": 15,
+          "návrh systému": 18,
+          "navrh systemu": 18,
+          "vysokoúrovňový návrh": 15,
+          "vysokourovnovy navrh": 15,
+          "trade-off": 12,
+          "kompromis": 10,
+          "škálovatelnost": 12,
+          "skalovatelnost": 12,
+          "modularita": 10,
+          "rozhraní": 10,
+          "rozhrani": 10,
+          "komponenty": 8,
+          "diagram": 8,
+          "architecture": 15,
+          "system design": 18,
+          "high-level design": 15,
+          "trade-offs": 12,
+          "scalability": 12,
+          "modularity": 10,
+          "interfaces": 10,
+          "components": 8,
+          "microservices": 10,
+          "monolith": 8,
+          "distributed": 10,
+          "api design": 10,
+          "data flow": 10
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "systematic_analysis"
+      ],
+      "domains": [
+        "architecture",
+        "creative",
+        "engineering",
+        "enterprise",
+        "general",
+        "infrastructure",
+        "planning",
+        "security"
+      ],
+      "checklist_count": 9,
+      "instructions_length": 3154,
+      "last_modified": "2025-12-31T14:29:52.137775+00:00"
+    },
+    "technical_explainer_expert": {
+      "name": "technical_explainer_expert",
+      "short_description": "Deep technical explanations for expert audiences without simplification, maintaining precision and completeness",
+      "source_file": "technical_explainer_expert.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "expert_audience",
+          "explanation"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 2,
+          "critical": 3
+        },
+        "complexity": {
+          "medium": 2,
+          "high": 3,
+          "complex": 4
+        },
+        "domain": {
+          "education": 6,
+          "technical": 8,
+          "engineering": 5,
+          "research": 6
+        },
+        "keywords": {
+          "vysvětli": 12,
+          "vysvetli": 12,
+          "vysvětlení": 12,
+          "vysvetleni": 12,
+          "jak funguje": 15,
+          "technicky": 10,
+          "hloubkově": 12,
+          "hloubkove": 12,
+          "detailně": 12,
+          "detailne": 12,
+          "pro experta": 15,
+          "bez zjednodušení": 12,
+          "bez zjednoduseni": 12,
+          "explain": 12,
+          "how does it work": 15,
+          "technically": 10,
+          "in depth": 12,
+          "detailed": 12,
+          "for expert": 15,
+          "without simplification": 12,
+          "deep dive": 12,
+          "internals": 10,
+          "under the hood": 10
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "quality_assurance"
+      ],
+      "domains": [
+        "education",
+        "engineering",
+        "research",
+        "technical"
+      ],
+      "checklist_count": 8,
+      "instructions_length": 3172,
+      "last_modified": "2025-12-31T14:29:52.147836+00:00"
+    },
+    "technical_explainer_nonexpert": {
+      "name": "technical_explainer_nonexpert",
+      "short_description": "Clear technical explanations for non-expert audiences using analogies, visual aids, and progressive complexity without jargon",
+      "source_file": "technical_explainer_nonexpert.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "explanation",
+          "nonexpert_audience"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 2,
+          "critical": 3
+        },
+        "complexity": {
+          "low": 3,
+          "medium": 2
+        },
+        "domain": {
+          "education": 10,
+          "training": 8,
+          "documentation": 6,
+          "communication": 7
+        },
+        "keywords": {
+          "vysvětli jednoduše": 18,
+          "vysvetli jednoduse": 18,
+          "pro laika": 15,
+          "srozumitelně": 12,
+          "srozumitelne": 12,
+          "bez žargonu": 12,
+          "bez zargonu": 12,
+          "analogie": 10,
+          "workshop": 10,
+          "školení": 12,
+          "skoleni": 12,
+          "pro kolegy": 12,
+          "explain simply": 18,
+          "for beginners": 15,
+          "easy to understand": 12,
+          "no jargon": 12,
+          "analogy": 10,
+          "training": 12,
+          "for colleagues": 12,
+          "eli5": 15,
+          "layman terms": 12
+        }
+      },
+      "capabilities": [
+        "adaptive_communication",
+        "chain_of_thought",
+        "verification"
+      ],
+      "domains": [
+        "communication",
+        "documentation",
+        "education",
+        "engineering",
+        "training"
+      ],
+      "checklist_count": 8,
+      "instructions_length": 6508,
+      "last_modified": "2025-12-31T14:29:52.147836+00:00"
+    },
+    "technical_support": {
+      "name": "technical_support",
+      "short_description": "Concise technical troubleshooting steps for software and infrastructure issues",
+      "source_file": "technical_support.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "domain": [
+          "devops",
+          "engineering",
+          "it",
+          "software"
+        ]
+      },
+      "weights": {
+        "domain": {
+          "engineering": 3,
+          "it": 2,
+          "devops": 3
+        },
+        "intent": {
+          "bug_report": 3,
+          "diagnosis": 2,
+          "debugging": 3
+        },
+        "context_tags": {
+          "outage": 2,
+          "incident": 1,
+          "error": 1,
+          "crash": 2
+        },
+        "keywords": {
+          "troubleshoot": 8,
+          "fix": 6,
+          "error": 6,
+          "crash": 8,
+          "issue": 5,
+          "problem": 5,
+          "debug": 6
+        }
+      },
+      "capabilities": [
+        "incident_response",
+        "quality_assurance",
+        "systematic_analysis",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "devops",
+        "engineering",
+        "it",
+        "software"
+      ],
+      "checklist_count": 8,
+      "instructions_length": 1494,
+      "last_modified": "2025-12-31T16:18:58.401611+00:00"
+    },
+    "technical_support_complex": {
+      "name": "technical_support_complex",
+      "short_description": "Advanced diagnostic framework with root cause analysis, systematic troubleshooting protocols, and expert-level incident management",
+      "source_file": "technical_support_complex.md",
+      "default_score": 1,
+      "fallback": false,
+      "complexity": "complex",
+      "extends": "technical_support",
+      "required": {
+        "domain": [
+          "devops",
+          "engineering",
+          "infrastructure",
+          "it",
+          "software",
+          "sre"
+        ]
+      },
+      "weights": {
+        "domain": {
+          "engineering": 4,
+          "it": 3,
+          "devops": 4,
+          "sre": 4,
+          "infrastructure": 3
+        },
+        "intent": {
+          "bug_report": 4,
+          "diagnosis": 3,
+          "debugging": 4,
+          "troubleshooting": 3,
+          "incident": 4
+        },
+        "context_tags": {
+          "outage": 3,
+          "incident": 2,
+          "error": 2,
+          "crash": 3,
+          "performance": 2,
+          "production": 3,
+          "critical": 3
+        },
+        "keywords": {
+          "troubleshoot": 10,
+          "fix": 6,
+          "error": 6,
+          "crash": 8,
+          "issue": 5,
+          "problem": 5,
+          "debug": 8,
+          "root cause": 12,
+          "incident": 10,
+          "outage": 10,
+          "diagnose": 8
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "incident_response",
+        "meta_cognition",
+        "systematic_analysis",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "devops",
+        "engineering",
+        "general",
+        "infrastructure",
+        "it",
+        "security",
+        "software",
+        "sre"
+      ],
+      "checklist_count": 15,
+      "instructions_length": 6779,
+      "last_modified": "2025-12-25T19:08:56.339326+00:00"
+    },
+    "time_series_specialist": {
+      "name": "time_series_specialist",
+      "short_description": "Expert time-series modeling with ARIMA, GARCH, stationarity testing, structural breaks, and forecasting with uncertainty quantification",
+      "source_file": "time_series_specialist.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "forecasting",
+          "time_series"
+        ]
+      },
+      "weights": {
+        "priority": {
+          "high": 3,
+          "critical": 4
+        },
+        "complexity": {
+          "medium": 3,
+          "high": 4,
+          "complex": 5
+        },
+        "domain": {
+          "data_science": 5,
+          "time_series": 10,
+          "finance": 6,
+          "econometrics": 6,
+          "forecasting": 7
+        },
+        "keywords": {
+          "časová řada": 18,
+          "casova rada": 18,
+          "stacionarita": 15,
+          "nestacionarita": 15,
+          "sezónnost": 12,
+          "sezonnost": 12,
+          "trend": 10,
+          "strukturální zlom": 15,
+          "strukturalni zlom": 15,
+          "predikce": 10,
+          "forecast": 12,
+          "volatilita": 12,
+          "time series": 18,
+          "arima": 15,
+          "garch": 15,
+          "stationarity": 15,
+          "unit root": 12,
+          "structural break": 15,
+          "seasonal": 12,
+          "volatility": 12,
+          "cointegration": 12,
+          "adf test": 10,
+          "acf pacf": 10,
+          "var": 10
+        }
+      },
+      "capabilities": [
+        "chain_of_thought",
+        "quality_assurance",
+        "troubleshooting",
+        "verification"
+      ],
+      "domains": [
+        "data_science",
+        "econometrics",
+        "finance",
+        "forecasting",
+        "time_series"
+      ],
+      "checklist_count": 11,
+      "instructions_length": 5484,
+      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+    }
+  },
+  "statistics": {
+    "total_profiles": 47,
+    "complex_profiles": 9,
+    "standard_profiles": 38,
+    "fallback_profile": "general_default",
+    "capabilities_coverage": {
+      "chain_of_thought": 30,
+      "quality_assurance": 24,
+      "verification": 33,
+      "adaptive_communication": 21,
+      "systematic_analysis": 16,
+      "cross_domain": 2,
+      "divergent_thinking": 2,
+      "ideation": 5,
+      "meta_cognition": 6,
+      "compliance": 9,
+      "troubleshooting": 11,
+      "privacy_protection": 7,
+      "incident_response": 9,
+      "zero_trust": 1
+    },
+    "domains_coverage": {
+      "code_review": 1,
+      "engineering": 34,
+      "finance": 7,
+      "quality": 2,
+      "security": 14,
+      "code_generation": 1,
+      "general": 20,
+      "python": 6,
+      "creative": 14,
+      "analysis": 3,
+      "architecture": 7,
+      "consulting": 1,
+      "strategy": 1,
+      "automation": 1,
+      "devops": 5,
+      "infrastructure": 8,
+      "mlops": 2,
+      "documentation": 2,
+      "technical_writing": 1,
+      "legal": 10,
+      "data_science": 5,
+      "econometrics": 2,
+      "economics": 1,
+      "research": 4,
+      "statistics": 2,
+      "planning": 3,
+      "project_management": 2,
+      "enterprise": 2,
+      "debugging": 2,
+      "llm": 3,
+      "prompt_engineering": 3,
+      "agents": 1,
+      "mcp": 2,
+      "orchestration": 1,
+      "routing": 1,
+      "healthcare": 7,
+      "quality_assurance": 3,
+      "testing": 3,
+      "machine_learning": 3,
+      "production": 2,
+      "evaluation": 1,
+      "hardware": 1,
+      "performance": 4,
+      "containers": 2,
+      "ci_cd": 1,
+      "government": 1,
+      "insurance": 1,
+      "backend": 4,
+      "optimization": 1,
+      "methodology": 1,
+      "scripting": 3,
+      "code_quality": 1,
+      "refactoring": 1,
+      "operations": 1,
+      "reliability": 1,
+      "banking": 1,
+      "compliance": 1,
+      "validation": 1,
+      "education": 2,
+      "technical": 1,
+      "communication": 1,
+      "training": 1,
+      "it": 2,
+      "software": 2,
+      "sre": 1,
+      "forecasting": 1,
+      "time_series": 1
+    }
+  }
+}

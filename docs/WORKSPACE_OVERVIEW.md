@@ -46,12 +46,12 @@
 
 Workspace je organizován do **4 hlavních modulů** + podpůrné struktury:
 
-| Modul | Popis | Status | Dokumentace |
-|-------|-------|--------|-------------|
-| **mcp-prompt-broker** | Hlavní MCP server pro inteligentní routing promptů | ✅ Produkční | [README](../README.md) |
-| **llama-orchestrator** | Docker-like CLI pro správu llama.cpp instancí | 🔧 Alpha | [README](../llama-orchestrator/README.md) |
-| **mcp-codex-orchestrator** | MCP server pro Codex CLI v Docker kontejnerech | 🔧 Alpha | [README](../mcp-codex-orchestrator/README.md) |
-| **llama-cpp-server** | Konfigurace lokálního llama.cpp serveru | ✅ Funkční | [README](../llama-cpp-server/README.md) |
+| Modul | Popis | Status | Lokace |
+|-------|-------|--------|--------|
+| **mcp-prompt-broker** | Hlavní MCP server pro inteligentní routing promptů | ✅ Produkční | `packages/mcp-prompt-broker/` |
+| **llama-orchestrator** | Docker-like CLI pro správu llama.cpp instancí | 🔧 Alpha | `packages/llama-orchestrator/` |
+| **mcp-codex-orchestrator** | MCP server pro Codex CLI v Docker kontejnerech | 🔧 Alpha | `packages/mcp-codex-orchestrator/` |
+| **llama-cpp-server** | Konfigurace lokálního llama.cpp serveru | ✅ Funkční | `infrastructure/llama-cpp-server/` |
 
 ### Vztahy mezi moduly
 

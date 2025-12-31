@@ -1,2 +1,0 @@
-[console_scripts]
-mcp-prompt-broker = mcp_prompt_broker.server:run

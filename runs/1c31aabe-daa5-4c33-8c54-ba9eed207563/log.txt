@@ -1,3 +1,0 @@
-Error: stdin is not a terminal
-
-[Container exited with code 1]

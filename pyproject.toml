@@ -1,59 +1,38 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
-name = "mcp-prompt-broker"
+name = "mcp-prompt-broker-workspace"
 version = "0.1.0"
-description = "MCP server that selects the best instruction for a user prompt."
-authors = [{ name = "Prompt Broker" }]
+description = "MCP Prompt Broker Monorepo Workspace"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = { text = "MIT" }
-keywords = ["mcp", "llm", "copilot", "prompt", "routing"]
-classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-]
-dependencies = [
-    "mcp>=1.0.0",
-    "pyyaml>=6.0",
-]
 
+# Workspace nemá vlastní dependencies - jen dev tools
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.0",
-    "pytest-asyncio>=0.21",
-]
-semantic = [
-    "sentence-transformers>=2.2.0",
-    "scikit-learn>=1.3.0",
-    "numpy>=1.24.0",
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.1",
+    "mypy>=1.0",
 ]
 
-[project.scripts]
-mcp-prompt-broker = "mcp_prompt_broker.server:run"
+# UV workspace configuration
+[tool.uv.workspace]
+members = [
+    "packages/mcp-prompt-broker",
+    "packages/llama-orchestrator", 
+    "packages/mcp-codex-orchestrator",
+]
 
-[project.urls]
-Homepage = "https://github.com/michaelprinc/MCP_prompt_broker"
-Repository = "https://github.com/michaelprinc/MCP_prompt_broker"
-
-# Konfigurace setuptools pro src layout
-[tool.setuptools]
-package-dir = { "" = "src" }
-
-[tool.setuptools.packages.find]
-where = ["src"]
-include = ["mcp_prompt_broker*"]
-
-# Pytest konfigurace
 [tool.pytest.ini_options]
-testpaths = ["tests"]
-pythonpath = ["src"]
+testpaths = ["packages/mcp-prompt-broker/tests", "tests"]
+pythonpath = ["packages/mcp-prompt-broker/src", "packages/llama-orchestrator/src", "packages/mcp-codex-orchestrator/src"]
 asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
