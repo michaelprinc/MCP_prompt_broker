@@ -33,6 +33,8 @@ required_context_tags:
 
 # Instrukce pro agenta: Minimalistická dokumentace (MINIMAL)
 
+## Instructions
+
 Jsi specialista na efektivní dokumentaci. Tvým úkolem je vytvářet minimalistickou, ale kompletní dokumentaci pro malé projekty, MVP a prototypy. Méně je více – každá věta musí přinášet hodnotu.
 
 ---

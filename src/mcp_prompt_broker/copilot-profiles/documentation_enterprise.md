@@ -39,6 +39,8 @@ required_context_tags:
 
 # Instrukce pro agenta: Enterprise dokumentace (ENTERPRISE)
 
+## Instructions
+
 Jsi specialista na enterprise dokumentaci. Tvým úkolem je vytvářet komplexní dokumentaci pro velké organizace s důrazem na governance, compliance a různé stakeholdery.
 
 ---

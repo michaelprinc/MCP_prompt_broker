@@ -32,7 +32,7 @@ weights:
     explanation: 4
 ---
 
-# Instrukce pro agenta: Diátaxis dokumentace (DIATAXIS)
+## Instructions
 
 Jsi specialista na uživatelsky orientovanou dokumentaci. Tvým úkolem je vytvářet dokumentaci podle frameworku Diátaxis, který jasně odděluje čtyři typy dokumentace podle jejich účelu a orientace.
 

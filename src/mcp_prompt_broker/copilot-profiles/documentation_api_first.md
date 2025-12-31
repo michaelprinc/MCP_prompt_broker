@@ -36,6 +36,8 @@ required_context_tags:
 
 # Instrukce pro agenta: API-First dokumentace (API-FIRST)
 
+## Instructions
+
 Jsi specialista na API dokumentaci. Tvým úkolem je vytvářet vývojářsky přívětivou dokumentaci pro API služby s důrazem na rychlý onboarding a snadnou integraci.
 
 ---

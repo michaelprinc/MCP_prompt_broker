@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2025-12-31T16:27:56.973161+00:00",
+  "generated_at": "2025-12-31T16:43:27.796051+00:00",
   "profiles": {
     "codex_cli": {
       "name": "codex_cli",
@@ -2636,12 +2636,173 @@
       "checklist_count": 11,
       "instructions_length": 5484,
       "last_modified": "2025-12-31T14:29:52.140782+00:00"
+    },
+    "documentation_diataxis": {
+      "name": "documentation_diataxis",
+      "short_description": "Documentation following the Diátaxis framework with clear separation into tutorials, how-to, reference, and explanation",
+      "source_file": "documentation_diataxis.md",
+      "default_score": 2,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {
+        "context_tags": [
+          "diataxis",
+          "documentation"
+        ]
+      },
+      "weights": {
+        "domain": {
+          "documentation": 8,
+          "technical_writing": 6
+        },
+        "keywords": {
+          "documentation": 8,
+          "dokumentace": 8,
+          "diataxis": 12,
+          "diátaxis": 12,
+          "tutorial": 6,
+          "how-to": 6,
+          "reference": 4,
+          "explanation": 4
+        }
+      },
+      "capabilities": [],
+      "domains": [
+        "documentation",
+        "technical_writing"
+      ],
+      "checklist_count": 8,
+      "instructions_length": 200,
+      "last_modified": "2025-12-31T16:41:58.801697+00:00"
+    },
+    "documentation_3level": {
+      "name": "documentation_3level",
+      "short_description": "",
+      "source_file": "documentation_3level.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {},
+      "weights": {},
+      "capabilities": [],
+      "domains": [],
+      "checklist_count": 15,
+      "instructions_length": 247,
+      "last_modified": "2025-12-31T16:41:58.806043+00:00"
+    },
+    "documentation_4level": {
+      "name": "documentation_4level",
+      "short_description": "",
+      "source_file": "documentation_4level.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {},
+      "weights": {},
+      "capabilities": [],
+      "domains": [],
+      "checklist_count": 19,
+      "instructions_length": 296,
+      "last_modified": "2025-12-31T16:43:08.017794+00:00"
+    },
+    "documentation_agile": {
+      "name": "documentation_agile",
+      "short_description": "",
+      "source_file": "documentation_agile.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {},
+      "weights": {},
+      "capabilities": [],
+      "domains": [],
+      "checklist_count": 10,
+      "instructions_length": 157,
+      "last_modified": "2025-12-31T16:43:08.026877+00:00"
+    },
+    "documentation_api_first": {
+      "name": "documentation_api_first",
+      "short_description": "",
+      "source_file": "documentation_api_first.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {},
+      "weights": {},
+      "capabilities": [],
+      "domains": [
+        "engineering"
+      ],
+      "checklist_count": 10,
+      "instructions_length": 165,
+      "last_modified": "2025-12-31T16:43:08.026877+00:00"
+    },
+    "documentation_enterprise": {
+      "name": "documentation_enterprise",
+      "short_description": "",
+      "source_file": "documentation_enterprise.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {},
+      "weights": {},
+      "capabilities": [
+        "compliance"
+      ],
+      "domains": [
+        "legal"
+      ],
+      "checklist_count": 10,
+      "instructions_length": 172,
+      "last_modified": "2025-12-31T16:43:08.026877+00:00"
+    },
+    "documentation_minimal": {
+      "name": "documentation_minimal",
+      "short_description": "",
+      "source_file": "documentation_minimal.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {},
+      "weights": {},
+      "capabilities": [],
+      "domains": [],
+      "checklist_count": 7,
+      "instructions_length": 198,
+      "last_modified": "2025-12-31T16:43:08.026877+00:00"
+    },
+    "documentation_oslc": {
+      "name": "documentation_oslc",
+      "short_description": "",
+      "source_file": "documentation_oslc.md",
+      "default_score": 0,
+      "fallback": false,
+      "complexity": "standard",
+      "extends": null,
+      "required": {},
+      "weights": {},
+      "capabilities": [
+        "compliance"
+      ],
+      "domains": [
+        "finance"
+      ],
+      "checklist_count": 6,
+      "instructions_length": 165,
+      "last_modified": "2025-12-31T16:43:08.026877+00:00"
     }
   },
   "statistics": {
-    "total_profiles": 39,
+    "total_profiles": 47,
     "complex_profiles": 9,
-    "standard_profiles": 30,
+    "standard_profiles": 38,
     "fallback_profile": "general_default",
     "capabilities_coverage": {
       "adaptive_communication": 21,
@@ -2654,14 +2815,14 @@
       "ideation": 5,
       "meta_cognition": 6,
       "privacy_protection": 7,
-      "compliance": 7,
+      "compliance": 9,
       "troubleshooting": 11,
       "incident_response": 9,
       "zero_trust": 1
     },
     "domains_coverage": {
       "code_generation": 1,
-      "engineering": 33,
+      "engineering": 34,
       "general": 20,
       "python": 6,
       "creative": 14,
@@ -2670,8 +2831,8 @@
       "project_management": 2,
       "security": 14,
       "enterprise": 2,
-      "finance": 6,
-      "legal": 9,
+      "finance": 7,
+      "legal": 10,
       "debugging": 2,
       "healthcare": 7,
       "quality_assurance": 3,
@@ -2722,10 +2883,11 @@
       "education": 2,
       "technical": 1,
       "communication": 1,
-      "documentation": 1,
+      "documentation": 2,
       "training": 1,
       "forecasting": 1,
-      "time_series": 1
+      "time_series": 1,
+      "technical_writing": 1
     }
   }
 }

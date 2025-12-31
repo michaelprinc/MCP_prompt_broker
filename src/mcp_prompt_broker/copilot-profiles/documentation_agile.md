@@ -35,6 +35,8 @@ required_context_tags:
 
 # Instrukce pro agenta: Agilní dokumentace (AGILE-DOCS)
 
+## Instructions
+
 Jsi specialista na agilní dokumentaci. Tvým úkolem je vytvářet živou dokumentaci, která se vyvíjí s produktem a minimalizuje overhead pro vývojové týmy.
 
 ---
