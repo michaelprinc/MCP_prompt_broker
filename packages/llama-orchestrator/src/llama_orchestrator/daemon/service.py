@@ -1,7 +1,8 @@
 """
-Daemon service for llama-orchestrator.
+Daemon service for llama-orchestrator V2.
 
 Runs as a background process to monitor instances and trigger auto-restarts.
+Uses event-based loop for reliable shutdown.
 """
 
 from __future__ import annotations
@@ -11,13 +12,15 @@ import logging
 import os
 import signal
 import sys
+import threading
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 
 from llama_orchestrator.config import discover_instances, get_state_dir
-from llama_orchestrator.engine.state import InstanceStatus, load_state
+from llama_orchestrator.engine.state import InstanceStatus, load_state, log_event
+from llama_orchestrator.engine.reconciler import Reconciler, ReconcileSummary
 from llama_orchestrator.health import HealthMonitor, start_monitoring, stop_monitoring
 
 if TYPE_CHECKING:
@@ -45,21 +48,52 @@ class DaemonStatus:
     uptime: float | None = None
     instances_monitored: int = 0
     health_checks_performed: int = 0
+    reconciliations_performed: int = 0
+    last_reconcile_time: float | None = None
+
+
+# Default timeouts
+DEFAULT_CHECK_INTERVAL = 10.0
+DEFAULT_RECONCILE_INTERVAL = 30.0
+DEFAULT_SHUTDOWN_TIMEOUT = 10.0
 
 
 class DaemonService:
     """
-    Background daemon service for llama-orchestrator.
+    Background daemon service for llama-orchestrator V2.
     
     Monitors all instances and triggers auto-restarts based on health policy.
+    Uses threading.Event for reliable shutdown without blocking.
     """
     
-    def __init__(self, check_interval: float = 10.0):
+    def __init__(
+        self,
+        check_interval: float = DEFAULT_CHECK_INTERVAL,
+        reconcile_interval: float = DEFAULT_RECONCILE_INTERVAL,
+        shutdown_timeout: float = DEFAULT_SHUTDOWN_TIMEOUT,
+    ):
+        """
+        Initialize daemon service.
+        
+        Args:
+            check_interval: Seconds between health checks
+            reconcile_interval: Seconds between state reconciliation
+            shutdown_timeout: Maximum seconds to wait for graceful shutdown
+        """
         self.check_interval = check_interval
-        self._running = False
+        self.reconcile_interval = reconcile_interval
+        self.shutdown_timeout = shutdown_timeout
+        
+        # V2: Use threading.Event instead of boolean flag
+        self._stop_event = threading.Event()
         self._start_time: float | None = None
         self._health_checks = 0
+        self._reconciliations = 0
         self._monitor: HealthMonitor | None = None
+        self._reconciler: Reconciler | None = None
+        
+        # Callbacks
+        self._on_shutdown: Callable[[], None] | None = None
     
     def start(self, foreground: bool = False) -> None:
         """
@@ -81,7 +115,7 @@ class DaemonService:
     def _run_foreground(self) -> None:
         """Run the daemon in foreground mode."""
         self._setup()
-        self._running = True
+        self._stop_event.clear()
         self._start_time = time.time()
         
         # Write PID file
@@ -93,6 +127,13 @@ class DaemonService:
         
         # Register cleanup
         atexit.register(self._cleanup)
+        
+        log_event(
+            event_type="daemon_started",
+            message=f"Daemon started (PID: {os.getpid()})",
+            level="info",
+            meta={"check_interval": self.check_interval},
+        )
         
         logger.info("Daemon started in foreground mode")
         
@@ -191,17 +232,40 @@ daemon._run_foreground()
     
     def _handle_signal(self, signum, frame) -> None:
         """Handle termination signals."""
-        logger.info(f"Received signal {signum}, shutting down...")
-        self._running = False
+        logger.info(f"Received signal {signum}, initiating shutdown...")
+        self._stop_event.set()
     
     def _cleanup(self) -> None:
         """Cleanup on exit."""
         logger.info("Daemon cleanup...")
+        
+        # Stop health monitoring
         stop_monitoring()
+        
+        # Call shutdown callback if registered
+        if self._on_shutdown:
+            try:
+                self._on_shutdown()
+            except Exception as e:
+                logger.error(f"Error in shutdown callback: {e}")
+        
+        # Remove PID file
         self._remove_pid_file()
+        
+        log_event(
+            event_type="daemon_stopped",
+            message="Daemon stopped",
+            level="info",
+            meta={"uptime": time.time() - self._start_time if self._start_time else 0},
+        )
     
     def _main_loop(self) -> None:
-        """Main daemon loop."""
+        """
+        Main daemon loop using event-based waiting.
+        
+        Uses threading.Event.wait() instead of time.sleep() for
+        responsive shutdown without blocking.
+        """
         # Start health monitoring
         self._monitor = start_monitoring(
             interval=self.check_interval,
@@ -209,10 +273,24 @@ daemon._run_foreground()
             on_restart=self._on_restart,
         )
         
-        logger.info(f"Health monitoring started (interval: {self.check_interval}s)")
+        # Initialize reconciler
+        self._reconciler = Reconciler(
+            interval=self.reconcile_interval,
+            auto_cleanup=True,
+            on_reconcile=self._on_reconcile,
+        )
         
-        while self._running:
+        logger.info(
+            f"Daemon loop started (health: {self.check_interval}s, "
+            f"reconcile: {self.reconcile_interval}s)"
+        )
+        
+        while not self._stop_event.is_set():
             try:
+                # Run reconciliation if due
+                if self._reconciler:
+                    self._reconciler.run_if_due()
+                
                 # Log status periodically
                 instances = list(discover_instances())
                 running = sum(
@@ -222,11 +300,25 @@ daemon._run_foreground()
                 
                 logger.debug(f"Monitoring {len(instances)} instances ({running} running)")
                 
-                time.sleep(self.check_interval)
+                # V2: Use event.wait() instead of time.sleep()
+                # This allows immediate response to stop signal
+                self._stop_event.wait(timeout=self.check_interval)
                 
             except Exception as e:
                 logger.error(f"Error in daemon loop: {e}")
-                time.sleep(1)
+                # Short wait before retry, but still check stop event
+                self._stop_event.wait(timeout=1.0)
+        
+        logger.info("Daemon loop exited")
+    
+    def _on_reconcile(self, summary: ReconcileSummary) -> None:
+        """Callback for reconciliation completion."""
+        self._reconciliations += 1
+        if summary.actions_taken > 0:
+            logger.info(
+                f"Reconciliation #{self._reconciliations}: "
+                f"{summary.actions_taken} actions taken"
+            )
     
     def _on_health_change(self, name: str, old_status, new_status) -> None:
         """Callback for health status changes."""
@@ -237,9 +329,47 @@ daemon._run_foreground()
         """Callback for instance restarts."""
         logger.info(f"Instance '{name}' restarted (attempt {attempt})")
     
-    def stop(self) -> None:
-        """Request daemon to stop."""
-        self._running = False
+    def stop(self, timeout: float | None = None) -> bool:
+        """
+        Request daemon to stop gracefully.
+        
+        Args:
+            timeout: Maximum time to wait for stop (default: shutdown_timeout)
+            
+        Returns:
+            True if stopped within timeout
+        """
+        if timeout is None:
+            timeout = self.shutdown_timeout
+        
+        logger.info(f"Stopping daemon (timeout: {timeout}s)...")
+        self._stop_event.set()
+        
+        # Wait for main loop to exit
+        start = time.time()
+        while not self._stop_event.is_set():
+            if time.time() - start > timeout:
+                logger.warning("Daemon stop timeout exceeded")
+                return False
+            time.sleep(0.1)
+        
+        return True
+    
+    @property
+    def is_running(self) -> bool:
+        """Check if daemon is running."""
+        return not self._stop_event.is_set()
+    
+    @property
+    def uptime(self) -> float:
+        """Get daemon uptime in seconds."""
+        if self._start_time is None:
+            return 0.0
+        return time.time() - self._start_time
+    
+    def register_shutdown_callback(self, callback: Callable[[], None]) -> None:
+        """Register a callback to be called on shutdown."""
+        self._on_shutdown = callback
 
 
 def is_daemon_running() -> bool:

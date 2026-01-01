@@ -68,6 +68,21 @@ from llama_orchestrator.engine.detach import (
     stop_detached,
     tail_log,
 )
+from llama_orchestrator.engine.logging_config import (
+    InstanceLogHandler,
+    LogConfig,
+    cleanup_old_logs,
+    get_instance_log_handler,
+    setup_orchestrator_logging,
+)
+from llama_orchestrator.engine.reconciler import (
+    ReconcileAction,
+    ReconcileResult,
+    ReconcileSummary,
+    Reconciler,
+    reconcile_all,
+    reconcile_instance,
+)
 
 __all__ = [
     # Command
@@ -129,4 +144,17 @@ __all__ = [
     "start_detached",
     "stop_detached",
     "tail_log",
+    # Logging Config
+    "InstanceLogHandler",
+    "LogConfig",
+    "cleanup_old_logs",
+    "get_instance_log_handler",
+    "setup_orchestrator_logging",
+    # Reconciler
+    "ReconcileAction",
+    "ReconcileResult",
+    "ReconcileSummary",
+    "Reconciler",
+    "reconcile_all",
+    "reconcile_instance",
 ]
