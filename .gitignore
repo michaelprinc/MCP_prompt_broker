@@ -40,3 +40,7 @@ infrastructure/llama-cpp-server/bin/
 packages/llama-orchestrator/.venv/
 packages/llama-orchestrator/models/
 packages/mcp-codex-orchestrator/workspace/
+packages/llama-orchestrator/bin_archived/
+packages/llama-orchestrator/bins/
+!packages/llama-orchestrator/bins/registry.json
+

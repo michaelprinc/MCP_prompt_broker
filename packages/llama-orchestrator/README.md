@@ -152,6 +152,15 @@ python -m llama_orchestrator --help
 
 ## Documentation
 
+### V2 Upgrade (2026)
+
+- [V2 Implementation Plan](docs/LLAMA_ORCH_V2_IMPLEMENTATION_PLAN.md) - Comprehensive upgrade plan
+- [V2 Checklist](docs/LLAMA_ORCH_V2_CHECKLIST.md) - Detailed task tracking
+- [V2 Dependency Map](docs/LLAMA_ORCH_V2_DEPENDENCY_MAP.md) - Module dependency graph
+- [V2 Risk Register](docs/LLAMA_ORCH_V2_RISK_REGISTER.md) - Risk assessment and mitigation
+
+### Original Documentation
+
 - [Implementation Plan](docs/IMPLEMENTATION_PLAN.md)
 - [Implementation Checklist](docs/CHECKLIST.md)
 
