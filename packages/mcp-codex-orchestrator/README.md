@@ -199,6 +199,19 @@ Více informací: [docs/SECURITY.md](docs/SECURITY.md)
 
 ## ✅ Verify Loop (v2.0)
 
+---
+
+### Note about local workspace imports
+
+If you run the MCP server from the workspace root without installing this package,
+a small compatibility shim `mcp_codex_orchestrator` is provided in the repository root
+to ensure the package can be imported. Prefer installing in editable mode for development:
+
+```powershell
+cd packages/mcp-codex-orchestrator
+pip install -e .
+```
+
 Automatická validace po změnách:
 
 ```json
