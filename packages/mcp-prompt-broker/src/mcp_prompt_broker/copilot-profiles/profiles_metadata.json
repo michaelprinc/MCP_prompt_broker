@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2025-12-31T23:58:30.872887+00:00",
+  "generated_at": "2026-01-01T13:57:24.273417+00:00",
   "profiles": {
     "code_reviewer_senior": {
       "name": "code_reviewer_senior",
@@ -64,7 +64,7 @@
       ],
       "checklist_count": 10,
       "instructions_length": 6296,
-      "last_modified": "2025-12-31T14:29:52.147836+00:00"
+      "last_modified": "2026-01-01T09:03:28.701667+00:00"
     },
     "codex_cli": {
       "name": "codex_cli",
@@ -119,7 +119,7 @@
       ],
       "checklist_count": 7,
       "instructions_length": 3264,
-      "last_modified": "2025-12-31T16:27:47.394872+00:00"
+      "last_modified": "2026-01-01T09:03:28.701667+00:00"
     },
     "creative_brainstorm": {
       "name": "creative_brainstorm",
@@ -170,7 +170,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 1860,
-      "last_modified": "2025-12-31T16:18:58.400054+00:00"
+      "last_modified": "2026-01-01T09:03:28.701667+00:00"
     },
     "creative_brainstorm_complex": {
       "name": "creative_brainstorm_complex",
@@ -233,7 +233,7 @@
       ],
       "checklist_count": 12,
       "instructions_length": 4183,
-      "last_modified": "2025-12-25T19:09:37.148460+00:00"
+      "last_modified": "2026-01-01T09:03:28.702790+00:00"
     },
     "decision_support_analyst": {
       "name": "decision_support_analyst",
@@ -306,7 +306,7 @@
       ],
       "checklist_count": 10,
       "instructions_length": 3260,
-      "last_modified": "2025-12-31T14:29:52.147836+00:00"
+      "last_modified": "2026-01-01T09:03:28.702790+00:00"
     },
     "devops_mlops_engineer": {
       "name": "devops_mlops_engineer",
@@ -374,7 +374,7 @@
       ],
       "checklist_count": 10,
       "instructions_length": 8638,
-      "last_modified": "2025-12-31T14:29:52.146836+00:00"
+      "last_modified": "2026-01-01T09:03:28.702790+00:00"
     },
     "documentation_3level": {
       "name": "documentation_3level",
@@ -402,7 +402,7 @@
       "domains": [],
       "checklist_count": 15,
       "instructions_length": 247,
-      "last_modified": "2025-12-31T17:07:15.511262+00:00"
+      "last_modified": "2026-01-01T09:03:28.703790+00:00"
     },
     "documentation_4level": {
       "name": "documentation_4level",
@@ -430,7 +430,7 @@
       "domains": [],
       "checklist_count": 19,
       "instructions_length": 296,
-      "last_modified": "2025-12-31T17:07:15.512262+00:00"
+      "last_modified": "2026-01-01T09:03:28.703790+00:00"
     },
     "documentation_agile": {
       "name": "documentation_agile",
@@ -459,7 +459,7 @@
       "domains": [],
       "checklist_count": 10,
       "instructions_length": 157,
-      "last_modified": "2025-12-31T17:07:15.512262+00:00"
+      "last_modified": "2026-01-01T09:03:28.703790+00:00"
     },
     "documentation_api_first": {
       "name": "documentation_api_first",
@@ -490,7 +490,7 @@
       ],
       "checklist_count": 10,
       "instructions_length": 165,
-      "last_modified": "2025-12-31T17:07:15.514768+00:00"
+      "last_modified": "2026-01-01T09:03:28.704791+00:00"
     },
     "documentation_diataxis": {
       "name": "documentation_diataxis",
@@ -529,7 +529,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 200,
-      "last_modified": "2025-12-31T16:41:58.801697+00:00"
+      "last_modified": "2026-01-01T09:03:28.704791+00:00"
     },
     "documentation_enterprise": {
       "name": "documentation_enterprise",
@@ -563,7 +563,7 @@
       ],
       "checklist_count": 10,
       "instructions_length": 172,
-      "last_modified": "2025-12-31T17:07:15.515773+00:00"
+      "last_modified": "2026-01-01T09:03:28.704791+00:00"
     },
     "documentation_minimal": {
       "name": "documentation_minimal",
@@ -590,7 +590,7 @@
       "domains": [],
       "checklist_count": 7,
       "instructions_length": 198,
-      "last_modified": "2025-12-31T17:07:15.514768+00:00"
+      "last_modified": "2026-01-01T09:03:28.706297+00:00"
     },
     "documentation_oslc": {
       "name": "documentation_oslc",
@@ -623,7 +623,7 @@
       ],
       "checklist_count": 6,
       "instructions_length": 165,
-      "last_modified": "2025-12-31T17:07:15.516775+00:00"
+      "last_modified": "2026-01-01T09:03:28.706297+00:00"
     },
     "econometrician": {
       "name": "econometrician",
@@ -705,7 +705,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 4223,
-      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+      "last_modified": "2026-01-01T09:03:28.706297+00:00"
     },
     "general_default": {
       "name": "general_default",
@@ -744,7 +744,7 @@
       ],
       "checklist_count": 5,
       "instructions_length": 1013,
-      "last_modified": "2025-12-31T16:55:18.291666+00:00"
+      "last_modified": "2026-01-01T09:03:28.707302+00:00"
     },
     "general_default_complex": {
       "name": "general_default_complex",
@@ -795,7 +795,7 @@
       ],
       "checklist_count": 12,
       "instructions_length": 4506,
-      "last_modified": "2025-12-31T16:55:18.296167+00:00"
+      "last_modified": "2026-01-01T09:03:28.707302+00:00"
     },
     "implementation_planner": {
       "name": "implementation_planner",
@@ -879,7 +879,7 @@
       ],
       "checklist_count": 22,
       "instructions_length": 2247,
-      "last_modified": "2025-12-31T16:18:58.403615+00:00"
+      "last_modified": "2026-01-01T09:03:28.707302+00:00"
     },
     "implementation_planner_complex": {
       "name": "implementation_planner_complex",
@@ -995,7 +995,7 @@
       ],
       "checklist_count": 19,
       "instructions_length": 2042,
-      "last_modified": "2025-12-27T13:46:22.716563+00:00"
+      "last_modified": "2026-01-01T09:03:28.708303+00:00"
     },
     "llm_behavior_debugger": {
       "name": "llm_behavior_debugger",
@@ -1068,7 +1068,7 @@
       ],
       "checklist_count": 9,
       "instructions_length": 4263,
-      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+      "last_modified": "2026-01-01T09:03:28.708303+00:00"
     },
     "mcp_agent_orchestrator": {
       "name": "mcp_agent_orchestrator",
@@ -1146,7 +1146,7 @@
       ],
       "checklist_count": 9,
       "instructions_length": 4784,
-      "last_modified": "2025-12-31T14:29:52.138781+00:00"
+      "last_modified": "2026-01-01T09:03:28.709308+00:00"
     },
     "mcp_server_testing_and_validation": {
       "name": "mcp_server_testing_and_validation",
@@ -1223,7 +1223,7 @@
       ],
       "checklist_count": 40,
       "instructions_length": 7018,
-      "last_modified": "2025-12-31T17:00:22.326081+00:00"
+      "last_modified": "2026-01-01T09:03:28.709978+00:00"
     },
     "ml_pragmatist": {
       "name": "ml_pragmatist",
@@ -1294,7 +1294,7 @@
       ],
       "checklist_count": 12,
       "instructions_length": 7905,
-      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+      "last_modified": "2026-01-01T09:03:28.709978+00:00"
     },
     "model_evaluation_expert": {
       "name": "model_evaluation_expert",
@@ -1366,7 +1366,7 @@
       ],
       "checklist_count": 9,
       "instructions_length": 6411,
-      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+      "last_modified": "2026-01-01T09:03:28.709978+00:00"
     },
     "performance_optimizer": {
       "name": "performance_optimizer",
@@ -1439,7 +1439,7 @@
       ],
       "checklist_count": 10,
       "instructions_length": 6028,
-      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+      "last_modified": "2026-01-01T09:03:28.709978+00:00"
     },
     "podman_container_management": {
       "name": "podman_container_management",
@@ -1493,7 +1493,7 @@
       ],
       "checklist_count": 10,
       "instructions_length": 8060,
-      "last_modified": "2025-12-25T19:08:32.364850+00:00"
+      "last_modified": "2026-01-01T09:03:28.711500+00:00"
     },
     "podman_container_management_complex": {
       "name": "podman_container_management_complex",
@@ -1565,7 +1565,7 @@
       ],
       "checklist_count": 14,
       "instructions_length": 14378,
-      "last_modified": "2025-12-25T19:02:02.893485+00:00"
+      "last_modified": "2026-01-01T09:03:28.712683+00:00"
     },
     "privacy_sensitive": {
       "name": "privacy_sensitive",
@@ -1618,7 +1618,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 1640,
-      "last_modified": "2025-12-31T16:18:58.401611+00:00"
+      "last_modified": "2026-01-01T09:03:28.713189+00:00"
     },
     "privacy_sensitive_complex": {
       "name": "privacy_sensitive_complex",
@@ -1694,7 +1694,7 @@
       ],
       "checklist_count": 16,
       "instructions_length": 5730,
-      "last_modified": "2025-12-25T19:08:32.364850+00:00"
+      "last_modified": "2026-01-01T09:03:28.713710+00:00"
     },
     "production_grade_engineer": {
       "name": "production_grade_engineer",
@@ -1773,7 +1773,7 @@
       ],
       "checklist_count": 11,
       "instructions_length": 5869,
-      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+      "last_modified": "2026-01-01T09:03:28.714240+00:00"
     },
     "prompt_minimalist": {
       "name": "prompt_minimalist",
@@ -1846,7 +1846,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 4125,
-      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+      "last_modified": "2026-01-01T09:03:28.715292+00:00"
     },
     "prompt_theorist": {
       "name": "prompt_theorist",
@@ -1915,7 +1915,7 @@
       ],
       "checklist_count": 10,
       "instructions_length": 5366,
-      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+      "last_modified": "2026-01-01T09:03:28.715814+00:00"
     },
     "python_code_generation": {
       "name": "python_code_generation",
@@ -1964,7 +1964,7 @@
       ],
       "checklist_count": 7,
       "instructions_length": 3033,
-      "last_modified": "2025-12-31T16:27:47.395879+00:00"
+      "last_modified": "2026-01-01T09:03:28.716342+00:00"
     },
     "python_code_generation_complex": {
       "name": "python_code_generation_complex",
@@ -2037,7 +2037,7 @@
       ],
       "checklist_count": 12,
       "instructions_length": 12140,
-      "last_modified": "2025-12-25T19:08:32.364850+00:00"
+      "last_modified": "2026-01-01T09:03:28.716870+00:00"
     },
     "python_code_generation_complex_with_codex": {
       "name": "python_code_generation_complex_with_codex",
@@ -2123,7 +2123,7 @@
       ],
       "checklist_count": 45,
       "instructions_length": 1288,
-      "last_modified": "2025-12-26T11:13:04.757982+00:00"
+      "last_modified": "2026-01-01T09:03:28.717395+00:00"
     },
     "python_testing_revision": {
       "name": "python_testing_revision",
@@ -2174,7 +2174,7 @@
       ],
       "checklist_count": 20,
       "instructions_length": 6977,
-      "last_modified": "2025-12-25T19:08:56.339326+00:00"
+      "last_modified": "2026-01-01T09:03:28.718463+00:00"
     },
     "python_testing_revision_complex": {
       "name": "python_testing_revision_complex",
@@ -2244,7 +2244,7 @@
       ],
       "checklist_count": 22,
       "instructions_length": 14241,
-      "last_modified": "2025-12-25T19:07:16.134184+00:00"
+      "last_modified": "2026-01-01T09:03:28.718990+00:00"
     },
     "refactoring_specialist": {
       "name": "refactoring_specialist",
@@ -2313,7 +2313,7 @@
       ],
       "checklist_count": 10,
       "instructions_length": 8823,
-      "last_modified": "2025-12-31T14:29:52.147836+00:00"
+      "last_modified": "2026-01-01T09:03:28.720064+00:00"
     },
     "reliability_analyst": {
       "name": "reliability_analyst",
@@ -2388,7 +2388,7 @@
       ],
       "checklist_count": 10,
       "instructions_length": 7381,
-      "last_modified": "2025-12-31T14:29:52.146836+00:00"
+      "last_modified": "2026-01-01T09:03:28.720595+00:00"
     },
     "security_compliance_reviewer": {
       "name": "security_compliance_reviewer",
@@ -2467,7 +2467,7 @@
       ],
       "checklist_count": 11,
       "instructions_length": 7550,
-      "last_modified": "2025-12-31T16:18:58.403615+00:00"
+      "last_modified": "2026-01-01T09:03:28.721120+00:00"
     },
     "skeptical_peer_reviewer": {
       "name": "skeptical_peer_reviewer",
@@ -2544,7 +2544,7 @@
       ],
       "checklist_count": 10,
       "instructions_length": 6563,
-      "last_modified": "2025-12-31T14:29:52.147836+00:00"
+      "last_modified": "2026-01-01T09:03:28.721120+00:00"
     },
     "system_architect": {
       "name": "system_architect",
@@ -2624,7 +2624,7 @@
       ],
       "checklist_count": 9,
       "instructions_length": 3154,
-      "last_modified": "2025-12-31T14:29:52.137775+00:00"
+      "last_modified": "2026-01-01T09:03:28.721632+00:00"
     },
     "technical_explainer_expert": {
       "name": "technical_explainer_expert",
@@ -2695,7 +2695,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 3172,
-      "last_modified": "2025-12-31T14:29:52.147836+00:00"
+      "last_modified": "2026-01-01T09:03:28.722145+00:00"
     },
     "technical_explainer_nonexpert": {
       "name": "technical_explainer_nonexpert",
@@ -2764,7 +2764,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 6508,
-      "last_modified": "2025-12-31T14:29:52.147836+00:00"
+      "last_modified": "2026-01-01T09:03:28.722672+00:00"
     },
     "technical_support": {
       "name": "technical_support",
@@ -2824,7 +2824,7 @@
       ],
       "checklist_count": 8,
       "instructions_length": 1494,
-      "last_modified": "2025-12-31T16:18:58.401611+00:00"
+      "last_modified": "2026-01-01T09:03:28.723206+00:00"
     },
     "technical_support_complex": {
       "name": "technical_support_complex",
@@ -2902,7 +2902,7 @@
       ],
       "checklist_count": 15,
       "instructions_length": 6779,
-      "last_modified": "2025-12-25T19:08:56.339326+00:00"
+      "last_modified": "2026-01-01T09:03:28.723206+00:00"
     },
     "time_series_specialist": {
       "name": "time_series_specialist",
@@ -2977,7 +2977,7 @@
       ],
       "checklist_count": 11,
       "instructions_length": 5484,
-      "last_modified": "2025-12-31T14:29:52.140782+00:00"
+      "last_modified": "2026-01-01T09:03:28.725387+00:00"
     }
   },
   "statistics": {
