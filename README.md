@@ -265,16 +265,6 @@ MCP_Prompt_Broker/
 ├── pyproject.toml                 # Package configuration
 └── install.ps1                    # Windows installation script
 ```
-│       │   └── parser.py          # Prompt metadata extraction
-│       ├── router/
-│       │   └── profile_router.py  # Profile routing logic
-│       └── copilot-profiles/      # Markdown profile files
-├── tests/                         # Unit tests
-├── docs/                          # Documentation
-├── reports/                       # Ad-hoc development reports
-├── pyproject.toml                 # Package configuration
-└── install.ps1                    # Windows installation script
-```
 
 ---
 
