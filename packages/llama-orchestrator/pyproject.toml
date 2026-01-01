@@ -1,6 +1,6 @@
 [project]
 name = "llama-orchestrator"
-version = "0.1.0"
+version = "2.0.0"
 description = "Docker-like CLI orchestration for llama.cpp server instances"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -10,7 +10,7 @@ authors = [
 ]
 keywords = ["llama.cpp", "llm", "orchestration", "cli", "inference"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",

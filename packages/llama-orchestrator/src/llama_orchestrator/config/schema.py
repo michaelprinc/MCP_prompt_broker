@@ -131,13 +131,59 @@ class GpuConfig(BaseModel):
 
 
 class HealthcheckConfig(BaseModel):
-    """Configuration for health monitoring."""
+    """Configuration for health monitoring with pluggable probe support."""
     
-    path: str = Field(default="/health", description="Health check endpoint path")
+    # Probe type configuration (V2)
+    type: Literal["http", "tcp", "custom"] = Field(
+        default="http",
+        description="Type of health probe: http, tcp, or custom"
+    )
+    path: str = Field(default="/health", description="Health check endpoint path (for HTTP probe)")
+    expected_status: list[int] = Field(
+        default_factory=lambda: [200],
+        description="Expected HTTP status codes (for HTTP probe)"
+    )
+    expected_body: Optional[str] = Field(
+        default=None,
+        description="Expected substring in response body (for HTTP probe)"
+    )
+    custom_script: Optional[str] = Field(
+        default=None,
+        description="Custom script to execute (for custom probe). Use {host} and {port} placeholders"
+    )
+    
+    # Timing configuration
     interval: int = Field(default=10, ge=1, le=3600, description="Check interval in seconds")
     timeout: int = Field(default=5, ge=1, le=60, description="Request timeout in seconds")
     retries: int = Field(default=3, ge=1, le=10, description="Retries before marking unhealthy")
+    retry_delay: float = Field(default=1.0, ge=0.1, le=60.0, description="Delay between retries in seconds")
     start_period: int = Field(default=60, ge=0, le=600, description="Grace period after start")
+    
+    # Backoff with jitter configuration (V2)
+    backoff_enabled: bool = Field(default=True, description="Enable exponential backoff on failures")
+    backoff_base: float = Field(default=1.0, ge=0.1, le=60.0, description="Base delay for backoff in seconds")
+    backoff_max: float = Field(default=60.0, ge=1.0, le=600.0, description="Maximum backoff delay in seconds")
+    backoff_jitter: float = Field(default=0.1, ge=0.0, le=1.0, description="Jitter factor (0-1) to add randomness")
+    
+    @model_validator(mode="after")
+    def validate_healthcheck_config(self) -> "HealthcheckConfig":
+        """Validate healthcheck configuration consistency."""
+        if self.type == "custom" and not self.custom_script:
+            raise ValueError("custom_script is required when type is 'custom'")
+        return self
+    
+    def to_probe_dict(self) -> dict:
+        """Convert to probe configuration dictionary."""
+        return {
+            "type": self.type,
+            "path": self.path,
+            "expected_status": self.expected_status,
+            "expected_body": self.expected_body,
+            "custom_script": self.custom_script,
+            "timeout": float(self.timeout),
+            "retries": self.retries,
+            "retry_delay": self.retry_delay,
+        }
 
 
 class RestartPolicy(BaseModel):

@@ -4,6 +4,14 @@ Health monitoring module for llama-orchestrator.
 Provides health checking, monitoring, and auto-restart functionality.
 """
 
+from llama_orchestrator.health.backoff import (
+    BackoffCalculator,
+    BackoffConfig,
+    HealthCheckBackoff,
+    RetryHandler,
+    calculate_jittered_delay,
+    with_jitter,
+)
 from llama_orchestrator.health.checker import (
     HealthCheckResult,
     check_health,
@@ -26,6 +34,17 @@ from llama_orchestrator.health.ports import (
     wait_for_port,
     wait_for_port_release,
 )
+from llama_orchestrator.health.probes import (
+    CustomProbe,
+    HealthProbe,
+    HTTPProbe,
+    ProbeConfig,
+    ProbeFactory,
+    ProbeResult,
+    ProbeType,
+    TCPProbe,
+    get_default_probe,
+)
 
 __all__ = [
     # Health checking
@@ -47,4 +66,21 @@ __all__ = [
     "validate_port_for_instance",
     "wait_for_port",
     "wait_for_port_release",
+    # Pluggable health probes (V2)
+    "CustomProbe",
+    "HealthProbe",
+    "HTTPProbe",
+    "ProbeConfig",
+    "ProbeFactory",
+    "ProbeResult",
+    "ProbeType",
+    "TCPProbe",
+    "get_default_probe",
+    # Backoff utilities (V2)
+    "BackoffCalculator",
+    "BackoffConfig",
+    "HealthCheckBackoff",
+    "RetryHandler",
+    "calculate_jittered_delay",
+    "with_jitter",
 ]
