@@ -20,9 +20,7 @@ logger = structlog.get_logger(__name__)
 async def handle_codex_artifacts(
     run_id: str,
     run_manager: RunManager,
-    include_diff: bool = True,
-    include_jsonl: bool = True,
-    include_log: bool = False,
+    artifact_type: str = "all",
 ) -> dict:
     """
     Get artifacts from a completed Codex run.
@@ -37,7 +35,7 @@ async def handle_codex_artifacts(
     Returns:
         Dictionary with artifact information and content
     """
-    logger.info("Getting run artifacts", run_id=run_id)
+    logger.info("Getting run artifacts", run_id=run_id, artifact_type=artifact_type)
     
     run_dir = run_manager.runs_path / run_id
     
@@ -48,6 +46,10 @@ async def handle_codex_artifacts(
             "error": f"Run {run_id} not found",
         }
     
+    include_diff = artifact_type in ("all", "diffs")
+    include_jsonl = artifact_type in ("all", "events")
+    include_log = artifact_type in ("all", "logs")
+
     artifacts: dict = {
         "success": True,
         "run_id": run_id,
@@ -59,6 +61,7 @@ async def handle_codex_artifacts(
     artifact_files = [
         ("request", "request.json", False),
         ("result", "result.json", False),
+        ("run_result", "run_result.json", False),
         ("events", "events.jsonl", include_jsonl),
         ("log", "log.txt", include_log),
         ("diff", "changes.patch", include_diff),

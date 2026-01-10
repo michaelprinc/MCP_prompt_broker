@@ -14,6 +14,7 @@ from mcp_codex_orchestrator.utils.markers import (
     inject_mcp_instructions,
 )
 from mcp_codex_orchestrator.utils.logging import setup_logging
+from mcp_codex_orchestrator.utils.sanitize import sanitize_text
 
 __all__ = [
     "MCP_INSTRUCTION_SUFFIX",
@@ -24,4 +25,5 @@ __all__ = [
     "parse_marker",
     "inject_mcp_instructions",
     "setup_logging",
+    "sanitize_text",
 ]

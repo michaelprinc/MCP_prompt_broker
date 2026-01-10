@@ -57,6 +57,8 @@ class ParsedDiff:
 async def handle_codex_git_diff(
     run_id: str,
     run_manager: RunManager,
+    file_filter: Optional[str] = None,
+    context_lines: int = 3,
     format: str = "unified",
 ) -> dict:
     """
@@ -75,8 +77,8 @@ async def handle_codex_git_diff(
     run_dir = run_manager.runs_path / run_id
     diff_file = run_dir / "changes.patch"
     
-    # Try to read existing patch file
-    if diff_file.exists():
+    # Try to read existing patch file if no filtering is requested
+    if diff_file.exists() and not file_filter and format == "unified":
         async with aiofiles.open(diff_file, "r", encoding="utf-8") as f:
             diff_content = await f.read()
     else:
@@ -84,6 +86,8 @@ async def handle_codex_git_diff(
         diff_content = await _generate_diff_from_workspace(
             run_manager.workspace_path,
             format,
+            file_filter,
+            context_lines,
         )
     
     if not diff_content:
@@ -145,17 +149,22 @@ async def handle_codex_git_diff(
 async def _generate_diff_from_workspace(
     workspace_path: Path,
     format: str,
+    file_filter: Optional[str],
+    context_lines: int,
 ) -> str:
     """Generate diff from workspace using git."""
     try:
         if format == "unified":
-            cmd = ["git", "diff", "--no-color", "HEAD"]
+            cmd = ["git", "diff", f"-U{context_lines}", "--no-color", "HEAD"]
         elif format == "stat":
             cmd = ["git", "diff", "--stat", "--no-color", "HEAD"]
         elif format == "name-only":
             cmd = ["git", "diff", "--name-only", "HEAD"]
         else:
             cmd = ["git", "diff", "--no-color", "HEAD"]
+
+        if file_filter:
+            cmd.extend(["--", file_filter])
         
         result = subprocess.run(
             cmd,

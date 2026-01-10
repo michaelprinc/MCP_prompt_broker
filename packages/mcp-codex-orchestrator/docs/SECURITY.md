@@ -218,6 +218,12 @@ Všechny operace jsou logovány v `runs/{run_id}/log.txt`:
 cat runs/abc123/log.txt | grep "file_change"
 ```
 
+### 5. Gemini OAuth secrets
+
+- Treat `~/.gemini` as a secret and do not copy it into run artifacts.
+- The runner mounts `~/.gemini` read-write for token refresh.
+- Logs are sanitized to mask token-like strings before saving.
+
 ---
 
 ## Troubleshooting

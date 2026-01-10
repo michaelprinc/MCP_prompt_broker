@@ -51,6 +51,44 @@ services:
     profiles:
       - manual
 
+  # Gemini CLI Runner - ephemeral per-run container
+  gemini-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.gemini
+    image: gemini-runner:latest
+    container_name: gemini-run-${RUN_ID:-manual}
+
+    volumes:
+      # Workspace - repository to work on
+      - ${WORKSPACE_PATH:-../workspace}:/workspace:rw
+      # Runs - logs and results storage
+      - ${RUNS_PATH:-../runs}:/runs:rw
+      # Gemini OAuth cache (read-write for token refresh)
+      - ${GEMINI_AUTH_PATH:-~/.gemini}:/home/runner/.gemini:rw
+
+    environment:
+      - GEMINI_HOME=/home/runner/.gemini
+      - HOME=/home/runner
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT:-}
+
+    working_dir: /workspace
+
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    networks:
+      - codex-net
+
+    profiles:
+      - manual
+
   # MCP Orchestrator Server (optional - can run as Python process instead)
   mcp-orchestrator:
     build:

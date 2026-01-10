@@ -16,12 +16,20 @@ import aiofiles
 import structlog
 
 from mcp_codex_orchestrator.models.run_request import CodexRunRequest
-from mcp_codex_orchestrator.models.run_result import CodexRunResult, RunOutput, RunStatus
+from mcp_codex_orchestrator.models.run_result import (
+    CodexRunResult,
+    RunOutput,
+    RunProvider,
+    RunResult,
+    RunStatus,
+)
 from mcp_codex_orchestrator.orchestrator.docker_client import DockerCodexClient
 from mcp_codex_orchestrator.orchestrator.result_collector import ResultCollector
 from mcp_codex_orchestrator.security.modes import SecurityMode
+from mcp_codex_orchestrator.security.patch_workflow import PatchWorkflow
 from mcp_codex_orchestrator.verify.verify_loop import VerifyConfig, VerifyLoop
 from mcp_codex_orchestrator.utils.markers import inject_mcp_instructions
+from mcp_codex_orchestrator.utils.sanitize import sanitize_text
 
 logger = structlog.get_logger(__name__)
 
@@ -57,6 +65,7 @@ class RunManager:
         # Initialize components
         self.docker_client = DockerCodexClient()
         self.result_collector = ResultCollector()
+        self.patch_workflow = PatchWorkflow(self.runs_path)
         
         # Track active runs
         self._active_runs: dict[str, asyncio.Task[Any]] = {}
@@ -175,11 +184,12 @@ class RunManager:
                 security_mode=security_mode,
                 schemas_path=self.schemas_path,
             ):
-                log_lines.append(line)
+                sanitized_line = sanitize_text(line)
+                log_lines.append(sanitized_line)
                 
                 # Write to log file in real-time
                 async with aiofiles.open(log_file, "a", encoding="utf-8") as f:
-                    await f.write(line)
+                    await f.write(sanitized_line)
             
             # Record finish time
             finished_at = datetime.now(timezone.utc)
@@ -187,11 +197,13 @@ class RunManager:
             
             # Collect and analyze result
             full_log = "".join(log_lines)
+            exit_code = self._extract_exit_code(full_log)
             result = await self.result_collector.collect(
                 run_id=run_id,
                 log=full_log,
                 started_at=started_at,
                 finished_at=finished_at,
+                exit_code=exit_code,
             )
             
             # Run verify loop if enabled and run was successful
@@ -207,22 +219,32 @@ class RunManager:
                     workspace_path=workspace,
                     config=verify_config,
                 )
-                verify_result = await verify_loop.run()
-                
+                verify_result = await verify_loop.run(run_id)
+                verify_payload = verify_result.to_dict()
+
                 # Add verify results to output
                 if result.output:
-                    result.output.verify_result = verify_result
-                
+                    result.output.verify_result = verify_payload
+
                 # Update status if verify failed
-                if not verify_result.get("success", False):
+                if not verify_payload.get("success", False):
                     logger.warning(
                         "Verify loop failed",
                         run_id=run_id,
-                        errors=verify_result.get("errors"),
+                        errors=verify_payload.get("errors"),
                     )
             
             # Save result
             await self._save_result(run_id, result)
+            await self._save_run_result(
+                run_id=run_id,
+                provider=RunProvider.CODEX,
+                result=result,
+                workspace=workspace,
+                stdout=full_log,
+                stderr="",
+                exit_code=exit_code,
+            )
             
             return result
             
@@ -243,6 +265,15 @@ class RunManager:
             )
             
             await self._save_result(run_id, result)
+            await self._save_run_result(
+                run_id=run_id,
+                provider=RunProvider.CODEX,
+                result=result,
+                workspace=workspace,
+                stdout="".join(log_lines),
+                stderr="",
+                exit_code=None,
+            )
             return result
             
         except Exception as e:
@@ -264,6 +295,15 @@ class RunManager:
             )
             
             await self._save_result(run_id, result)
+            await self._save_run_result(
+                run_id=run_id,
+                provider=RunProvider.CODEX,
+                result=result,
+                workspace=workspace,
+                stdout="".join(log_lines),
+                stderr="",
+                exit_code=None,
+            )
             return result
     
     async def cancel_run(self, run_id: str) -> None:
@@ -341,6 +381,80 @@ class RunManager:
             await f.write(json.dumps(result_data, indent=2, ensure_ascii=False))
         
         logger.debug("Result saved", run_id=run_id, result_file=str(result_file))
+
+    async def _save_run_result(
+        self,
+        run_id: str,
+        provider: RunProvider,
+        result: CodexRunResult,
+        workspace: Path,
+        stdout: str,
+        stderr: str,
+        exit_code: int | None,
+    ) -> None:
+        """Save provider-agnostic run result to file."""
+        run_dir = self.runs_path / run_id
+        result_file = run_dir / "run_result.json"
+
+        diff_content = ""
+        files_changed: list[str] = []
+
+        patch_result = await self.patch_workflow.generate_patch(
+            workspace_path=workspace,
+            run_id=run_id,
+            include_untracked=True,
+        )
+        if patch_result.success and patch_result.patch_path:
+            try:
+                async with aiofiles.open(patch_result.patch_path, "r", encoding="utf-8") as f:
+                    diff_content = await f.read()
+            except Exception as e:
+                logger.warning("Failed to read patch content", error=str(e))
+
+            if patch_result.stats and patch_result.stats.files:
+                files_changed = patch_result.stats.files
+
+        if not files_changed:
+            files_changed = result.output.files_changed
+
+        run_result = RunResult(
+            run_id=run_id,
+            provider=provider,
+            status=result.status,
+            exit_code=exit_code,
+            duration=result.duration,
+            stdout=stdout,
+            stderr=stderr,
+            raw_events=result.output.jsonl_events or None,
+            files_changed=files_changed,
+            diff=diff_content,
+            summary=result.output.summary,
+            verify_result=result.output.verify_result,
+            error=result.error,
+            started_at=result.started_at,
+            finished_at=result.finished_at,
+        )
+
+        async with aiofiles.open(result_file, "w", encoding="utf-8") as f:
+            await f.write(run_result.json(indent=2, ensure_ascii=False))
+
+        logger.debug("RunResult saved", run_id=run_id, result_file=str(result_file))
+
+    @staticmethod
+    def _extract_exit_code(log: str) -> int | None:
+        """Extract container exit code from log output."""
+        if not log:
+            return None
+        for line in reversed(log.splitlines()):
+            line = line.strip()
+            if "Container exited with code" in line:
+                parts = line.rsplit(" ", 1)
+                if len(parts) == 2:
+                    try:
+                        return int(parts[1].strip("]"))
+                    except ValueError:
+                        return None
+        return None
     
     def close(self) -> None:
         """Close manager and cleanup resources."""

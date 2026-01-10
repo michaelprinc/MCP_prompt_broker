@@ -132,6 +132,38 @@ Container cannot authenticate with OpenAI API.
 
 ---
 
+### 6. Gemini OAuth Not Found in Container
+
+**Symptom:**
+Gemini CLI reports missing login or prompts for OAuth inside the container.
+
+**Cause:**
+The host OAuth cache is missing or not mounted into the runner.
+
+**Solution:**
+
+1. **Authenticate locally:**
+   ```powershell
+   npm install -g @google/gemini-cli
+   gemini
+   ```
+
+2. **Verify cache exists:**
+   ```powershell
+   Test-Path "$env:USERPROFILE\.gemini"
+   ```
+
+3. **Ensure mount is configured:**
+   ```yaml
+   volumes:
+     - ${GEMINI_AUTH_PATH:-~/.gemini}:/home/runner/.gemini:rw
+   ```
+
+4. **Avoid API-key overrides:**
+   Remove `GEMINI_API_KEY` or `GOOGLE_API_KEY` from your environment or `.env` file.
+
+---
+
 ## Getting Help
 
 If you encounter an issue not covered here:

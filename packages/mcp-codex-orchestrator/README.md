@@ -9,7 +9,7 @@ MCP Codex Orchestrator je rozšíření [MCP Prompt Broker](../README.md), kter�
 ### Klíčové vlastnosti
 
 - 🐳 **Per-run container** – každý běh v čistém izolovaném prostředí
-- 🔧 **MCP tools** – `codex_run`, `codex_status`, `codex_cancel`, `codex_artifacts`, `codex_git_diff`
+- 🔧 **MCP tools** – `codex_run`, `codex_status`, `codex_cancel`, `codex_artifacts`, `codex_git_diff`, `gemini_run`, `gemini_run_status`, `gemini_run_cancel`, `gemini_run_artifacts`, `gemini_git_diff`
 - 📝 **JSONL output** – strojově čitelný výstup z Codex CLI (`--json`)
 - 🔒 **Security modes** – `readonly`, `workspace_write`, `full_access`
 - ✅ **Verify loop** – automatické spouštění testů a lintu po změnách
@@ -117,6 +117,9 @@ python -m mcp_codex_orchestrator
 | `RUNS_PATH` | ❌ | `./runs` | Cesta k run artefaktům |
 | `SCHEMAS_PATH` | ❌ | `./schemas` | Cesta k JSON schématům (v2.0) |
 | `CODEX_IMAGE` | ❌ | `codex-runner:latest` | Docker image name |
+| `GEMINI_IMAGE` | ❌ | `gemini-runner:latest` | Gemini runner image name |
+| `GEMINI_AUTH_PATH` | ❌ | `~/.gemini` | Host path to Gemini OAuth cache |
+| `GOOGLE_CLOUD_PROJECT` | ❌ | - | Optional Google Cloud project for org licenses |
 | `DEFAULT_TIMEOUT` | ❌ | `300` | Default timeout (s) |
 | `LOG_LEVEL` | ❌ | `INFO` | Log level |
 
@@ -274,6 +277,22 @@ result = await mcp_client.call_tool("codex_git_diff", {
     "context_lines": 3
 })
 ```
+
+## Gemini Runner (v2.1)
+
+Optional runner for Google Gemini CLI with OAuth-mounted credentials.
+
+- Docker image: `gemini-runner:latest`
+- OAuth bootstrap: `.\scripts\setup-gemini-auth.ps1`
+- Docs: `docs/GEMINI_RUNNER.md`
+
+### Gemini MCP Tools
+
+- `gemini_run`
+- `gemini_run_status`
+- `gemini_run_cancel`
+- `gemini_run_artifacts`
+- `gemini_git_diff`
 
 ## 🏗️ Architektura
 

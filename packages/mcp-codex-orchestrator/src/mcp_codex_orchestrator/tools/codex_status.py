@@ -70,6 +70,20 @@ async def handle_codex_status(
             }
         except Exception as e:
             logger.warning("Failed to read result file", error=str(e))
+
+    run_result_file = run_dir / "run_result.json"
+    if run_result_file.exists():
+        try:
+            async with aiofiles.open(run_result_file, "r", encoding="utf-8") as f:
+                result_data = json.loads(await f.read())
+            return {
+                "status": result_data.get("status", "completed"),
+                "run_id": run_id,
+                "duration": result_data.get("duration"),
+                "completed_at": result_data.get("finished_at"),
+            }
+        except Exception as e:
+            logger.warning("Failed to read run_result.json", error=str(e))
     
     # Check if container is still running
     container_running = await _check_container_running(run_id, run_manager)
