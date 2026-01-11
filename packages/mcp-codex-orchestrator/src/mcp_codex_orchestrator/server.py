@@ -401,10 +401,11 @@ def create_server() -> Server:
                 output_format=arguments.get("output_format", "json"),
             )
             result = await handle_gemini_run(request, gemini_manager)
+            payload = result.model_dump(mode="json") if hasattr(result, "model_dump") else result.dict()
             return [
                 TextContent(
                     type="text",
-                    text=result.json(indent=2, ensure_ascii=False),
+                    text=json.dumps(payload, indent=2, ensure_ascii=False, default=str),
                 )
             ]
         

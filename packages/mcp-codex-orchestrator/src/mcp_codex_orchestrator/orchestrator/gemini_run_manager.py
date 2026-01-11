@@ -259,8 +259,9 @@ class GeminiRunManager:
     async def _save_run_result(self, run_id: str, result: RunResult) -> None:
         run_dir = self.runs_path / run_id
         result_file = run_dir / "run_result.json"
+        payload = result.model_dump(mode="json") if hasattr(result, "model_dump") else result.dict()
         async with aiofiles.open(result_file, "w", encoding="utf-8") as f:
-            await f.write(result.json(indent=2, ensure_ascii=False))
+            await f.write(json.dumps(payload, indent=2, ensure_ascii=False, default=str))
         logger.debug("Gemini RunResult saved", run_id=run_id, result_file=str(result_file))
 
     async def _save_response_payload(self, run_id: str, payload: dict[str, Any]) -> None:

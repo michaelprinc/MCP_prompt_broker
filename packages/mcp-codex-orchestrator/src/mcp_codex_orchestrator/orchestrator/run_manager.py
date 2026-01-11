@@ -435,8 +435,9 @@ class RunManager:
             finished_at=result.finished_at,
         )
 
+        payload = run_result.model_dump(mode="json") if hasattr(run_result, "model_dump") else run_result.dict()
         async with aiofiles.open(result_file, "w", encoding="utf-8") as f:
-            await f.write(run_result.json(indent=2, ensure_ascii=False))
+            await f.write(json.dumps(payload, indent=2, ensure_ascii=False, default=str))
 
         logger.debug("RunResult saved", run_id=run_id, result_file=str(result_file))
 
