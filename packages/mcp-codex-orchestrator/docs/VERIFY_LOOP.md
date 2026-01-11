@@ -15,7 +15,7 @@ Verify loop automaticky spouští:
 
 ```json
 {
-  "prompt": "Implementuj funkci pro parsování JSON",
+  "task": "Implementuj funkci pro parsování JSON",
   "verify": true
 }
 ```
@@ -238,7 +238,7 @@ Výsledek verify loop je zahrnut v MCP response:
 
 ```json
 {
-  "prompt": "...",
+  "task": "...",
   "verify": true
 }
 ```
@@ -263,7 +263,7 @@ config = VerifyConfig(
 
 ```json
 {
-  "prompt": "...",
+  "task": "...",
   "security_mode": "workspace_write",
   "verify": true
 }
@@ -305,7 +305,7 @@ config = VerifyConfig(
 2. Zvyšte timeout:
    ```json
    {
-     "timeout": 600
+     "timeout_seconds": 600
    }
    ```
 

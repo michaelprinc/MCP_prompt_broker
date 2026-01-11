@@ -123,7 +123,7 @@ mcp-codex-orchestrator/
 ```python
 @mcp_tool(name="codex_run")
 async def codex_run(
-    prompt: str,
+    task: str,
     mode: str = "full-auto",           # full-auto | suggest | ask
     repo: str | None = None,            # Cesta k repo (default: aktuální workspace)
     timeout: int = 300,                 # Timeout v sekundách
@@ -183,7 +183,7 @@ class DockerCodexClient:
     async def run_codex(
         self,
         run_id: str,
-        prompt: str,
+        task: str,
         mode: str,
         workspace_path: Path,
         runs_path: Path,
@@ -286,11 +286,11 @@ services:
 {
   "runId": "uuid-v4",
   "timestamp": "2025-12-25T10:30:00Z",
-  "prompt": "Implementuj funkci pro validaci emailu",
-  "mode": "full-auto",
-  "repo": "/workspace/my-project",
+  "task": "Implementuj funkci pro validaci emailu",
+  "execution_mode": "full-auto",
+  "repository_path": "/workspace/my-project",
   "workingDir": "src/validators",
-  "timeout": 300,
+  "timeout_seconds": 300,
   "envVars": {
     "DEBUG": "1"
   }
@@ -364,7 +364,7 @@ Přidání do `.vscode/mcp.json`:
 ```json
 {
   "servers": {
-    "codex-orchestrator": {
+    "delegated-task-runner": {
       "type": "stdio",
       "command": "python",
       "args": ["-m", "mcp_codex_orchestrator"],
@@ -381,7 +381,7 @@ Pro komplexnější scénáře lze použít HTTP transport s docker-compose:
 ```json
 {
   "servers": {
-    "codex-orchestrator": {
+    "delegated-task-runner": {
       "type": "http",
       "url": "http://localhost:3000/mcp"
     }

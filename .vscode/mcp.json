@@ -7,7 +7,7 @@
             "args": ["-m", "mcp_prompt_broker"],
             "env": {}
         },
-        "codex-orchestrator": {
+        "delegated-task-runner": {
             "type": "stdio",
             "command": "${workspaceFolder}/.venv/Scripts/python.exe",
             "args": ["-m", "mcp_codex_orchestrator"],

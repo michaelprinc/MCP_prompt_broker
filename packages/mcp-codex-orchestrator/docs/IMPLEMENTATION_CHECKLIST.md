@@ -101,7 +101,7 @@
 - [x] Vytvořit `src/mcp_codex_orchestrator/models/run_request.py`:
   ```python
   class CodexRunRequest(BaseModel):
-      prompt: str
+      task: str
       mode: Literal["full-auto", "suggest", "ask"] = "full-auto"
       repo: str | None = None
       working_dir: str | None = None

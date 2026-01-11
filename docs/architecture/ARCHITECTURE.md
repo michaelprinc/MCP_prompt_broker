@@ -72,7 +72,7 @@ graph TB
     
     subgraph "MCP Servers"
         D[mcp-prompt-broker]
-        E[mcp-codex-orchestrator]
+        E[delegated-task-runner]
     end
     
     subgraph "Control Plane"

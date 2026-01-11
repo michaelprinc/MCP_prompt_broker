@@ -21,7 +21,7 @@ async def handle_codex_run(
     Handle codex_run tool invocation.
     
     Args:
-        request: The run request with prompt and parameters
+        request: The run request with task and parameters
         run_manager: The run manager instance
         
     Returns:
@@ -29,9 +29,9 @@ async def handle_codex_run(
     """
     logger.info(
         "Handling codex_run request",
-        prompt_length=len(request.prompt),
-        mode=request.mode,
-        timeout=request.timeout,
+        task_length=len(request.task),
+        execution_mode=request.execution_mode,
+        timeout=request.timeout_seconds,
     )
     
     try:

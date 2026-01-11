@@ -1,6 +1,6 @@
 ---
 name: codex_orchestrator_integration_template
-short_description: Template for profiles integrating MCP codex-orchestrator server for automated code generation
+short_description: Template for profiles integrating MCP delegated-task-runner server for automated code generation
 extends: null
 default_score: 0
 fallback: false
@@ -26,23 +26,23 @@ weights:
     mcp codex: 12
 ---
 
-# [Profile Name] with MCP Codex-Orchestrator Integration
+# [Profile Name] with MCP delegated-task-runner Integration
 
 ## Instructions
 
-This template demonstrates how to integrate the MCP `codex-orchestrator` server into a Copilot profile. The orchestrator provides Docker-isolated execution of OpenAI Codex CLI with structured responses and audit trails.
+This template demonstrates how to integrate the MCP `delegated-task-runner` server into a Copilot profile. The orchestrator provides Docker-isolated execution of OpenAI Codex CLI with structured responses and audit trails.
 
 ### Prerequisites
 
 Before using this profile, ensure:
 
-1. **MCP Server Running**: The `codex-orchestrator` server must be available
+1. **MCP Server Running**: The `delegated-task-runner` server must be available
 2. **Docker Environment**: Docker must be installed and running
 3. **Codex CLI Authorization Configured**: Codex CLI authorization must be set in the environment
 
 ### MCP Tool Reference
 
-The `codex-orchestrator` exposes the `codex_run` tool:
+The `delegated-task-runner` exposes the `codex_run` tool:
 
 ```json
 {
@@ -51,30 +51,30 @@ The `codex-orchestrator` exposes the `codex_run` tool:
   "inputSchema": {
     "type": "object",
     "properties": {
-      "prompt": {
+      "task": {
         "type": "string",
         "description": "Zadání pro Codex CLI - co má udělat"
       },
-      "mode": {
+      "execution_mode": {
         "type": "string",
         "enum": ["full-auto", "suggest", "ask"],
         "default": "full-auto",
         "description": "Režim běhu Codex CLI"
       },
-      "repo": {
+      "repository_path": {
         "type": "string",
         "description": "Cesta k repository (default: aktuální workspace)"
       },
-      "working_dir": {
+      "working_directory": {
         "type": "string",
         "description": "Working directory uvnitř repository"
       },
-      "timeout": {
+      "timeout_seconds": {
         "type": "integer",
         "default": 300,
         "description": "Timeout v sekundách"
       },
-      "env_vars": {
+      "environment_variables": {
         "type": "object",
         "additionalProperties": {"type": "string"},
         "description": "Extra environment variables"
@@ -92,11 +92,11 @@ The `codex-orchestrator` exposes the `codex_run` tool:
 For simple code generation tasks:
 
 ```json
-// Use mcp_codex-orchest_codex_run tool
+// Use mcp_delegated-task-runner_codex_run tool
 {
-  "prompt": "Your task description here",
-  "mode": "full-auto",
-  "timeout": 180
+  "task": "Your task description here",
+  "execution_mode": "full-auto",
+  "timeout_seconds": 180
 }
 ```
 
@@ -106,10 +106,10 @@ When you need to target a specific folder:
 
 ```json
 {
-  "prompt": "Create a module with utility functions",
-  "mode": "full-auto",
-  "working_dir": "src/utils",
-  "timeout": 240
+  "task": "Create a module with utility functions",
+  "execution_mode": "full-auto",
+  "working_directory": "src/utils",
+  "timeout_seconds": 240
 }
 ```
 
@@ -119,10 +119,10 @@ For tasks requiring specific configuration:
 
 ```json
 {
-  "prompt": "Set up a test suite",
-  "mode": "full-auto",
-  "timeout": 300,
-  "env_vars": {
+  "task": "Set up a test suite",
+  "execution_mode": "full-auto",
+  "timeout_seconds": 300,
+  "environment_variables": {
     "PYTHON_VERSION": "3.11",
     "TEST_FRAMEWORK": "pytest"
   }
@@ -135,9 +135,9 @@ For code review or planning without execution:
 
 ```json
 {
-  "prompt": "Review this module for security issues",
-  "mode": "suggest",
-  "timeout": 120
+  "task": "Review this module for security issues",
+  "execution_mode": "suggest",
+  "timeout_seconds": 120
 }
 ```
 
@@ -193,15 +193,15 @@ Before invoking Codex:
 
 ```json
 {
-  "prompt": "[CONTEXT]\nProject: [name]\nArchitecture: [patterns]\nDependencies: [list]\n\n[TASK]\n[Detailed task description]\n\n[REQUIREMENTS]\n1. [Requirement 1]\n2. [Requirement 2]\n\n[QUALITY STANDARDS]\n- Type hints required\n- Docstrings with examples\n- Error handling",
-  "mode": "full-auto",
-  "timeout": 300
+  "task": "[CONTEXT]\nProject: [name]\nArchitecture: [patterns]\nDependencies: [list]\n\n[TASK]\n[Detailed task description]\n\n[REQUIREMENTS]\n1. [Requirement 1]\n2. [Requirement 2]\n\n[QUALITY STANDARDS]\n- Type hints required\n- Docstrings with examples\n- Error handling",
+  "execution_mode": "full-auto",
+  "timeout_seconds": 300
 }
 ```
 
 ### Step 3: Invoke and Audit
 
-1. Call `mcp_codex-orchest_codex_run` with the prompt
+1. Call `mcp_delegated-task-runner_codex_run` with the prompt
 2. Review the response status and output
 3. Validate against quality criteria
 4. Iterate if necessary
@@ -266,8 +266,8 @@ weights:
 3. Invoke Codex via MCP:
    ```json
    {
-     "prompt": "[Your template]",
-     "mode": "full-auto"
+     "task": "[Your template]",
+     "execution_mode": "full-auto"
    }
    ```
 4. [Audit and iterate]
@@ -275,6 +275,6 @@ weights:
 
 ## Notes
 
-- This template is designed for profiles that delegate to MCP `codex-orchestrator`
+- This template is designed for profiles that delegate to MCP `delegated-task-runner`
 - For direct code generation without Codex, use standard Copilot profiles
 - Combine with other profiles using `extends` for layered functionality

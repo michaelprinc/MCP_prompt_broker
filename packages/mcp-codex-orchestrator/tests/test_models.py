@@ -18,58 +18,58 @@ class TestCodexRunRequest:
     
     def test_minimal_request(self) -> None:
         """Test creating request with only required fields."""
-        request = CodexRunRequest(prompt="Test prompt")
-        
-        assert request.prompt == "Test prompt"
-        assert request.mode == "full-auto"
-        assert request.timeout == 300
-        assert request.repo is None
-        assert request.working_dir is None
-        assert request.env_vars is None
+        request = CodexRunRequest(task="Test task")
+
+        assert request.task == "Test task"
+        assert request.execution_mode == "full-auto"
+        assert request.timeout_seconds == 300
+        assert request.repository_path is None
+        assert request.working_directory is None
+        assert request.environment_variables is None
     
     def test_full_request(self) -> None:
         """Test creating request with all fields."""
         request = CodexRunRequest(
-            prompt="Test prompt",
-            mode="suggest",
-            repo="/path/to/repo",
-            working_dir="src",
-            timeout=600,
-            env_vars={"DEBUG": "1"},
+            task="Test task",
+            execution_mode="suggest",
+            repository_path="/path/to/repo",
+            working_directory="src",
+            timeout_seconds=600,
+            environment_variables={"DEBUG": "1"},
         )
-        
-        assert request.prompt == "Test prompt"
-        assert request.mode == "suggest"
-        assert request.repo == "/path/to/repo"
-        assert request.working_dir == "src"
-        assert request.timeout == 600
-        assert request.env_vars == {"DEBUG": "1"}
+
+        assert request.task == "Test task"
+        assert request.execution_mode == "suggest"
+        assert request.repository_path == "/path/to/repo"
+        assert request.working_directory == "src"
+        assert request.timeout_seconds == 600
+        assert request.environment_variables == {"DEBUG": "1"}
     
-    def test_empty_prompt_fails(self) -> None:
-        """Test that empty prompt raises validation error."""
+    def test_empty_task_fails(self) -> None:
+        """Test that empty task raises validation error."""
         with pytest.raises(ValidationError):
-            CodexRunRequest(prompt="")
+            CodexRunRequest(task="")
     
-    def test_invalid_mode_fails(self) -> None:
-        """Test that invalid mode raises validation error."""
+    def test_invalid_execution_mode_fails(self) -> None:
+        """Test that invalid execution mode raises validation error."""
         with pytest.raises(ValidationError):
-            CodexRunRequest(prompt="Test", mode="invalid")  # type: ignore
+            CodexRunRequest(task="Test", execution_mode="invalid")  # type: ignore
     
     def test_timeout_too_low_fails(self) -> None:
         """Test that timeout below minimum raises error."""
         with pytest.raises(ValidationError):
-            CodexRunRequest(prompt="Test", timeout=5)
+            CodexRunRequest(task="Test", timeout_seconds=5)
     
     def test_timeout_too_high_fails(self) -> None:
         """Test that timeout above maximum raises error."""
         with pytest.raises(ValidationError):
-            CodexRunRequest(prompt="Test", timeout=10000)
+            CodexRunRequest(task="Test", timeout_seconds=10000)
     
     def test_all_modes(self) -> None:
         """Test all valid modes."""
         for mode in ["full-auto", "suggest", "ask"]:
-            request = CodexRunRequest(prompt="Test", mode=mode)  # type: ignore
-            assert request.mode == mode
+            request = CodexRunRequest(task="Test", execution_mode=mode)  # type: ignore
+            assert request.execution_mode == mode
 
 
 class TestRunOutput:

@@ -1,4 +1,4 @@
-# Report: Migrace Codex CLI profilů na MCP codex-orchestrator
+# Report: Migrace Codex CLI profilů na MCP delegated-task-runner
 
 **Datum:** 2024-12-26  
 **Autor:** GitHub Copilot  
@@ -8,7 +8,7 @@
 
 ## Přehled
 
-Tento report dokumentuje migraci profilů v adresáři `src/mcp_prompt_broker/copilot-profiles/`, které doporučovaly přímé použití Codex CLI, na nový MCP server `codex-orchestrator`. Migrace přináší bezpečnější, lépe strukturovanou a auditovatelnou integraci s OpenAI Codex.
+Tento report dokumentuje migraci profilů v adresáři `src/mcp_prompt_broker/copilot-profiles/`, které doporučovaly přímé použití Codex CLI, na nový MCP server `delegated-task-runner`. Migrace přináší bezpečnější, lépe strukturovanou a auditovatelnou integraci s OpenAI Codex.
 
 ## Cíl migrace
 
@@ -40,7 +40,7 @@ keywords:
   subprocess: 4
 
 # PO
-short_description: Integration profile for Codex via MCP codex-orchestrator server...
+short_description: Integration profile for Codex via MCP delegated-task-runner server...
 required:
   context_tags: ["codex_cli", "mcp_integration", "codex_orchestrator"]
 keywords:
@@ -55,7 +55,7 @@ keywords:
 |-------|-------|
 | **Název** | `Codex CLI Integration Profile` → `Codex MCP Orchestrator Integration Profile` |
 | **Core Principles** | Přidána Docker izolace, MCP protokol, audit trail |
-| **Integration Flow** | `subprocess.run()` → `mcp_codex-orchest_codex_run` |
+| **Integration Flow** | `subprocess.run()` → `mcp_delegated-task-runner_codex_run` |
 | **Example Usage** | Python subprocess kód → JSON MCP tool invokace |
 | **Checklist** | Aktualizován na MCP-specifické body |
 | **Response Structure** | Přidána dokumentace `CodexRunResult` |
@@ -75,7 +75,7 @@ required:
   context_tags: ["codex_cli", "ml_modeling"]
 
 # PO
-short_description: ...using MCP codex-orchestrator
+short_description: ...using MCP delegated-task-runner
 required:
   context_tags: ["codex_cli", "ml_modeling", "codex_orchestrator"]
 keywords:
@@ -87,12 +87,12 @@ keywords:
 
 | Sekce | Změna |
 |-------|-------|
-| **Název frameworku** | `Codex CLI Orchestration Framework` → `MCP Codex-Orchestrator Framework` |
+| **Název frameworku** | `Codex CLI Orchestration Framework` → `MCP delegated-task-runner Framework` |
 | **Primary Role** | Delegace přes terminal → Delegace přes MCP tool |
 | **Core Workflow** | Codex CLI commands → MCP `codex_run` invokace |
 | **Všechny příklady** | Bash `codex "..."` → JSON `{"prompt": "...", "mode": "..."}` |
-| **Preferred tool** | `Codex CLI` → `MCP codex-orchestrator` |
-| **Progress reports** | `Codex CLI is working...` → `MCP codex-orchestrator is working...` |
+| **Preferred tool** | `Codex CLI` → `MCP delegated-task-runner` |
+| **Progress reports** | `Codex CLI is working...` → `MCP delegated-task-runner is working...` |
 | **Motto** | Terminal → Docker isolation via MCP |
 
 #### Aktualizované příklady (ukázka):
@@ -122,7 +122,7 @@ Implement data models...
 
 **Umístění:** `src/mcp_prompt_broker/copilot-profiles/template/codex_orchestrator_integration.md`
 
-Vytvořena nová šablona pro budoucí profily integrující MCP `codex-orchestrator`.
+Vytvořena nová šablona pro budoucí profily integrující MCP `delegated-task-runner`.
 
 #### Obsah šablony:
 
@@ -215,6 +215,6 @@ src/mcp_prompt_broker/copilot-profiles/
 
 ## Závěr
 
-Migrace byla úspěšně dokončena. Oba profily nyní používají MCP `codex-orchestrator` server místo přímého volání Codex CLI. Nová šablona poskytuje základ pro budoucí profily s Codex integrací.
+Migrace byla úspěšně dokončena. Oba profily nyní používají MCP `delegated-task-runner` server místo přímého volání Codex CLI. Nová šablona poskytuje základ pro budoucí profily s Codex integrací.
 
 **Status:** ✅ DOKONČENO

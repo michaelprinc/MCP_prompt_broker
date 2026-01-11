@@ -81,7 +81,7 @@ Done."""
 def sample_request_data() -> dict:
     """Sample request data."""
     return {
-        "prompt": "Implementuj funkci pro validaci emailu",
-        "mode": "full-auto",
-        "timeout": 300,
+        "task": "Implementuj funkci pro validaci emailu",
+        "execution_mode": "full-auto",
+        "timeout_seconds": 300,
     }

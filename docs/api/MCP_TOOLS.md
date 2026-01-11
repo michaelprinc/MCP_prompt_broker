@@ -10,7 +10,7 @@
 
 1. [Přehled MCP Tools](#přehled-mcp-tools)
 2. [MCP Prompt Broker Tools](#mcp-prompt-broker-tools)
-3. [MCP Codex Orchestrator Tools](#mcp-codex-orchestrator-tools)
+3. [Delegated Task Runner Tools](#delegated-task-runner-tools)
 4. [Chybové stavy](#chybové-stavy)
 5. [Příklady integrace](#příklady-integrace)
 
@@ -23,7 +23,7 @@
 | Server | Tools | Popis |
 |--------|-------|-------|
 | `mcp-prompt-broker` | 9 | Inteligentní routing promptů |
-| `mcp-codex-orchestrator` | 1 | Codex CLI orchestrace |
+| `delegated-task-runner` | 10 | Delegated task runner (Codex CLI + Gemini CLI) |
 
 ### MCP Protocol
 
@@ -554,22 +554,27 @@ reload_profiles(): ReloadResult
 
 ---
 
-## MCP Codex Orchestrator Tools
+## Delegated Task Runner Tools
 
 ### 1. codex_run
 
-**Spustí Codex CLI v izolovaném Docker kontejneru.**
+**Spusti Codex CLI v izolovanem Docker kontejneru.**
 
 #### Signatura
 
 ```typescript
 codex_run(
-  prompt: string,           // Povinný: Zadání pro Codex
-  mode?: string,            // Volitelný: "full-auto" | "suggest" | "ask"
-  timeout?: number,         // Volitelný: Timeout v sekundách
-  repo?: string,            // Volitelný: Cesta k repository
-  working_dir?: string,     // Volitelný: Working directory
-  env_vars?: object         // Volitelný: Extra env vars
+  task: string,             // Povinne: Zadani pro Codex
+  execution_mode?: string,  // "full-auto" | "suggest" | "ask"
+  timeout_seconds?: number, // Timeout v sekundach
+  repository_path?: string, // Cesta k repository
+  working_directory?: string,
+  environment_variables?: object,
+  security_mode?: string,
+  intent?: string,          // "code_change" | "analysis" | "refactor" | "test_fix"
+  verify?: boolean,
+  output_schema?: string,
+  json_output?: boolean
 ): CodexRunResult
 ```
 
@@ -579,36 +584,61 @@ codex_run(
 {
   "type": "object",
   "properties": {
-    "prompt": {
+    "task": {
       "type": "string",
-      "description": "Zadání pro Codex CLI - co má udělat"
+      "description": "Zadani pro Codex CLI - co ma udelat"
     },
-    "mode": {
+    "execution_mode": {
       "type": "string",
       "enum": ["full-auto", "suggest", "ask"],
       "default": "full-auto",
-      "description": "Režim běhu Codex CLI"
+      "description": "Rezim behu Codex CLI"
     },
-    "timeout": {
+    "timeout_seconds": {
       "type": "integer",
       "default": 300,
-      "description": "Timeout v sekundách"
+      "description": "Timeout v sekundach"
     },
-    "repo": {
+    "repository_path": {
       "type": "string",
-      "description": "Cesta k repository (default: aktuální workspace)"
+      "description": "Cesta k repository (default: aktualni workspace)"
     },
-    "working_dir": {
+    "working_directory": {
       "type": "string",
-      "description": "Working directory uvnitř repository"
+      "description": "Working directory uvnitr repository"
     },
-    "env_vars": {
+    "environment_variables": {
       "type": "object",
       "additionalProperties": { "type": "string" },
       "description": "Extra environment variables"
+    },
+    "security_mode": {
+      "type": "string",
+      "enum": ["readonly", "workspace_write", "full_access"],
+      "default": "workspace_write",
+      "description": "Security mode pro sandbox izolaci"
+    },
+    "intent": {
+      "type": "string",
+      "enum": ["code_change", "analysis", "refactor", "test_fix"],
+      "description": "Routing hint pro delegovani ulohy"
+    },
+    "verify": {
+      "type": "boolean",
+      "default": false,
+      "description": "Automaticky spustit verify loop (testy, lint)"
+    },
+    "output_schema": {
+      "type": "string",
+      "description": "Nazev JSON schematu pro validaci vystupu"
+    },
+    "json_output": {
+      "type": "boolean",
+      "default": true,
+      "description": "Pouzit JSONL vystup z Codex CLI"
     }
   },
-  "required": ["prompt"]
+  "required": ["task"]
 }
 ```
 
@@ -626,17 +656,18 @@ codex_run(
 }
 ```
 
-#### Příklad
+#### P??klad
 
 ```json
 // Request
 {
   "tool": "codex_run",
   "arguments": {
-    "prompt": "Refactor the authentication module to use async/await patterns",
-    "mode": "full-auto",
-    "timeout": 600,
-    "working_dir": "src/auth"
+    "task": "Refactor the authentication module to use async/await patterns",
+    "execution_mode": "full-auto",
+    "timeout_seconds": 600,
+    "working_directory": "src/auth",
+    "intent": "refactor"
   }
 }
 
@@ -644,7 +675,14 @@ codex_run(
 {
   "success": true,
   "exit_code": 0,
-  "output": "Successfully refactored authentication module.\n\nChanges made:\n- Converted login() to async\n- Added await for database calls\n- Updated session management\n\nFiles modified: 3",
+  "output": "Successfully refactored authentication module.
+
+Changes made:
+- Converted login() to async
+- Added await for database calls
+- Updated session management
+
+Files modified: 3",
   "files_changed": [
     "src/auth/login.py",
     "src/auth/session.py",
@@ -658,11 +696,11 @@ codex_run(
 
 #### Approval Modes
 
-| Mode | Popis | Použití |
+| Mode | Popis | Pouziti |
 |------|-------|---------|
-| `full-auto` | Automatické schválení | Důvěryhodné úlohy |
+| `full-auto` | Automaticke schvaleni | Doverihodne ulohy |
 | `suggest` | Pouze navrhuje | Review mode |
-| `ask` | Interaktivní | Step-by-step |
+| `ask` | Interaktivni | Step-by-step |
 
 ---
 
@@ -698,7 +736,7 @@ codex_run(
     "code": -32602,
     "message": "Invalid params",
     "data": {
-      "details": "Missing required parameter: prompt"
+      "details": "Missing required parameter: task"
     }
   }
 }

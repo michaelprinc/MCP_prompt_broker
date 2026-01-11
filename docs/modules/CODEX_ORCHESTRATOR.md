@@ -109,7 +109,7 @@ from .orchestrator.runner import CodexRunner
 
 def create_server() -> Server:
     """Create and configure MCP server."""
-    server = Server("mcp-codex-orchestrator")
+    server = Server("delegated-task-runner")
     runner = CodexRunner()
     
     @server.list_tools()
@@ -124,7 +124,7 @@ def create_server() -> Server:
                 inputSchema={
                     "type": "object",
                     "properties": {
-                        "prompt": {
+                        "task": {
                             "type": "string",
                             "description": "Zadání pro Codex CLI - co má udělat"
                         },
@@ -148,7 +148,7 @@ def create_server() -> Server:
                             "description": "Working directory uvnitř repository"
                         }
                     },
-                    "required": ["prompt"]
+                    "required": ["task"]
                 }
             )
         ]
@@ -208,7 +208,7 @@ class CodexRunner:
         Execute Codex CLI in a Docker container.
         
         Args:
-            request: CodexRunRequest with prompt, mode, timeout, etc.
+            request: CodexRunRequest with task, execution_mode, timeout_seconds, etc.
             
         Returns:
             CodexRunResult with success status, output, and file changes.
@@ -269,7 +269,7 @@ class CodexRunner:
             "codex",
             "--approval-mode", request.mode,
             "--quiet",
-            request.prompt
+            request.task
         ]
         
         if request.working_dir:
@@ -323,7 +323,7 @@ from typing import List, Optional, Literal
 class CodexRunRequest(BaseModel):
     """Request model for codex_run tool."""
     
-    prompt: str = Field(
+    task: str = Field(
         ...,
         description="Task description for Codex CLI"
     )
@@ -419,7 +419,7 @@ def log_run(
     logger.info(
         "codex_run_completed",
         run_id=run_id,
-        prompt=request.prompt[:100],
+        task=request.task[:100],
         mode=request.mode,
         success=result.success,
         exit_code=result.exit_code,
@@ -512,7 +512,7 @@ services:
 │  1. CREATE                                                                  │
 │     docker.containers.create(                                               │
 │         image="codex-runner:latest",                                        │
-│         command=["codex", "--approval-mode", "full-auto", prompt],          │
+│         command=["codex", "--approval-mode", "full-auto", task],          │
 │         volumes={workspace: "/app", auth: "/root/.codex"}                   │
 │     )                                                                       │
 │           │                                                                 │
@@ -555,7 +555,7 @@ services:
 
 | Parametr | Typ | Povinný | Default | Popis |
 |----------|-----|---------|---------|-------|
-| `prompt` | string | ✅ | - | Zadání úlohy pro Codex |
+| `task` | string | ✅ | - | Zadání úlohy pro Codex |
 | `mode` | enum | ❌ | full-auto | Režim schvalování |
 | `timeout` | int | ❌ | 300 | Timeout v sekundách |
 | `repo` | string | ❌ | workspace/ | Cesta k repository |
@@ -576,7 +576,7 @@ services:
 {
   "tool": "codex_run",
   "arguments": {
-    "prompt": "Refactor the authentication module to use async/await patterns",
+    "task": "Refactor the authentication module to use async/await patterns",
     "mode": "full-auto",
     "timeout": 600,
     "working_dir": "src/auth"
@@ -649,7 +649,7 @@ OPENAI_API_KEY=sk-...
 │                                       │ Codex CLI           │              │
 │                                       │ ├── Read auth.json  │              │
 │                                       │ ├── Validate token  │              │
-│                                       │ └── Execute prompt  │              │
+│                                       │ └── Execute task  │              │
 │                                       └─────────────────────┘              │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
@@ -674,7 +674,7 @@ OPENAI_API_KEY=sk-...
 ```json
 {
   "mcpServers": {
-    "mcp-codex-orchestrator": {
+    "delegated-task-runner": {
       "command": "python",
       "args": ["-m", "mcp_codex_orchestrator"],
       "env": {
@@ -729,7 +729,7 @@ def runner():
 @pytest.mark.asyncio
 async def test_codex_run_simple(runner):
     request = CodexRunRequest(
-        prompt="Create a hello.py file that prints 'Hello, World!'",
+        task="Create a hello.py file that prints 'Hello, World!'",
         mode="full-auto",
         timeout=60
     )

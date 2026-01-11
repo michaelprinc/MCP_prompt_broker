@@ -18,7 +18,7 @@ MCP Codex Orchestrator v2.0 zavádí tři úrovně bezpečnostních režimů pro
 
 ```json
 {
-  "prompt": "Analyzuj tento kód a navrhni vylepšení",
+  "task": "Analyzuj tento kód a navrhni vylepšení",
   "security_mode": "readonly"
 }
 ```
@@ -44,7 +44,7 @@ MCP Codex Orchestrator v2.0 zavádí tři úrovně bezpečnostních režimů pro
 
 ```json
 {
-  "prompt": "Implementuj validaci emailových adres",
+  "task": "Implementuj validaci emailových adres",
   "security_mode": "workspace_write"
 }
 ```
@@ -70,7 +70,7 @@ MCP Codex Orchestrator v2.0 zavádí tři úrovně bezpečnostních režimů pro
 
 ```json
 {
-  "prompt": "Nainstaluj a nakonfiguruj pytest",
+  "task": "Nainstaluj a nakonfiguruj pytest",
   "security_mode": "full_access"
 }
 ```

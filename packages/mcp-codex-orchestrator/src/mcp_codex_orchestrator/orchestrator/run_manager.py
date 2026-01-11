@@ -93,14 +93,15 @@ class RunManager:
         request_data = {
             "runId": run_id,
             "timestamp": datetime.now(timezone.utc).isoformat(),
-            "prompt": request.prompt,
-            "mode": request.mode,
-            "repo": request.repo,
-            "workingDir": request.working_dir,
-            "timeout": request.timeout,
-            "envVars": request.env_vars,
+            "task": request.task,
+            "executionMode": request.execution_mode,
+            "repositoryPath": request.repository_path,
+            "workingDirectory": request.working_directory,
+            "timeoutSeconds": request.timeout_seconds,
+            "environmentVariables": request.environment_variables,
             # V2.0 fields
             "securityMode": request.security_mode,
+            "intent": request.intent,
             "verify": request.verify,
             "outputSchema": request.output_schema,
             "jsonOutput": request.json_output,
@@ -132,12 +133,12 @@ class RunManager:
             request_data = json.loads(await f.read())
         
         # Extract request parameters
-        prompt = request_data["prompt"]
-        mode = request_data.get("mode", "full-auto")
-        timeout = request_data.get("timeout", self.default_timeout)
-        working_dir = request_data.get("workingDir")
-        env_vars = request_data.get("envVars")
-        repo = request_data.get("repo")
+        task = request_data.get("task") or request_data.get("prompt")
+        mode = request_data.get("executionMode", request_data.get("mode", "full-auto"))
+        timeout = request_data.get("timeoutSeconds", request_data.get("timeout", self.default_timeout))
+        working_dir = request_data.get("workingDirectory", request_data.get("workingDir"))
+        env_vars = request_data.get("environmentVariables", request_data.get("envVars"))
+        repo = request_data.get("repositoryPath", request_data.get("repo"))
         # V2.0 fields
         security_mode_str = request_data.get("securityMode", "workspace_write")
         security_mode = SecurityMode(security_mode_str)
@@ -149,7 +150,7 @@ class RunManager:
         workspace = Path(repo) if repo else self.workspace_path
         
         # Inject MCP instructions into prompt
-        enhanced_prompt = inject_mcp_instructions(prompt)
+        enhanced_prompt = inject_mcp_instructions(task)
         
         # Record start time
         started_at = datetime.now(timezone.utc)

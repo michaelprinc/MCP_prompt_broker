@@ -1,14 +1,14 @@
-﻿# MCP Codex-Orchestrator Gemini Delegation Report
+﻿# MCP delegated-task-runner Gemini Delegation Report
 
 Date: 2026-01-10
 
 ## Summary
-- MCP server `mcp-codex-orchestrator` initialized over stdio and returned a valid tools list (including `gemini_run`).
+- MCP server `delegated-task-runner` initialized over stdio and returned a valid tools list (including `gemini_run`).
 - Gemini CLI delegated task completed with status `done` and exit code `0`.
 - Deliverables for a CatBoostClassifier toyset demo were created in the workspace.
 
 ## MCP Server Test
-- Server name/version: `mcp-codex-orchestrator` / `1.25.0`
+- Server name/version: `delegated-task-runner` / `1.25.0`
 - Protocol version: `2024-11-05`
 - Tools verified: `gemini_run` present via `tools/list`
 

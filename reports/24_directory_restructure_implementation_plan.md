@@ -46,7 +46,7 @@ MCP_Prompt_Broker/                    # Workspace root
 ├── pyproject.toml                    # Hlavní package config
 ├── reports/                          # 🟡 Velké množství reportů
 │   └── *.md                          # 24+ reportů
-├── runs/                             # 🔴 Orphaned: Mělo by být v codex-orchestrator
+├── runs/                             # 🔴 Orphaned: Mělo by být v delegated-task-runner
 ├── src/                              # 🔴 PROBLÉM: Smíšená struktura
 │   ├── AGENTS.md                     # Nepatří sem
 │   ├── config/                       # Duplikát

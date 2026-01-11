@@ -63,7 +63,7 @@ graph TB
     
     subgraph "MCP Layer"
         B[mcp-prompt-broker<br/>Port: stdio]
-        C[mcp-codex-orchestrator<br/>Port: stdio]
+        C[delegated-task-runner<br/>Port: stdio]
     end
     
     subgraph "Orchestration Layer"
@@ -104,10 +104,10 @@ graph TB
 
 | Závislost | Modul | Účel |
 |-----------|-------|------|
-| `mcp>=1.0.0` | prompt-broker, codex-orchestrator | Model Context Protocol |
-| `pydantic>=2.0` | llama-orchestrator, codex-orchestrator | Datová validace |
+| `mcp>=1.0.0` | prompt-broker, delegated-task-runner | Model Context Protocol |
+| `pydantic>=2.0` | llama-orchestrator, delegated-task-runner | Datová validace |
 | `typer>=0.9` | llama-orchestrator | CLI framework |
-| `docker>=7.0` | codex-orchestrator | Container management |
+| `docker>=7.0` | delegated-task-runner | Container management |
 | `httpx>=0.25` | llama-orchestrator | HTTP klient |
 | `rich>=13.7` | llama-orchestrator | TUI Dashboard |
 

@@ -59,7 +59,7 @@ Po restrukturalizaci adresářové struktury workspace (přesun balíčků do `p
 
 ### Fáze 2: Aktualizace konfigurace
 
-- [x] **2.1** Aktualizovat `.vscode/mcp.json` - opravit cesty pro `codex-orchestrator`
+- [x] **2.1** Aktualizovat `.vscode/mcp.json` - opravit cesty pro `delegated-task-runner`
   - Změnit `mcp-codex-orchestrator/docker` → `packages/mcp-codex-orchestrator/docker`
   - Změnit `mcp-codex-orchestrator/workspace` → `packages/mcp-codex-orchestrator/workspace`
   - Změnit `mcp-codex-orchestrator/runs` → `packages/mcp-codex-orchestrator/runs`
@@ -130,7 +130,7 @@ git checkout HEAD~1 -- .vscode/mcp.json
 | Soubor/Adresář | Akce | Popis |
 |----------------|------|-------|
 | `.venv/` | Reinstalace | Přeinstalování editable balíčků z `packages/` |
-| `.vscode/mcp.json` | Úprava | Aktualizované cesty pro `codex-orchestrator` |
+| `.vscode/mcp.json` | Úprava | Aktualizované cesty pro `delegated-task-runner` |
 | `mcp_codex_orchestrator/` | Smazán | Odstraněn nekonzistentní shim adresář |
 | `packages/mcp-prompt-broker/README.md` | Vytvořen | Nový README pro hatchling build |
 

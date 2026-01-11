@@ -68,8 +68,8 @@ class TestRunManager:
         with open(request_file) as f:
             saved_request = json.load(f)
         
-        assert saved_request["prompt"] == sample_request_data["prompt"]
-        assert saved_request["mode"] == sample_request_data["mode"]
+        assert saved_request["task"] == sample_request_data["task"]
+        assert saved_request["executionMode"] == sample_request_data["execution_mode"]
         assert saved_request["runId"] == run_id
     
     @pytest.mark.asyncio
@@ -79,12 +79,12 @@ class TestRunManager:
     ) -> None:
         """Test creating a run with all optional fields."""
         request = CodexRunRequest(
-            prompt="Test prompt",
-            mode="suggest",
-            repo="/custom/repo",
-            working_dir="src",
-            timeout=120,
-            env_vars={"KEY": "value"},
+            task="Test task",
+            execution_mode="suggest",
+            repository_path="/custom/repo",
+            working_directory="src",
+            timeout_seconds=120,
+            environment_variables={"KEY": "value"},
         )
         
         run_id = await run_manager.create_run(request)
@@ -93,8 +93,8 @@ class TestRunManager:
         with open(request_file) as f:
             saved_request = json.load(f)
         
-        assert saved_request["workingDir"] == "src"
-        assert saved_request["envVars"] == {"KEY": "value"}
+        assert saved_request["workingDirectory"] == "src"
+        assert saved_request["environmentVariables"] == {"KEY": "value"}
     
     @pytest.mark.asyncio
     async def test_execute_run_docker_not_available(

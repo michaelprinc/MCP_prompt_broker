@@ -20,8 +20,8 @@ async def handle_gemini_run(
     """Handle gemini_run tool invocation."""
     logger.info(
         "Handling gemini_run request",
-        prompt_length=len(request.prompt),
-        timeout=request.timeout,
+        task_length=len(request.task),
+        timeout=request.timeout_seconds,
         output_format=request.output_format,
     )
 

@@ -138,7 +138,7 @@ MCP servery komunikují přes standardní vstup/výstup (stdio), což zajišťuj
         "PYTHONPATH": "K:/Data_science_projects/MCP_Prompt_Broker/src"
       }
     },
-    "mcp-codex-orchestrator": {
+    "delegated-task-runner": {
       "command": "python",
       "args": ["-m", "mcp_codex_orchestrator"],
       "env": {
@@ -362,8 +362,8 @@ async def generate_completion(prompt: str) -> str:
 |----------|-------|-------|
 | `PYTHONPATH` | all | Cesta k src/ |
 | `MCP_SERVER` | prompt-broker | local/staging/prod |
-| `OPENAI_API_KEY` | codex-orchestrator | API klíč (volitelné) |
-| `DOCKER_HOST` | codex-orchestrator | Docker daemon |
+| `OPENAI_API_KEY` | delegated-task-runner | API klíč (volitelné) |
+| `DOCKER_HOST` | delegated-task-runner | Docker daemon |
 | `LLAMA_CPP_PATH` | llama-orchestrator | Cesta k binárce |
 
 ### Konfigurační soubory

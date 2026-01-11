@@ -203,7 +203,7 @@ Přidejte do `.vscode/settings.json`:
 {
   "github.copilot.advanced": {
     "servers": {
-      "mcp-codex-orchestrator": {
+      "delegated-task-runner": {
         "command": "python",
         "args": ["-m", "mcp_codex_orchestrator.main"],
         "cwd": "${workspaceFolder}/mcp-codex-orchestrator",
@@ -224,7 +224,7 @@ Přidejte do `.vscode/settings.json`:
 {
   "github.copilot.advanced": {
     "servers": {
-      "mcp-codex-orchestrator": {
+      "delegated-task-runner": {
         "command": "wsl",
         "args": [
           "-e", "bash", "-c",
@@ -322,7 +322,7 @@ Error: OPENAI_API_KEY not set
    {
      "github.copilot.advanced": {
        "servers": {
-         "mcp-codex-orchestrator": {
+         "delegated-task-runner": {
            "env": {
              "OPENAI_API_KEY": "sk-..."
            }
@@ -343,7 +343,7 @@ Error: Container timed out after 300 seconds
 1. Zvyšte timeout:
    ```json
    {
-     "timeout": 600
+     "timeout_seconds": 600
    }
    ```
 
@@ -376,7 +376,7 @@ Error: Container timed out after 300 seconds
 
 ```json
 {
-  "prompt": "...",
+  "task": "...",
   "security_mode": "workspace_write",
   "verify": true
 }

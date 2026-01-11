@@ -41,7 +41,7 @@ DEFAULT_TIMEOUT = int(os.getenv("DEFAULT_TIMEOUT", "300"))
 
 def create_server() -> Server:
     """Create and configure the MCP server."""
-    server = Server("mcp-codex-orchestrator")
+    server = Server("delegated-task-runner")
     
     # Initialize run managers
     run_manager = RunManager(
@@ -64,36 +64,44 @@ def create_server() -> Server:
             Tool(
                 name="codex_run",
                 description=(
-                    "Spustí OpenAI Codex CLI v izolovaném Docker kontejneru. "
-                    "Codex provede zadanou úlohu nad workspace a vrátí výsledek."
+                    "Spusti OpenAI Codex CLI v izolovanem Docker kontejneru a vrati strukturovane vysledky.\n"
+                    "Pouzij, kdyz:\n"
+                    "- potrebujes upravit soubory v repo\n"
+                    "- potrebujes spustit testy nebo lint\n"
+                    "- potrebujes vratit git diff a artefakty\n"
+                    "- chces izolovany beh v Dockeru\n"
+                    "Mini priklady:\n"
+                    "- Oprav testy po refaktoru auth modulu (intent: test_fix)\n"
+                    "- Uprav README a vrat diff (intent: code_change)\n"
+                    "- Zrefaktoruj parser na mensi funkce (intent: refactor)\n"
                 ),
                 inputSchema={
                     "type": "object",
                     "properties": {
-                        "prompt": {
+                        "task": {
                             "type": "string",
-                            "description": "Zadání pro Codex CLI - co má udělat",
+                            "description": "Zadani pro Codex CLI - co ma udelat",
                         },
-                        "mode": {
+                        "execution_mode": {
                             "type": "string",
                             "enum": ["full-auto", "suggest", "ask"],
                             "default": "full-auto",
-                            "description": "Režim běhu Codex CLI",
+                            "description": "Rezim behu Codex CLI",
                         },
-                        "repo": {
+                        "repository_path": {
                             "type": "string",
-                            "description": "Cesta k repository (default: aktuální workspace)",
+                            "description": "Cesta k repository (default: aktualni workspace)",
                         },
-                        "working_dir": {
+                        "working_directory": {
                             "type": "string",
-                            "description": "Working directory uvnitř repository",
+                            "description": "Working directory uvnitr repository",
                         },
-                        "timeout": {
+                        "timeout_seconds": {
                             "type": "integer",
                             "default": 300,
-                            "description": "Timeout v sekundách",
+                            "description": "Timeout v sekundach",
                         },
-                        "env_vars": {
+                        "environment_variables": {
                             "type": "object",
                             "additionalProperties": {"type": "string"},
                             "description": "Extra environment variables",
@@ -104,6 +112,11 @@ def create_server() -> Server:
                             "default": "workspace_write",
                             "description": "Security mode pro sandbox izolaci",
                         },
+                        "intent": {
+                            "type": "string",
+                            "enum": ["code_change", "analysis", "refactor", "test_fix"],
+                            "description": "Routing hint pro delegovani ulohy",
+                        },
                         "verify": {
                             "type": "boolean",
                             "default": False,
@@ -111,49 +124,57 @@ def create_server() -> Server:
                         },
                         "output_schema": {
                             "type": "string",
-                            "description": "Název JSON schématu pro validaci výstupu",
+                            "description": "Nazev JSON schematu pro validaci vystupu",
                         },
                         "json_output": {
                             "type": "boolean",
                             "default": True,
-                            "description": "Použít JSONL výstup z Codex CLI",
+                            "description": "Pouzit JSONL vystup z Codex CLI",
                         },
                     },
-                    "required": ["prompt"],
+                    "required": ["task"],
                 },
             ),
             Tool(
                 name="gemini_run",
                 description=(
-                    "Spusti Gemini CLI v izolovanem Docker kontejneru. "
-                    "Gemini provede zadanou ulohu nad workspace a vrati vysledek."
+                    "Spusti Gemini CLI v izolovanem Docker kontejneru a vrati strukturovane vysledky.\n"
+                    "Pouzij, kdyz:\n"
+                    "- potrebujes upravit soubory v repo\n"
+                    "- potrebujes spustit testy nebo lint\n"
+                    "- potrebujes vratit git diff a artefakty\n"
+                    "- chces izolovany beh v Dockeru\n"
+                    "Mini priklady:\n"
+                    "- Oprav testy po refaktoru auth modulu (intent: test_fix)\n"
+                    "- Uprav README a vrat diff (intent: code_change)\n"
+                    "- Zrefaktoruj parser na mensi funkce (intent: refactor)\n"
                 ),
                 inputSchema={
                     "type": "object",
                     "properties": {
-                        "prompt": {
+                        "task": {
                             "type": "string",
                             "description": "Zadani pro Gemini CLI - co ma udelat",
                         },
-                        "mode": {
+                        "access_mode": {
                             "type": "string",
                             "enum": ["suggest", "workspace_write", "full_access"],
                             "description": "Zjednoduseny rezim (prebiji security_mode)",
                         },
-                        "repo": {
+                        "repository_path": {
                             "type": "string",
                             "description": "Cesta k repository (default: aktualni workspace)",
                         },
-                        "working_dir": {
+                        "working_directory": {
                             "type": "string",
                             "description": "Working directory uvnitr repository",
                         },
-                        "timeout": {
+                        "timeout_seconds": {
                             "type": "integer",
                             "default": 300,
                             "description": "Timeout v sekundach",
                         },
-                        "env_vars": {
+                        "environment_variables": {
                             "type": "object",
                             "additionalProperties": {"type": "string"},
                             "description": "Extra environment variables",
@@ -163,6 +184,11 @@ def create_server() -> Server:
                             "enum": ["readonly", "workspace_write", "full_access"],
                             "default": "workspace_write",
                             "description": "Security mode pro workspace mount",
+                        },
+                        "intent": {
+                            "type": "string",
+                            "enum": ["code_change", "analysis", "refactor", "test_fix"],
+                            "description": "Routing hint pro delegovani ulohy",
                         },
                         "verify": {
                             "type": "boolean",
@@ -176,10 +202,9 @@ def create_server() -> Server:
                             "description": "Gemini CLI output format",
                         },
                     },
-                    "required": ["prompt"],
+                    "required": ["task"],
                 },
             ),
-            # Status polling tool
             Tool(
                 name="codex_run_status",
                 description=(
@@ -364,14 +389,16 @@ def create_server() -> Server:
         
         if normalized_name == "codex_run":
             # Validate and create request
+            task = arguments.get("task") or arguments.get("prompt")
             request = CodexRunRequest(
-                prompt=arguments["prompt"],
-                mode=arguments.get("mode", "full-auto"),
-                repo=arguments.get("repo"),
-                working_dir=arguments.get("working_dir"),
-                timeout=arguments.get("timeout", DEFAULT_TIMEOUT),
-                env_vars=arguments.get("env_vars"),
+                task=task,
+                execution_mode=arguments.get("execution_mode", arguments.get("mode", "full-auto")),
+                repository_path=arguments.get("repository_path", arguments.get("repo")),
+                working_directory=arguments.get("working_directory", arguments.get("working_dir")),
+                timeout_seconds=arguments.get("timeout_seconds", arguments.get("timeout", DEFAULT_TIMEOUT)),
+                environment_variables=arguments.get("environment_variables", arguments.get("env_vars")),
                 security_mode=arguments.get("security_mode", "workspace_write"),
+                intent=arguments.get("intent"),
                 verify=arguments.get("verify", False),
                 output_schema=arguments.get("output_schema"),
                 json_output=arguments.get("json_output", True),
@@ -389,14 +416,16 @@ def create_server() -> Server:
             ]
 
         if normalized_name == "gemini_run":
+            task = arguments.get("task") or arguments.get("prompt")
             request = GeminiRunRequest(
-                prompt=arguments["prompt"],
-                mode=arguments.get("mode"),
-                repo=arguments.get("repo"),
-                working_dir=arguments.get("working_dir"),
-                timeout=arguments.get("timeout", DEFAULT_TIMEOUT),
-                env_vars=arguments.get("env_vars"),
+                task=task,
+                access_mode=arguments.get("access_mode", arguments.get("mode")),
+                repository_path=arguments.get("repository_path", arguments.get("repo")),
+                working_directory=arguments.get("working_directory", arguments.get("working_dir")),
+                timeout_seconds=arguments.get("timeout_seconds", arguments.get("timeout", DEFAULT_TIMEOUT)),
+                environment_variables=arguments.get("environment_variables", arguments.get("env_vars")),
                 security_mode=arguments.get("security_mode", "workspace_write"),
+                intent=arguments.get("intent"),
                 verify=arguments.get("verify", False),
                 output_format=arguments.get("output_format", "json"),
             )

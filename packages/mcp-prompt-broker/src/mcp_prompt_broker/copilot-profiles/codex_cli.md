@@ -1,6 +1,6 @@
 ---
 name: codex_cli
-short_description: Integration profile for Codex via MCP codex-orchestrator server with Docker isolation, timeout management, and structured responses
+short_description: Integration profile for Codex via MCP delegated-task-runner server with Docker isolation, timeout management, and structured responses
 extends: null
 default_score: 0
 fallback: false
@@ -44,7 +44,7 @@ weights:
 
 ## Instructions
 
-This profile provides guidelines for **integration with OpenAI Codex via the MCP `codex-orchestrator` server**. The orchestrator runs Codex CLI in isolated Docker containers, providing safety, timeout management, and structured responses.
+This profile provides guidelines for **integration with OpenAI Codex via the MCP `delegated-task-runner` server**. The orchestrator runs Codex CLI in isolated Docker containers, providing safety, timeout management, and structured responses.
 
 Use this profile when:
 
@@ -63,45 +63,70 @@ Use this profile when:
 
 ### MCP Tool: `codex_run`
 
-The `codex-orchestrator` MCP server exposes the `codex_run` tool with the following schema:
+The `delegated-task-runner` MCP server exposes the `codex_run` tool with the following schema:
 
 ```json
 {
   "name": "codex_run",
-  "description": "Spustí OpenAI Codex CLI v izolovaném Docker kontejneru.",
+  "description": "Spusti OpenAI Codex CLI v izolovanem Docker kontejneru.",
   "inputSchema": {
     "type": "object",
     "properties": {
-      "prompt": {
+      "task": {
         "type": "string",
-        "description": "Zadání pro Codex CLI - co má udělat"
+        "description": "Zadani pro Codex CLI - co ma udelat"
       },
-      "mode": {
+      "execution_mode": {
         "type": "string",
         "enum": ["full-auto", "suggest", "ask"],
         "default": "full-auto",
-        "description": "Režim běhu Codex CLI"
+        "description": "Rezim behu Codex CLI"
       },
-      "repo": {
+      "repository_path": {
         "type": "string",
-        "description": "Cesta k repository (default: aktuální workspace)"
+        "description": "Cesta k repository (default: aktualni workspace)"
       },
-      "working_dir": {
+      "working_directory": {
         "type": "string",
-        "description": "Working directory uvnitř repository"
+        "description": "Working directory uvnitr repository"
       },
-      "timeout": {
+      "timeout_seconds": {
         "type": "integer",
         "default": 600,
-        "description": "Timeout v sekundách"
+        "description": "Timeout v sekundach"
       },
-      "env_vars": {
+      "environment_variables": {
         "type": "object",
         "additionalProperties": {"type": "string"},
         "description": "Extra environment variables"
+      },
+      "security_mode": {
+        "type": "string",
+        "enum": ["readonly", "workspace_write", "full_access"],
+        "default": "workspace_write",
+        "description": "Security mode pro sandbox izolaci"
+      },
+      "intent": {
+        "type": "string",
+        "enum": ["code_change", "analysis", "refactor", "test_fix"],
+        "description": "Routing hint pro delegovani ulohy"
+      },
+      "verify": {
+        "type": "boolean",
+        "default": false,
+        "description": "Automaticky spustit verify loop (testy, lint)"
+      },
+      "output_schema": {
+        "type": "string",
+        "description": "Nazev JSON schematu pro validaci vystupu"
+      },
+      "json_output": {
+        "type": "boolean",
+        "default": true,
+        "description": "Pouzit JSONL vystup z Codex CLI"
       }
     },
-    "required": ["prompt"]
+    "required": ["task"]
   }
 }
 ```
@@ -109,7 +134,7 @@ The `codex-orchestrator` MCP server exposes the `codex_run` tool with the follow
 ### Integration Flow
 
 1. **Prepare prompt**: Craft a precise, context-rich prompt for Codex
-2. **Call MCP tool**: Invoke `mcp_codex-orchest_codex_run` with parameters
+2. **Call MCP tool**: Invoke `mcp_delegated-task-runner_codex_run` with parameters
 3. **Receive result**: Get structured `CodexRunResult` with status and outputs
 4. **Audit output**: Review generated code for correctness and quality
 5. **Iterate if needed**: Refine prompt and re-run for improvements
@@ -122,13 +147,13 @@ Instead of calling Codex CLI directly via subprocess, use the MCP tool:
 # OLD WAY (deprecated - do not use):
 # result = subprocess.run(["codex", prompt], ...)
 
-# NEW WAY - via MCP codex-orchestrator:
-# Use the mcp_codex-orchest_codex_run tool with these parameters:
+# NEW WAY - via MCP delegated-task-runner:
+# Use the mcp_delegated-task-runner_codex_run tool with these parameters:
 {
-    "prompt": "Create a Python function that calculates fibonacci numbers with memoization",
-    "mode": "full-auto",
-    "timeout": 600,
-    "env_vars": {
+    "task": "Create a Python function that calculates fibonacci numbers with memoization",
+    "execution_mode": "full-auto",
+    "timeout_seconds": 600,
+    "environment_variables": {
         "PYTHON_VERSION": "3.11"
     }
 }
@@ -144,7 +169,7 @@ Instead of calling Codex CLI directly via subprocess, use the MCP tool:
 
 ## Checklist
 
-- [ ] MCP `codex-orchestrator` server is running and accessible
+- [ ] MCP `delegated-task-runner` server is running and accessible
 - [ ] Docker environment is available for container isolation
 - [ ] Appropriate timeout configured for task complexity
 - [ ] Prompt is specific and includes context
@@ -177,6 +202,6 @@ The `codex_run` tool returns a structured response:
 
 ## Notes
 
-- This profile uses the MCP `codex-orchestrator` server instead of direct CLI calls
+- This profile uses the MCP `delegated-task-runner` server instead of direct CLI calls
 - For complex Python projects, use `python_code_generation_complex_with_codex` profile
 - Ensure the MCP server is configured in your VS Code settings or MCP configuration

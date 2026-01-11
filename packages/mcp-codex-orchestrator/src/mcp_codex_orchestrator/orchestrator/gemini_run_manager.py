@@ -68,13 +68,14 @@ class GeminiRunManager:
             "runId": run_id,
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "provider": "gemini",
-            "prompt": request.prompt,
-            "mode": request.mode,
-            "repo": request.repo,
-            "workingDir": request.working_dir,
-            "timeout": request.timeout,
-            "envVars": request.env_vars,
+            "task": request.task,
+            "accessMode": request.access_mode,
+            "repositoryPath": request.repository_path,
+            "workingDirectory": request.working_directory,
+            "timeoutSeconds": request.timeout_seconds,
+            "environmentVariables": request.environment_variables,
             "securityMode": request.security_mode,
+            "intent": request.intent,
             "verify": request.verify,
             "outputFormat": request.output_format,
         }
@@ -94,28 +95,28 @@ class GeminiRunManager:
         async with aiofiles.open(request_file, "r", encoding="utf-8") as f:
             request_data = json.loads(await f.read())
 
-        prompt = request_data["prompt"]
-        timeout = request_data.get("timeout", self.default_timeout)
-        working_dir = request_data.get("workingDir")
-        env_vars = request_data.get("envVars")
-        repo = request_data.get("repo")
+        task = request_data.get("task") or request_data.get("prompt")
+        timeout = request_data.get("timeoutSeconds", request_data.get("timeout", self.default_timeout))
+        working_dir = request_data.get("workingDirectory", request_data.get("workingDir"))
+        env_vars = request_data.get("environmentVariables", request_data.get("envVars"))
+        repo = request_data.get("repositoryPath", request_data.get("repo"))
         output_format = request_data.get("outputFormat", "json")
         security_mode = request_data.get("securityMode", "workspace_write")
-        mode = request_data.get("mode")
+        access_mode = request_data.get("accessMode", request_data.get("mode"))
         verify_enabled = request_data.get("verify", False)
 
-        if mode:
-            if mode == "suggest":
+        if access_mode:
+            if access_mode == "suggest":
                 security_mode = "readonly"
             else:
-                security_mode = mode
+                security_mode = access_mode
 
         approval_mode = self._map_approval_mode(security_mode)
         extensions = "none"
 
         workspace = Path(repo) if repo else self.workspace_path
 
-        enhanced_prompt = self._build_prompt(prompt, security_mode)
+        enhanced_prompt = self._build_prompt(task, security_mode)
 
         started_at = datetime.now(timezone.utc)
         log_lines: list[str] = []

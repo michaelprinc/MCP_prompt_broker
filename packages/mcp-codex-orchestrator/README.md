@@ -5,6 +5,7 @@ MCP server pro orchestraci OpenAI Codex CLI běhů v izolovaných Docker kontejn
 ## 📋 Přehled
 
 MCP Codex Orchestrator je rozšíření [MCP Prompt Broker](../README.md), které umožňuje automatizované spouštění Codex CLI úloh prostřednictvím MCP protokolu. Každý běh probíhá v čistém Docker kontejneru s přimountovaným workspace.
+Server podporuje dva poskytovatele delegovanych uloh: Codex CLI a Gemini CLI.
 
 ### Klíčové vlastnosti
 
@@ -130,7 +131,7 @@ Přidejte do `.vscode/mcp.json`:
 ```json
 {
   "servers": {
-    "codex-orchestrator": {
+    "delegated-task-runner": {
       "type": "stdio",
       "command": "python",
       "args": ["-m", "mcp_codex_orchestrator"],
@@ -147,9 +148,9 @@ Přidejte do `.vscode/mcp.json`:
 ```python
 # Příklad volání přes MCP
 result = await mcp_client.call_tool("codex_run", {
-    "prompt": "Implementuj funkci pro validaci emailu",
-    "mode": "full-auto",
-    "timeout": 300
+    "task": "Implementuj funkci pro validaci emailu",
+    "execution_mode": "full-auto",
+    "timeout_seconds": 300
 })
 ```
 
@@ -157,16 +158,17 @@ result = await mcp_client.call_tool("codex_run", {
 
 | Parametr | Typ | Default | Popis |
 |----------|-----|---------|-------|
-| `prompt` | string | (required) | Zadání pro Codex |
-| `mode` | string | `"full-auto"` | Režim: full-auto, suggest, ask |
-| `repo` | string | workspace | Cesta k repository |
-| `working_dir` | string | repo root | Working directory |
-| `timeout` | int | 300 | Timeout v sekundách |
-| `env_vars` | dict | null | Extra environment variables |
+| `task` | string | (required) | Zadani pro Codex |
+| `execution_mode` | string | `"full-auto"` | Rezim: full-auto, suggest, ask |
+| `repository_path` | string | workspace | Cesta k repository |
+| `working_directory` | string | repo root | Working directory |
+| `timeout_seconds` | int | 300 | Timeout v sekundach |
+| `environment_variables` | dict | null | Extra environment variables |
 | `security_mode` | string | `"workspace_write"` | Security mode (v2.0) |
+| `intent` | string | null | Routing hint (code_change, analysis, refactor, test_fix) |
 | `verify` | bool | false | Spustit verify loop (v2.0) |
 | `output_schema` | string | null | JSON schema pro validaci (v2.0) |
-| `json_output` | bool | true | Použít JSONL výstup (v2.0) |
+| `json_output` | bool | true | Pouzit JSONL vystup (v2.0) |
 
 ### Výstup
 
@@ -219,7 +221,7 @@ Automatická validace po změnách:
 
 ```json
 {
-  "prompt": "Implementuj validaci emailu",
+  "task": "Implementuj validaci emailu",
   "verify": true
 }
 ```

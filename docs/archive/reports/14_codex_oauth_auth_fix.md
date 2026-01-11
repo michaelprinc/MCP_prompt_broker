@@ -8,14 +8,14 @@
 
 ## 📋 Shrnutí
 
-Tento report dokumentuje analýzu a opravu problému s OAuth autentizací u MCP serveru `codex-orchestrator`. Autentizace pomocí ChatGPT Plus předplatného nefungovala, protože Docker kontejner neměl přístup k souboru `auth.json` obsahujícímu OAuth tokeny.
+Tento report dokumentuje analýzu a opravu problému s OAuth autentizací u MCP serveru `delegated-task-runner`. Autentizace pomocí ChatGPT Plus předplatného nefungovala, protože Docker kontejner neměl přístup k souboru `auth.json` obsahujícímu OAuth tokeny.
 
 ---
 
 ## 🔍 Analýza problému
 
 ### Příznaky
-- MCP server `codex-orchestrator` nedokázal autentizovat Codex CLI v Docker kontejneru
+- MCP server `delegated-task-runner` nedokázal autentizovat Codex CLI v Docker kontejneru
 - OAuth autentizace s ChatGPT Plus selhávala
 - Chyba: "Not signed in" nebo podobné autentizační chyby
 
@@ -117,7 +117,7 @@ def _build_volumes(self, workspace_path, runs_path, run_id):
 
 **Přidána proměnná prostředí `CODEX_AUTH_PATH`:**
 ```json
-"codex-orchestrator": {
+"delegated-task-runner": {
     "env": {
         "DOCKER_COMPOSE_PATH": "${workspaceFolder}/mcp-codex-orchestrator/docker",
         "WORKSPACE_PATH": "${workspaceFolder}/mcp-codex-orchestrator/workspace",

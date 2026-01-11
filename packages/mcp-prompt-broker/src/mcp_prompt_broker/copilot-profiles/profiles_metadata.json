@@ -68,7 +68,7 @@
     },
     "codex_cli": {
       "name": "codex_cli",
-      "short_description": "Integration profile for Codex via MCP codex-orchestrator server with Docker isolation, timeout management, and structured responses",
+      "short_description": "Integration profile for Codex via MCP delegated-task-runner server with Docker isolation, timeout management, and structured responses",
       "source_file": "codex_cli.md",
       "default_score": 0,
       "fallback": false,
@@ -2041,7 +2041,7 @@
     },
     "python_code_generation_complex_with_codex": {
       "name": "python_code_generation_complex_with_codex",
-      "short_description": "Advanced Python code generation with architecture patterns, performance optimization, and enterprise-grade practices using MCP codex-orchestrator",
+      "short_description": "Advanced Python code generation with architecture patterns, performance optimization, and enterprise-grade practices using MCP delegated-task-runner",
       "source_file": "python_code_generation_complex_with_codex.md",
       "default_score": 2,
       "fallback": false,
