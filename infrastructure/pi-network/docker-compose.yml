@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  pi-node:
+    image: pinetwork/pi-node-docker:latest
+    container_name: pi-node-testnet2
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - pi-data:/home/pi/.pi
+      - pi-stellar:/root/.stellar
+    environment:
+      - NETWORK=testnet2
+      - PI_NODE_NAME=pi-node-local
+      - AUTO_UPDATE=true
+    ports:
+      - "31400:31400"
+      - "31401:31401"
+      - "31402:31402"
+      - "31403:31403"
+      - "31404:31404"
+      - "31405:31405"
+      - "31406:31406"
+      - "31407:31407"
+      - "31408:31408"
+      - "31409:31409"
+    stdin_open: true
+    tty: true
+
+volumes:
+  pi-data:
+    driver: local
+  pi-stellar:
+    driver: local
