@@ -7,6 +7,20 @@
 
 ---
 
+## Aktuální stav dokumentu
+
+Tento soubor je historická dokumentace původní workspace kopie. Autoritativní
+lokální implementace pro tento repozitář je nyní:
+
+- `infra-local/llama-orchestrator/`
+- package version `2.0.0`
+- primární user guide: `infra-local/llama-orchestrator/README.md`
+- binary guide: `infra-local/llama-orchestrator/docs/BINARY_MANAGEMENT.md`
+- globální reference: `docs/reference/infra-local/llama-orchestrator-primary-version.md`
+
+Následující sekce ponechávají původní historický kontext a nemají se používat
+jako zdroj pravdy pro aktuální CLI, GUI, stavové schéma ani binary management.
+
 ## 📋 Obsah
 
 1. [Přehled modulu](#přehled-modulu)

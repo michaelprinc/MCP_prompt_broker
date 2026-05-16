@@ -49,7 +49,7 @@ Workspace je organizován do **4 hlavních modulů** + podpůrné struktury:
 | Modul | Popis | Status | Lokace |
 |-------|-------|--------|--------|
 | **mcp-prompt-broker** | Hlavní MCP server pro inteligentní routing promptů | ✅ Produkční | `packages/mcp-prompt-broker/` |
-| **llama-orchestrator** | Docker-like CLI pro správu llama.cpp instancí | 🔧 Alpha | `packages/llama-orchestrator/` |
+| **llama-orchestrator** | Docker-like CLI/GUI pro správu llama.cpp instancí | ✅ Lokální 2.0.0 | `../infra-local/llama-orchestrator/` |
 | **mcp-codex-orchestrator** | MCP server pro Codex CLI v Docker kontejnerech | 🔧 Alpha | `packages/mcp-codex-orchestrator/` |
 | **llama-cpp-server** | Konfigurace lokálního llama.cpp serveru | ✅ Funkční | `infrastructure/llama-cpp-server/` |
 
