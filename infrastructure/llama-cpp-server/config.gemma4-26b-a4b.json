@@ -1,0 +1,48 @@
+{
+    "$schema": "llama-server-config-schema.json",
+    "_comment": "Gemma 4 26B A4B IT Q4_K_S on AMD Radeon RX 6800 via llama.cpp Vulkan.",
+    "server": {
+        "host": "127.0.0.1",
+        "port": 8014,
+        "timeout": 120
+    },
+    "model": {
+        "path": "../../models/google_gemma-4-26B-A4B-it-Q4_K_S.gguf",
+        "name": "Gemma-4-26B-A4B-it-Q4_K_S",
+        "context_size": 2048,
+        "batch_size": 256,
+        "threads": 16,
+        "gpu_layers": 999,
+        "_comment_gpu_layers": "999 requests full offload; llama.cpp clamps to available model layers."
+    },
+    "gpu": {
+        "backend": "vulkan",
+        "device": "Vulkan1",
+        "device_id": 1,
+        "main_gpu": 1,
+        "fit_memory": false,
+        "_comment_device": "Vulkan1 is AMD Radeon RX 6800 as reported by llama-server --list-devices."
+    },
+    "generation": {
+        "temperature": 0.2,
+        "top_p": 0.95,
+        "top_k": 40,
+        "repeat_penalty": 1.1,
+        "max_tokens": 2048,
+        "reasoning": "off",
+        "_comment_reasoning": "Disabled for API smoke tests so message.content contains the visible answer."
+    },
+    "api": {
+        "api_key": "",
+        "cors_allow_origin": "*",
+        "embedding": false,
+        "parallel": 1,
+        "no_mmproj": true,
+        "_comment_parallel": "One slot keeps KV/cache memory predictable on 16GB VRAM."
+    },
+    "performance": {
+        "prompt_tokens_per_sec_observed": 229.09,
+        "predicted_tokens_per_sec_observed": 66.05,
+        "test_date": "2026-04-29"
+    }
+}

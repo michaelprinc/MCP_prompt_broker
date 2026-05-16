@@ -54,7 +54,7 @@ $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # Verze llama.cpp k stažení (aktualizujte podle potřeby)
-$LLAMA_CPP_VERSION = "b7548"
+$LLAMA_CPP_VERSION = "b8974"
 
 # URL pro stažení - Vulkan build pro Windows
 $DOWNLOAD_URL = "https://github.com/ggml-org/llama.cpp/releases/download/$LLAMA_CPP_VERSION/llama-$LLAMA_CPP_VERSION-bin-win-vulkan-x64.zip"
@@ -194,6 +194,12 @@ function Start-LlamaServer {
     $contextSize = $Config.model.context_size
     $batchSize = $Config.model.batch_size
     $threads = $Config.model.threads
+    $device = $null
+    if ($Config.gpu.device) {
+        $device = [string]$Config.gpu.device
+    } elseif ($null -ne $Config.gpu.device_id) {
+        $device = "Vulkan$($Config.gpu.device_id)"
+    }
     
     Write-Step "Konfigurace serveru:"
     Write-Host "    Model: $modelPath" -ForegroundColor Gray
@@ -202,6 +208,9 @@ function Start-LlamaServer {
     Write-Host "    Kontext: $contextSize tokens" -ForegroundColor Gray
     Write-Host "    Batch size: $batchSize" -ForegroundColor Gray
     Write-Host "    Threads: $threads" -ForegroundColor Gray
+    if ($device) {
+        Write-Host "    Device: $device" -ForegroundColor Gray
+    }
     
     $args = @(
         "--model", $modelPath,
@@ -214,13 +223,25 @@ function Start-LlamaServer {
         "--timeout", $Config.server.timeout,
         "-fit", "off"
     )
-    
+
+    if ($device) {
+        $args += "--device", $device
+    }
+
     if ($Config.api.api_key) {
         $args += "--api-key", $Config.api.api_key
     }
     
     if ($Config.api.parallel) {
         $args += "--parallel", $Config.api.parallel
+    }
+
+    if ($Config.api.no_mmproj) {
+        $args += "--no-mmproj"
+    }
+
+    if ($Config.generation.reasoning) {
+        $args += "--reasoning", $Config.generation.reasoning
     }
     
     Write-Step "Spouštím server..."
